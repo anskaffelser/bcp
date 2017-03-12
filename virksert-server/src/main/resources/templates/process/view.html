@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html layout:decorator="layout" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div layout:fragment="content">
+
+    <ol class="breadcrumb">
+        <li><a th:href="@{/}">Home</a></li>
+        <li><a th:href="@{/process}">Processes</a></li>
+        <li class="active" th:text="${process.title}">Process</li>
+    </ol>
+
+    <div class="page-header">
+        <h1 th:text="${process.title}">Process</h1>
+    </div>
+
+    <dl>
+        <dt>Scheme</dt>
+        <dd th:text="${process.scheme}"></dd>
+
+        <dt>Identifier</dt>
+        <dd th:text="${process.identifier}"></dd>
+    </dl>
+
+
+</div>
+
+</body>
+</html>

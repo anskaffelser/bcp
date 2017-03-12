@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jaxb:bindings xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+               jaxb:version="2.0">
+    <jaxb:bindings schemaLocation="../xsd/virksert-v1-1.0.xsd">
+        <jaxb:schemaBindings>
+            <jaxb:package name="no.difi.virksert.jaxb.v1.model"/>
+        </jaxb:schemaBindings>
+    </jaxb:bindings>
+    <jaxb:bindings schemaLocation="../xsd/xmldsig-core-schema.xsd">
+        <jaxb:schemaBindings>
+            <jaxb:package name="no.difi.virksert.jaxb.xmldsig"/>
+        </jaxb:schemaBindings>
+    </jaxb:bindings>
+</jaxb:bindings>

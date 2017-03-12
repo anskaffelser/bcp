@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html layout:decorator="layout" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div layout:fragment="content">
+
+    <ol class="breadcrumb">
+        <li><a th:href="@{/}">Home</a></li>
+        <li><a th:href="@{/participant}">Participants</a></li>
+        <li><a th:href="@{/participant/{ps}::{pi}(ps=${participant.scheme}, pi=${participant.identifier})}"
+               th:text="${participant.name}">Participant</a></li>
+        <li class="active">Certificates</li>
+    </ol>
+
+    <div class="page-header">
+        <h1>Certificates</h1>
+    </div>
+
+    <div class="pull-right" sec:authorize="!hasRole('ADMIN')">
+        <a th:href="@{/participant/{ps}::{pi}/certificate/upload(ps=${participant.scheme}, pi=${participant.identifier})}"
+           class="btn btn-default">Upload certificate</a>
+    </div>
+
+    <table class="table table-striped" id="list">
+        <thead>
+        <th>Internal name</th>
+        <th style="width: 25%;">Serial number</th>
+        <th style="width: 10%;">Usage</th>
+        </thead>
+        <tbody>
+        <th:block th:each="certificate : ${list}">
+            <tr>
+                <td>
+                    <a th:href="@{/participant/{ps}::{pi}/certificate/{i}(ps=${participant.scheme}, pi=${participant.identifier}, i=${certificate.identifier})}"
+                       th:text="${certificate.name}"></a></td>
+                <td th:text="${certificate.serialNumber}"></td>
+                <td th:text="${certificate.registrations.size()}"></td>
+            </tr>
+        </th:block>
+        </tbody>
+    </table>
+
+</div>
+
+<!--
+<th:block layout:fragment="script">
+    <script src="/webjars/dropzone/4.3.0/min/dropzone.min.js"></script>
+    <script>
+        jQuery("#list").dropzone({
+            url: "<th:block th:text='@{/participant/{ps}::{pi}/certificate/upload(ps=${participant.scheme}, pi=${participant.identifier})}'></th:block>"
+        });
+    </script>
+</th:block>
+
+<th:block layout:fragment="style">
+    <link href="/webjars/dropzone/4.3.0/min/dropzone.min.css" rel="stylesheet"/>
+</th:block>
+-->
+
+</body>
+</html>

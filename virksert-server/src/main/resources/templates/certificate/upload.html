@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html layout:decorator="layout" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div layout:fragment="content">
+
+    <ol class="breadcrumb">
+        <li><a th:href="@{/}">Home</a></li>
+        <li><a th:href="@{/participant}">Participants</a></li>
+        <li><a th:href="@{/participant/{ps}::{pi}(ps=${participant.scheme}, pi=${participant.identifier})}"
+               th:text="${participant.name}">Participant</a></li>
+        <li><a th:href="@{/participant/{ps}::{pi}/certificate(ps=${participant.scheme}, pi=${participant.identifier})}">Certificates</a></li>
+        <li class="active">Upload certificate</li>
+    </ol>
+
+
+    <div class="page-header">
+        <h1>Upload certificate</h1>
+    </div>
+
+    <form method="post" enctype="multipart/form-data" th:action="@{/participant/{ps}::{pi}/certificate/upload(ps=${participant.scheme}, pi=${participant.identifier})}" th:object="${form}" class="form-horizontal">
+
+        <div class="form-group">
+            <label for="name" class="col-sm-2 control-label">Internal name</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="name" th:field="*{name}"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="file" class="col-sm-2 control-label">Certificate file</label>
+            <div class="col-sm-6">
+                <input type="file" class="form-control" id="file" th:field="*{file}"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-primary">Upload</button>
+            </div>
+        </div>
+
+    </form>
+
+</div>
+
+</body>
+</html>

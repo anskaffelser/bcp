@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html layout:decorator="layout" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div layout:fragment="content">
+
+    <ol class="breadcrumb">
+        <li><a th:href="@{/}">Home</a></li>
+        <li><a th:href="@{/participant}">Participants</a></li>
+        <li><a th:href="@{/participant/{ps}::{pi}(ps=${participant.scheme}, pi=${participant.identifier})}"
+               th:text="${participant.name}">Participant</a></li>
+        <li><a th:href="@{/participant/{ps}::{pi}/certificate(ps=${participant.scheme}, pi=${participant.identifier})}">Certificates</a>
+        </li>
+        <li class="active" th:text="${certificate.name}">Certificate</li>
+    </ol>
+
+    <div class="page-header">
+        <h1 th:text="${certificate.name}">Certificate</h1>
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-9">
+
+            <dl>
+                <dt>Certificate subject</dt>
+                <dd th:text="${certificate.subject}"></dd>
+
+                <dt>Certificate issuer</dt>
+                <dd th:text="${certificate.issuer}"></dd>
+
+                <dt>Serial number</dt>
+                <dd th:text="${certificate.serialNumber}"></dd>
+            </dl>
+
+        </div>
+
+        <div class="col-md-3">
+            <a th:href="@{/participant/{ps}::{pi}/certificate/{i}/download(ps=${participant.scheme}, pi=${participant.identifier}, i=${certificate.identifier})}"
+               class="btn btn-primary btn-lg">Download certificate</a>
+        </div>
+
+    </div>
+
+    <h2>Connected processes</h2>
+
+    <form method="post" th:action="@{/participant/{ps}::{pi}/certificate/{i}/connect(ps=${participant.scheme}, pi=${participant.identifier}, i=${certificate.identifier})}" class="form-inline pull-right">
+        <div class="input-group">
+            <select name="process" class="form-control" id="process">
+                <option th:each="p : ${processesAvailable}"
+                        th:value="${p.scheme} + '::' + ${p.identifier}"
+                        th:text="${p.title} + ' (' + ${p.identifier} + ')'"></option>
+            </select>
+            <span class="input-group-btn">
+                <button class="btn btn-primary" type="submit">Add</button>
+            </span>
+        </div>
+    </form>
+
+    <table class="table table-striped">
+        <thead>
+        <th style="width: 15%;">Scheme</th>
+        <th style="width: 25%;">Identifier</th>
+        <th>Title</th>
+        </thead>
+        <tbody>
+        <th:block th:each="process : ${processesConnected}">
+            <tr>
+                <td th:text="${process.scheme}"></td>
+                <td th:text="${process.identifier}"></td>
+                <td><a th:text="${process.title}"
+                       th:href="@{/process/{scheme}::{identifier}(scheme=${process.scheme}, identifier=${process.identifier})}">Process
+                    title</a></td>
+            </tr>
+        </th:block>
+        </tbody>
+    </table>
+
+
+</div>
+
+</body>
+</html>

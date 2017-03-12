@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html layout:decorator="layout" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div layout:fragment="content">
+
+    <ol class="breadcrumb">
+        <li><a th:href="@{/}">Home</a></li>
+        <li><a th:href="@{/participant}">Participants</a></li>
+        <li class="active" th:text="${participant.name}">Participant</li>
+    </ol>
+
+    <div class="page-header">
+        <h1 th:text="${participant.name}">Participant</h1>
+    </div>
+
+</div>
+
+</body>
+</html>

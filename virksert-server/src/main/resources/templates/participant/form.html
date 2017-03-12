@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html layout:decorator="layout" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div layout:fragment="content">
+
+    <div class="page-header">
+        <h1>New participant</h1>
+    </div>
+
+    <form method="post" th:action="@{/participant/add}" th:object="${form}" class="form-horizontal">
+
+        <div class="form-group">
+            <label for="identifier" class="col-sm-2 control-label">Identifier</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="identifier" th:field="*{identifier}"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="scheme" class="col-sm-2 control-label">Scheme</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="scheme" th:field="*{scheme}" disabled="disabled"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="name" class="col-sm-2 control-label">Name</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" id="name" th:field="*{name}"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+
+    </form>
+
+</div>
+
+</body>
+</html>

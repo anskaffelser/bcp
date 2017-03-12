@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html layout:decorator="layout" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<body>
+
+<div layout:fragment="content">
+
+    <ol class="breadcrumb">
+        <li><a th:href="@{/}">Home</a></li>
+        <li class="active">Participants</li>
+    </ol>
+
+    <div class="page-header">
+        <h1>Participants</h1>
+    </div>
+
+    <div class="pull-right" sec:authorize="hasAnyAuthority('ADMIN')">
+        <a th:href="@{/participant/add}" class="btn btn-default">Add participant</a>
+    </div>
+
+    <table class="table table-striped">
+        <thead>
+        <th style="width: 25%;">Identifier</th>
+        <th>Title</th>
+        </thead>
+        <tbody>
+        <th:block th:each="participant : ${list}">
+            <tr>
+                <td th:text="${participant.identifier}"></td>
+                <td><a th:text="${participant.name}" th:href="@{/participant/{scheme}::{identifier}(scheme=${participant.scheme}, identifier=${participant.identifier})}">Participant name</a></td>
+            </tr>
+        </th:block>
+        </tbody>
+    </table>
+
+</div>
+
+</body>
+</html>
