@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.UUID;
 
@@ -48,6 +49,7 @@ public class LoginService {
     @Autowired
     private UserService userService;
 
+    @Transactional
     public void prepare(Participant participant, String email) {
         User user = userService.findUser(participant, email);
 
@@ -58,13 +60,15 @@ public class LoginService {
             login.setRemoteType(Login.Type.USER);
             login.setTimestamp(new Date());
             login.setParticipant(participant);
+
+            loginRepository.deleteByRemoteTypeAndRemoteId(login.getRemoteType(), login.getRemoteId());
             loginRepository.save(login);
 
-            logger.info("{}", login);
             logger.info("Code: {}", login.getCode());
         }
     }
 
+    @Transactional
     public Object redeem(Participant participant, String code) {
         Login login = loginRepository.findByParticipantAndCode(participant, code);
 

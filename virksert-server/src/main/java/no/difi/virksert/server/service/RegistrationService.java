@@ -27,6 +27,8 @@ import no.difi.virksert.server.domain.RegistrationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 /**
  * @author erlend
  */
@@ -36,6 +38,7 @@ public class RegistrationService {
     @Autowired
     private RegistrationRepository registrationRepository;
 
+    @Transactional
     public void save(Registration registration) {
         registrationRepository.save(registration);
     }

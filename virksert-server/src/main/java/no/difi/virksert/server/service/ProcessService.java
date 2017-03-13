@@ -37,6 +37,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -87,6 +88,7 @@ public class ProcessService {
         return processRepository.findByParticipant(participant);
     }
 
+    @Transactional
     public void save(Process process) {
         processRepository.save(process);
     }

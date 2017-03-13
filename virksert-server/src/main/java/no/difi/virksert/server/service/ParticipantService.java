@@ -34,6 +34,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 /**
@@ -58,6 +59,7 @@ public class ParticipantService {
         return participantRepository.findAll(new PageRequest(page, 20, Sort.Direction.ASC, "name"));
     }
 
+    @Transactional
     public void save(Participant participant) throws VirksertServerException {
         if (participant.getId() == 0) {
             if (participant.getIdentifier().startsWith("9908:")) {

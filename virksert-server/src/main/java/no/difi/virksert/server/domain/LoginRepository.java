@@ -29,6 +29,8 @@ import org.springframework.data.repository.CrudRepository;
  */
 public interface LoginRepository extends CrudRepository<Login, Long> {
 
+    void deleteByRemoteTypeAndRemoteId(Login.Type remoteType, long remoteId);
+
     Login findByParticipantAndCode(Participant participant, String code);
 
 }
