@@ -33,7 +33,7 @@ import java.io.Serializable;
 @Entity
 @Table(
         indexes = {
-                @Index(columnList = "participant_id")
+                @Index(columnList = "participant_id,identifier")
         },
         uniqueConstraints = @UniqueConstraint(columnNames = {"participant_id", "email"})
 )
@@ -44,6 +44,8 @@ public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+
+    private String identifier;
 
     @ManyToOne
     private Participant participant;
@@ -64,6 +66,14 @@ public class User implements Serializable {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
     }
 
     public Participant getParticipant() {

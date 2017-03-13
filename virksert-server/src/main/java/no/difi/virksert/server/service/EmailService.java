@@ -20,23 +20,19 @@
  * permissions and limitations under the Licence.
  */
 
-package no.difi.virksert.server.domain;
+package no.difi.virksert.server.service;
 
-import org.springframework.data.repository.CrudRepository;
-
-import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.stereotype.Service;
 
 /**
  * @author erlend
  */
-public interface UserRepository extends CrudRepository<User, Long> {
+@Service
+public class EmailService {
 
-    User findByParticipantAndEmail(Participant participant, String email);
-
-    User findByParticipantAndIdentifier(Participant participant, String identifier);
-
-    long countByParticipant(Participant participant);
-
-    List<User> findByParticipant(Participant participant);
+    @Autowired(required = false)
+    private JavaMailSender mailSender;
 
 }

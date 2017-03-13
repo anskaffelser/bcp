@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html layout:decorator="layout" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div layout:fragment="content">
+
+    <ol class="breadcrumb">
+        <li><a th:href="@{/}">Home</a></li>
+        <li><a th:href="@{/user}">Users</a></li>
+        <li><a th:href="@{/user/{i}(i=${user.identifier})}" th:text="${user.name}">User</a></li>
+        <li class="active">Delete user</li>
+    </ol>
+
+    <div class="page-header">
+        <h1>Delete user</h1>
+    </div>
+
+    <p class="lead">Are you sure you want to delete the user <strong th:text="${user.name}">User</strong>?</p>
+
+    <form method="post" th:action="${#httpServletRequest.requestURI}" th:object="${form}" class="form-horizontal">
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-danger btn-lg">Yes</button>
+            <a class="btn btn-default btn-lg" th:href="@{/user}">No</a>
+        </div>
+
+    </form>
+
+</div>
+
+</body>
+</html>

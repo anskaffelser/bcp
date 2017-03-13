@@ -31,6 +31,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -55,22 +56,73 @@ public class UserController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.GET)
-    public String addForm(ModelMap modelMap) throws VirksertServerException {
+    public String addForm(ModelMap modelMap) {
         modelMap.put("form", new UserForm());
 
-        return "participant/user/form";
+        return "user/form";
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String addSubmit(@Valid UserForm form, BindingResult bindingResult, ModelMap modelMap)
-            throws VirksertServerException {
+    public String addSubmit(@Valid UserForm form, BindingResult bindingResult, ModelMap modelMap) {
         if (bindingResult.hasErrors()) {
             modelMap.put("form", form);
-            return "participant/user/form";
+            return "user/form";
         }
 
         User user = form.update(new User());
         userService.save(user);
+
+        return "redirect:/user";
+    }
+
+    @RequestMapping(value = "/{identifier}", method = RequestMethod.GET)
+    public String view(@PathVariable String identifier, ModelMap modelMap) throws VirksertServerException {
+        modelMap.put("user", userService.findUserByIdentifier(null, identifier));
+
+        return "user/view";
+    }
+
+    @RequestMapping(value = "/{identifier}/edit", method = RequestMethod.GET)
+    public String editForm(@PathVariable String identifier, ModelMap modelMap) throws VirksertServerException {
+        User user = userService.findUserByIdentifier(null, identifier);
+
+        modelMap.put("form", new UserForm(user));
+        modelMap.put("user", user);
+
+        return "user/form";
+    }
+
+    @RequestMapping(value = "/{identifier}/edit", method = RequestMethod.POST)
+    public String editSubmit(@PathVariable String identifier, @Valid UserForm form, BindingResult bindingResult,
+                             ModelMap modelMap) throws VirksertServerException {
+        User user = userService.findUserByIdentifier(null, identifier);
+
+        if (bindingResult.hasErrors()) {
+            form.setExists(true);
+            modelMap.put("form", form);
+            modelMap.put("user", user);
+            return "user/form";
+        }
+
+        user = form.update(user);
+        userService.save(user);
+
+        return "redirect:/user";
+    }
+
+    @RequestMapping(value = "/{identifier}/delete", method = RequestMethod.GET)
+    public String deleteForm(@PathVariable String identifier, ModelMap modelMap) throws VirksertServerException {
+        User user = userService.findUserByIdentifier(null, identifier);
+
+        modelMap.put("user", user);
+
+        return "user/delete";
+    }
+
+    @RequestMapping(value = "/{identifier}/delete", method = RequestMethod.POST)
+    public String deleteSubmit(@PathVariable String identifier, ModelMap modelMap) throws VirksertServerException {
+        User user = userService.findUserByIdentifier(null, identifier);
+        userService.delete(user);
 
         return "redirect:/user";
     }

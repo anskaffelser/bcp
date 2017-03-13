@@ -22,12 +22,25 @@
         <thead>
         <th>Name</th>
         <th>Email</th>
+        <th>&nbsp;</th>
         </thead>
         <tbody>
         <th:block th:each="user : ${list}">
             <tr>
-                <td th:text="${user.name}"></td>
+                <td><a th:href="@{/user/{identifier}(identifier=${user.identifier})}" th:text="${user.name}"></a></td>
                 <td th:text="${user.email}"></td>
+                <td style="text-align: right;">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
+                            Action <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a th:href="@{/user/{i}/edit(i=${user.identifier})}">Edit</a></li>
+                            <li><a th:href="@{/user/{i}/delete(i=${user.identifier})}">Delete</a></li>
+                        </ul>
+                    </div>
+                </td>
             </tr>
         </th:block>
         </tbody>

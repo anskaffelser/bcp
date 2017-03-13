@@ -20,23 +20,17 @@
  * permissions and limitations under the Licence.
  */
 
-package no.difi.virksert.server.domain;
-
-import org.springframework.data.repository.CrudRepository;
-
-import java.util.List;
+package no.difi.virksert.server.lang;
 
 /**
  * @author erlend
  */
-public interface UserRepository extends CrudRepository<User, Long> {
+public class UserNotFoundException extends VirksertServerException {
+    public UserNotFoundException() {
+        this("Unable to find user.");
+    }
 
-    User findByParticipantAndEmail(Participant participant, String email);
-
-    User findByParticipantAndIdentifier(Participant participant, String identifier);
-
-    long countByParticipant(Participant participant);
-
-    List<User> findByParticipant(Participant participant);
-
+    public UserNotFoundException(String message) {
+        super(message);
+    }
 }

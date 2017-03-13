@@ -8,7 +8,7 @@
         <h1>Sign in with email</h1>
     </div>
 
-    <form th:action="@{/signin/email}" method="post" class="form-horizontal" th:object="${form}">
+    <form th:action="${#httpServletRequest.requestURI}" method="post" class="form-horizontal" th:object="${form}">
         <div class="form-group form-group-lg">
             <label for="participant" class="col-sm-4 control-label">Participant identifier</label>
             <div class="col-sm-6">

@@ -81,8 +81,6 @@ public class VirksertAuthenticationManager implements AuthenticationProvider {
                     authorities.add(new SimpleGrantedAuthority(participant.toVefa().toString()));
                 }
 
-                LOGGER.info("{}", authorities);
-
                 return new UsernamePasswordAuthenticationToken(o, new Date(), authorities);
             }
 

@@ -25,11 +25,13 @@ package no.difi.virksert.server.service;
 import no.difi.virksert.server.domain.Participant;
 import no.difi.virksert.server.domain.User;
 import no.difi.virksert.server.domain.UserRepository;
+import no.difi.virksert.server.lang.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author erlend
@@ -61,14 +63,31 @@ public class UserService {
             user.setEmail(email);
             user.setHasAccess(true);
             user.setHasReceiveMessages(true);
-            userRepository.save(user);
+            save(user);
         }
+
+        return user;
+    }
+
+    public User findUserByIdentifier(Participant participant, String identifier) throws UserNotFoundException {
+        User user = userRepository.findByParticipantAndIdentifier(participant, identifier);
+
+        if (user == null)
+            throw new UserNotFoundException();
 
         return user;
     }
 
     @Transactional
     public void save(User user) {
+        if (user.getIdentifier() == null)
+            user.setIdentifier(UUID.randomUUID().toString());
+
         userRepository.save(user);
+    }
+
+    @Transactional
+    public void delete(User user) {
+        userRepository.delete(user);
     }
 }

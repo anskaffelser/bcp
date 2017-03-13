@@ -4,11 +4,24 @@
 
 <div layout:fragment="content">
 
+    <ol class="breadcrumb">
+        <li><a th:href="@{/}">Home</a></li>
+        <li><a th:href="@{/user}">Users</a></li>
+        <th:block th:if="${!form.exists}">
+            <li class="active">New user</li>
+        </th:block>
+        <th:block th:if="${form.exists}">
+            <li><a th:href="@{/user/{i}(i=${user.identifier})}" th:text="${user.name}">User</a></li>
+            <li class="active">Edit user</li>
+        </th:block>
+    </ol>
+
     <div class="page-header">
-        <h1>New user</h1>
+        <h1 th:if="${!form.exists}">New user</h1>
+        <h1 th:if="${form.exists}">Edit user</h1>
     </div>
 
-    <form method="post" th:action="@{/participant/{ps}::{pi}/user/add(ps=${participant.scheme}, pi=${participant.identifier})}" th:object="${form}" class="form-horizontal">
+    <form method="post" th:action="${#httpServletRequest.requestURI}" th:object="${form}" class="form-horizontal">
 
         <div class="form-group">
             <label for="name" class="col-sm-2 control-label">Name</label>

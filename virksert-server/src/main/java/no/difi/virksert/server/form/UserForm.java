@@ -31,12 +31,33 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 public class UserForm {
 
+    private boolean exists;
+
     @NotBlank
     private String name;
 
     @NotBlank
     @Email
     private String email;
+
+    public UserForm() {
+        exists = false;
+    }
+
+    public UserForm(User user) {
+        exists = true;
+
+        setName(user.getName());
+        setEmail(user.getEmail());
+    }
+
+    public boolean isExists() {
+        return exists;
+    }
+
+    public void setExists(boolean exists) {
+        this.exists = exists;
+    }
 
     public String getName() {
         return name;
