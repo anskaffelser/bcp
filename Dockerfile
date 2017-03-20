@@ -14,4 +14,4 @@ EXPOSE 8080
 
 WORKDIR /virksert
 
-CMD ["sh", "/virksert/bin/run.sh"]
+ENTRYPOINT ["sh", "/virksert/bin/run.sh"]
