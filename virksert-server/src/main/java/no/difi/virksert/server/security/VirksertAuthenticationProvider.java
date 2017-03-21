@@ -47,9 +47,9 @@ import java.util.List;
  * @author erlend
  */
 @Component
-public class VirksertAuthenticationManager implements AuthenticationProvider {
+public class VirksertAuthenticationProvider implements AuthenticationProvider {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(VirksertAuthenticationManager.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(VirksertAuthenticationProvider.class);
 
     @Autowired
     private LoginService loginService;

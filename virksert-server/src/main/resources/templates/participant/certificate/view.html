@@ -16,32 +16,22 @@
     </ol>
 
     <div class="page-header">
+        <a th:href="@{/participant/{ps}::{pi}/certificate/{i}/download(ps=${participant.scheme}, pi=${participant.identifier}, i=${certificate.identifier})}"
+           class="btn btn-primary pull-right">Download certificate</a>
+
         <h1 th:text="${certificate.name}">Certificate</h1>
     </div>
 
-    <div class="row">
+    <dl>
+        <dt>Certificate subject</dt>
+        <dd th:text="${certificate.subject}"></dd>
 
-        <div class="col-md-9">
+        <dt>Certificate issuer</dt>
+        <dd th:text="${certificate.issuer}"></dd>
 
-            <dl>
-                <dt>Certificate subject</dt>
-                <dd th:text="${certificate.subject}"></dd>
-
-                <dt>Certificate issuer</dt>
-                <dd th:text="${certificate.issuer}"></dd>
-
-                <dt>Serial number</dt>
-                <dd th:text="${certificate.serialNumber}"></dd>
-            </dl>
-
-        </div>
-
-        <div class="col-md-3">
-            <a th:href="@{/participant/{ps}::{pi}/certificate/{i}/download(ps=${participant.scheme}, pi=${participant.identifier}, i=${certificate.identifier})}"
-               class="btn btn-primary btn-lg">Download certificate</a>
-        </div>
-
-    </div>
+        <dt>Serial number</dt>
+        <dd th:text="${certificate.serialNumber}"></dd>
+    </dl>
 
     <h2>Connected processes</h2>
 

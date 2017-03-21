@@ -22,11 +22,8 @@
 
 package no.difi.virksert.server.web;
 
-import no.difi.vefa.peppol.common.lang.PeppolParsingException;
-import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.difi.virksert.server.domain.Participant;
 import no.difi.virksert.server.form.ParticipantForm;
-import no.difi.virksert.server.lang.InvalidInputException;
 import no.difi.virksert.server.lang.VirksertServerException;
 import no.difi.virksert.server.service.CertificateService;
 import no.difi.virksert.server.service.ParticipantService;
@@ -66,27 +63,20 @@ public class ParticipantController {
     }
 
     @PreAuthorize("true")
-    @RequestMapping(value = "/{participantParam}", method = RequestMethod.GET)
-    public String view(@PathVariable String participantParam, ModelMap modelMap) throws VirksertServerException {
-        try {
-            ParticipantIdentifier participantIdentifier = ParticipantIdentifier.parse(participantParam);
-            Participant participant = participantService.get(participantIdentifier);
+    @RequestMapping(value = "/{participant}", method = RequestMethod.GET)
+    public String view(@PathVariable Participant participant, ModelMap modelMap) throws VirksertServerException {
+        modelMap.put("participant", participant);
 
-            modelMap.put("participant", participant);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getAuthorities().stream().map(Object::toString)
+                .anyMatch(s -> participant.toVefa().toString().equals(s) || "ADMIN".equals(s))) {
 
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication.getAuthorities().stream().map(Object::toString)
-                    .anyMatch(s -> participantIdentifier.toString().equals(s) || "ADMIN".equals(s))) {
+            modelMap.put("count_certificates", certificateService.countActive(participant));
+            modelMap.put("count_users", userService.count(participant));
 
-                modelMap.put("count_certificates", certificateService.countActive(participant));
-                modelMap.put("count_users", userService.count(participant));
-
-                return "participant/view";
-            } else {
-                return "participant/view_public";
-            }
-        } catch (PeppolParsingException e) {
-            throw new InvalidInputException(e.getMessage(), e);
+            return "participant/view";
+        } else {
+            return "participant/view_public";
         }
     }
 
@@ -105,8 +95,7 @@ public class ParticipantController {
             return "participant/form";
         }
 
-        Participant process = form.update(new Participant());
-        participantService.save(process);
+        participantService.save(form.update(new Participant()));
 
         return "redirect:/participant";
     }

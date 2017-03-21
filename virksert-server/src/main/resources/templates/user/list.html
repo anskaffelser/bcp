@@ -11,11 +11,11 @@
     </ol>
 
     <div class="page-header">
-        <h1>Users</h1>
-    </div>
+        <div class="pull-right">
+            <a th:href="@{/user/add}" class="btn btn-link">Add user</a>
+        </div>
 
-    <div class="pull-right">
-        <a th:href="@{/user/add}" class="btn btn-default">Add user</a>
+        <h1>Users</h1>
     </div>
 
     <table class="table table-striped">
@@ -30,16 +30,8 @@
                 <td><a th:href="@{/user/{identifier}(identifier=${user.identifier})}" th:text="${user.name}"></a></td>
                 <td th:text="${user.email}"></td>
                 <td style="text-align: right;">
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false">
-                            Action <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a th:href="@{/user/{i}/edit(i=${user.identifier})}">Edit</a></li>
-                            <li><a th:href="@{/user/{i}/delete(i=${user.identifier})}">Delete</a></li>
-                        </ul>
-                    </div>
+                    <a th:href="@{/user/{i}/edit(i=${user.identifier})}">Edit</a> |
+                    <a th:href="@{/user/{i}/delete(i=${user.identifier})}">Delete</a>
                 </td>
             </tr>
         </th:block>

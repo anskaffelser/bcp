@@ -11,11 +11,11 @@
     </ol>
 
     <div class="page-header">
-        <h1>Processes</h1>
-    </div>
+        <div class="pull-right" sec:authorize="hasAnyAuthority('ADMIN')">
+            <a th:href="@{/process/add}" class="btn btn-link">Add process</a>
+        </div>
 
-    <div class="pull-right" sec:authorize="hasAnyAuthority('ADMIN')">
-        <a th:href="@{/process/add}" class="btn btn-default">Add process</a>
+        <h1>Processes</h1>
     </div>
 
     <table class="table table-striped">
@@ -23,6 +23,7 @@
         <th style="width: 15%;">Scheme</th>
         <th style="width: 25%;">Identifier</th>
         <th>Title</th>
+        <th style="width: 20%;">&nbsp;</th>
         </thead>
         <tbody>
         <th:block th:each="process : ${list}">
@@ -32,6 +33,10 @@
                 <td><a th:text="${process.title}"
                        th:href="@{/process/{scheme}::{identifier}(scheme=${process.scheme}, identifier=${process.identifier})}">Process
                     title</a></td>
+                <td style="text-align: right;">
+                    <a th:href="@{/process/{scheme}::{identifier}/edit(scheme=${process.scheme}, identifier=${process.identifier})}">Edit</a> |
+                    <a th:href="@{/process/{scheme}::{identifier}/delete(scheme=${process.scheme}, identifier=${process.identifier})}">Delete</a>
+                </td>
             </tr>
         </th:block>
         </tbody>

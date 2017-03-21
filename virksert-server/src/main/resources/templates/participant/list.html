@@ -11,11 +11,11 @@
     </ol>
 
     <div class="page-header">
-        <h1>Participants</h1>
-    </div>
+        <div class="pull-right" sec:authorize="hasAnyAuthority('ADMIN')">
+            <a th:href="@{/participant/add}" class="btn btn-link">Add participant</a>
+        </div>
 
-    <div class="pull-right" sec:authorize="hasAnyAuthority('ADMIN')">
-        <a th:href="@{/participant/add}" class="btn btn-default">Add participant</a>
+        <h1>Participants</h1>
     </div>
 
     <table class="table table-striped">

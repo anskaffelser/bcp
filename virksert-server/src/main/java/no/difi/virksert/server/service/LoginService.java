@@ -26,10 +26,7 @@ import no.difi.virksert.server.domain.Login;
 import no.difi.virksert.server.domain.LoginRepository;
 import no.difi.virksert.server.domain.Participant;
 import no.difi.virksert.server.domain.User;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -41,8 +38,6 @@ import java.util.UUID;
  */
 @Service
 public class LoginService {
-
-    private static Logger logger = LoggerFactory.getLogger(LoginService.class);
 
     @Autowired
     private EmailService emailService;
@@ -68,7 +63,8 @@ public class LoginService {
             loginRepository.deleteByRemoteTypeAndRemoteId(login.getRemoteType(), login.getRemoteId());
             loginRepository.save(login);
 
-            logger.info("Code: {}", login.getCode());
+            emailService.send(email, "OTP for Business Certificate Publisher",
+                    String.format("Your code (OTP) is: %s", login.getCode()));
         }
     }
 

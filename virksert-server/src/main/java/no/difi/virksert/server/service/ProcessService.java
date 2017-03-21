@@ -92,4 +92,8 @@ public class ProcessService {
     public void save(Process process) {
         processRepository.save(process);
     }
+
+    public void delete(Process process) {
+        processRepository.delete(process);
+    }
 }

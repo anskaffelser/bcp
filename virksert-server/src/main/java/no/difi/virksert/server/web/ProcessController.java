@@ -22,15 +22,11 @@
 
 package no.difi.virksert.server.web;
 
-import no.difi.vefa.peppol.common.lang.PeppolParsingException;
-import no.difi.vefa.peppol.common.model.ProcessIdentifier;
 import no.difi.virksert.server.domain.Process;
+import no.difi.virksert.server.domain.User;
 import no.difi.virksert.server.form.ProcessForm;
-import no.difi.virksert.server.lang.InvalidInputException;
 import no.difi.virksert.server.lang.VirksertServerException;
 import no.difi.virksert.server.service.ProcessService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -46,8 +42,6 @@ import org.springframework.web.bind.annotation.*;
 @PreAuthorize("hasAnyAuthority('ADMIN')")
 public class ProcessController {
 
-    private static Logger logger = LoggerFactory.getLogger(ProcessController.class);
-
     @Autowired
     private ProcessService processService;
 
@@ -60,23 +54,11 @@ public class ProcessController {
     }
 
     @PreAuthorize("true")
-    @RequestMapping(value = "/{processParam:.+}", method = RequestMethod.GET)
-    public String view(@PathVariable String processParam, ModelMap modelMap)
-            throws VirksertServerException {
-        try {
-            ProcessIdentifier processIdentifier = ProcessIdentifier.parse(processParam);
-            logger.info("{}", processIdentifier);
+    @RequestMapping(value = "/{process:.+}", method = RequestMethod.GET)
+    public String view(@PathVariable Process process, ModelMap modelMap) {
+        modelMap.put("process", process);
 
-            Process process = processService.get(processIdentifier);
-
-            logger.info("{}", process);
-
-            modelMap.put("process", process);
-
-            return "process/view";
-        } catch (PeppolParsingException e) {
-            throw new InvalidInputException(e.getMessage(), e);
-        }
+        return "process/view";
     }
 
 
@@ -94,8 +76,40 @@ public class ProcessController {
             return "process/form";
         }
 
-        Process process = form.update(new Process());
-        processService.save(process);
+        processService.save(form.update(new Process()));
+
+        return "redirect:/process";
+    }
+
+    @RequestMapping(value = "/{process:.+}/edit", method = RequestMethod.GET)
+    public String editForm(@PathVariable Process process, ModelMap modelMap) {
+        modelMap.put("form", new ProcessForm(process));
+
+        return "process/form";
+    }
+
+    @RequestMapping(value = "/{process:.+}/edit", method = RequestMethod.POST)
+    public String editSubmit(@PathVariable Process process, @ModelAttribute ProcessForm form, BindingResult bindingResult, ModelMap modelMap) {
+        if (bindingResult.hasErrors()) {
+            modelMap.put("form", form);
+            return "process/form";
+        }
+
+        processService.save(form.update(process));
+
+        return "redirect:/process";
+    }
+
+    @RequestMapping(value = "/{process:.+}/delete", method = RequestMethod.GET)
+    public String deleteForm(@PathVariable Process process, ModelMap modelMap) throws VirksertServerException {
+        modelMap.put("process", process);
+
+        return "process/delete";
+    }
+
+    @RequestMapping(value = "/{process:.+}/delete", method = RequestMethod.POST)
+    public String deleteSubmit(@PathVariable Process process) throws VirksertServerException {
+        processService.delete(process);
 
         return "redirect:/process";
     }

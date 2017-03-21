@@ -22,7 +22,12 @@
 
 package no.difi.virksert.server.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailMessage;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +37,26 @@ import org.springframework.stereotype.Service;
 @Service
 public class EmailService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(EmailService.class);
+
     @Autowired(required = false)
     private JavaMailSender mailSender;
 
+    @Value("${virksert.mail.from:}")
+    private String from;
+
+    public void send(String to, String subject, String text) {
+        if (mailSender == null) {
+            LOGGER.info("{} => {}\n{}", to, subject, text);
+        } else {
+            MailMessage mailMessage = new SimpleMailMessage();
+            if (!from.isEmpty()) {
+                mailMessage.setFrom(from);
+            }
+            mailMessage.setTo(to);
+            mailMessage.setSubject(subject);
+            mailMessage.setText(text);
+            LOGGER.info("Message '{}' sent to '{}'.", subject, to);
+        }
+    }
 }

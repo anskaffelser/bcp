@@ -2,3 +2,4 @@
 target
 *.iml
 /virksert.properties
+application-local.properties

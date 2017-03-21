@@ -22,7 +22,7 @@
 
 package no.difi.virksert.server.config;
 
-import no.difi.virksert.server.security.VirksertAuthenticationManager;
+import no.difi.virksert.server.security.VirksertAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -40,17 +40,13 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private VirksertAuthenticationManager authenticationManager;
+    private VirksertAuthenticationProvider authenticationManager;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                // .antMatchers("/api/v1/**", "/webjars/**", "/favicon.ico", "/").permitAll()
-                // .antMatchers("/signin", "/signin/*").anonymous()
-                // .anyRequest().permitAll()
-                // .anyRequest().authenticated()
-                // .anyRequest().denyAll()
+                .antMatchers("/signin", "/signin/*").anonymous()
 
                 .and()
                 .formLogin()

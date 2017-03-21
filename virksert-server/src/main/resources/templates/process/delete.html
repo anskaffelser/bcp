@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html layout:decorator="layout" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div layout:fragment="content">
+
+    <ol class="breadcrumb">
+        <li><a th:href="@{/}">Home</a></li>
+        <li><a th:href="@{/user}">Processes</a></li>
+        <li><a th:href="@{/process/{scheme}::{identifier}(scheme=${process.scheme}, identifier=${process.identifier})}" th:text="${process.title}">Process</a></li>
+        <li class="active">Delete process</li>
+    </ol>
+
+    <div class="page-header">
+        <h1>Delete process</h1>
+    </div>
+
+    <p class="lead">Are you sure you want to delete the process <strong th:text="${process.title}">User</strong>?</p>
+
+    <form method="post" th:action="${#httpServletRequest.requestURI}" class="form-horizontal">
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-danger btn-lg">Yes</button>
+            <a class="btn btn-default btn-lg" th:href="@{/process}">No</a>
+        </div>
+
+    </form>
+
+</div>
+
+</body>
+</html>

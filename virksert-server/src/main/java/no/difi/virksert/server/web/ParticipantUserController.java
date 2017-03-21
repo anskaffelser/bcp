@@ -22,14 +22,10 @@
 
 package no.difi.virksert.server.web;
 
-import no.difi.vefa.peppol.common.lang.PeppolParsingException;
-import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.difi.virksert.server.domain.Participant;
 import no.difi.virksert.server.domain.User;
 import no.difi.virksert.server.form.UserForm;
-import no.difi.virksert.server.lang.InvalidInputException;
 import no.difi.virksert.server.lang.VirksertServerException;
-import no.difi.virksert.server.service.ParticipantService;
 import no.difi.virksert.server.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -46,63 +42,42 @@ import javax.validation.Valid;
  * @author erlend
  */
 @Controller
-@RequestMapping("/participant/{participantParam}/user")
-@PreAuthorize("hasAnyAuthority('ADMIN', #participantParam)")
+@RequestMapping("/participant/{participant}/user")
+@PreAuthorize("hasAnyAuthority('ADMIN', #participant.toVefa().toString())")
 public class ParticipantUserController {
-
-    @Autowired
-    private ParticipantService participantService;
 
     @Autowired
     private UserService userService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list(@PathVariable String participantParam, ModelMap modelMap) throws VirksertServerException {
-        try {
-            Participant participant = participantService.get(ParticipantIdentifier.parse(participantParam));
+    public String list(@PathVariable Participant participant, ModelMap modelMap) throws VirksertServerException {
+        modelMap.put("participant", participant);
+        modelMap.put("list", userService.findByParticipant(participant));
 
-            modelMap.put("participant", participant);
-            modelMap.put("list", userService.findByParticipant(participant));
-
-            return "participant/user/list";
-        } catch (PeppolParsingException e) {
-            throw new InvalidInputException(e.getMessage(), e);
-        }
+        return "participant/user/list";
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.GET)
-    public String addForm(@PathVariable String participantParam, ModelMap modelMap) throws VirksertServerException {
-        try {
-            Participant participant = participantService.get(ParticipantIdentifier.parse(participantParam));
+    public String addForm(@PathVariable Participant participant, ModelMap modelMap) throws VirksertServerException {
+        modelMap.put("participant", participant);
+        modelMap.put("form", new UserForm());
 
-            modelMap.put("participant", participant);
-            modelMap.put("form", new UserForm());
-
-            return "participant/user/form";
-        } catch (PeppolParsingException e) {
-            throw new InvalidInputException(e.getMessage(), e);
-        }
+        return "participant/user/form";
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String addSubmit(@PathVariable String participantParam, @Valid UserForm form, BindingResult bindingResult,
+    public String addSubmit(@PathVariable Participant participant, @Valid UserForm form, BindingResult bindingResult,
                             ModelMap modelMap) throws VirksertServerException {
-        try {
-            Participant participant = participantService.get(ParticipantIdentifier.parse(participantParam));
-
-            if (bindingResult.hasErrors()) {
-                modelMap.put("participant", participant);
-                modelMap.put("form", form);
-                return "participant/user/form";
-            }
-
-            User user = form.update(new User());
-            user.setParticipant(participant);
-            userService.save(user);
-
-            return String.format("redirect:/participant/%s/user", participantParam);
-        } catch (PeppolParsingException e) {
-            throw new InvalidInputException(e.getMessage(), e);
+        if (bindingResult.hasErrors()) {
+            modelMap.put("participant", participant);
+            modelMap.put("form", form);
+            return "participant/user/form";
         }
+
+        User user = form.update(new User());
+        user.setParticipant(participant);
+        userService.save(user);
+
+        return String.format("redirect:/participant/%s/user", participant.toVefa());
     }
 }

@@ -59,7 +59,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/participant/{participantParam}/certificate")
 @PreAuthorize("hasAnyAuthority('ADMIN', #participantParam)")
-public class CertificateController {
+public class ParticipantCertificateController {
 
     private static Base64.Encoder encoder = Base64.getEncoder();
 
@@ -84,7 +84,7 @@ public class CertificateController {
             modelMap.put("participant", participant);
             modelMap.put("list", certificateService.findAll(participant, page - 1));
 
-            return "certificate/list";
+            return "participant/certificate/list";
         } catch (PeppolParsingException e) {
             throw new InvalidInputException(e.getMessage(), e);
         }
@@ -98,7 +98,7 @@ public class CertificateController {
             modelMap.put("participant", participant);
             modelMap.put("form", new UploadForm());
 
-            return "certificate/upload";
+            return "participant/certificate/upload";
         } catch (PeppolParsingException e) {
             throw new InvalidInputException(e.getMessage(), e);
         }
@@ -155,7 +155,7 @@ public class CertificateController {
             modelMap.put("processesConnected", processesConnected);
             modelMap.put("processesAvailable", processesAvailable);
 
-            return "certificate/view";
+            return "participant/certificate/view";
         } catch (PeppolParsingException e) {
             throw new InvalidInputException(e.getMessage(), e);
         }
