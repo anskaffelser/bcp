@@ -2,4 +2,4 @@
 
 cd %0\..\..
 
-java -classpath .;lib/*;conf no.difi.virksert.server.Application %*
+java -classpath .;ext/*;lib/*;conf no.difi.virksert.server.Application %*
