@@ -48,13 +48,15 @@
         </dependency>
 
         <!-- VEFA PEPPOL -->
-        <!-- <dependency>
+        <dependency>
             <groupId>no.difi.vefa</groupId>
             <artifactId>peppol-common</artifactId>
-        </dependency> -->
+        </dependency>
+
+        <!-- Difi commons -->
         <dependency>
-            <groupId>com.github.difi.vefa-peppol</groupId>
-            <artifactId>peppol-common</artifactId>
+            <groupId>no.difi.commons</groupId>
+            <artifactId>commons-datahotel</artifactId>
         </dependency>
 
         <!-- Spring boot -->
@@ -69,6 +71,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-logging</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -89,27 +95,11 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- Difi commons -->
-        <dependency>
-            <groupId>no.difi.commons</groupId>
-            <artifactId>commons-datahotel</artifactId>
-        </dependency>
-
-        <!-- Servlet -->
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>3.1.0</version>
-            <scope>provided</scope>
-        </dependency>
-
         <!-- Database -->
-        <!-- MySQL -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
-        <!-- HSQL -->
         <dependency>
             <groupId>org.hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
@@ -134,19 +124,6 @@
         </dependency>
 
     </dependencies>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <!-- Import dependency management from Spring Boot -->
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring.boot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
     <build>
         <plugins>

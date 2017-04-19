@@ -26,6 +26,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.5.2.RELEASE</version>
+    </parent>
+
     <groupId>no.difi.virksert</groupId>
     <artifactId>virksert-parent</artifactId>
     <packaging>pom</packaging>
@@ -37,6 +43,7 @@
         <module>virksert-client</module>
         <module>virksert-common</module>
         <module>virksert-server</module>
+        <module>virksert-extension</module>
     </modules>
 
     <properties>
@@ -71,6 +78,11 @@
                 <artifactId>virksert-client</artifactId>
                 <version>1.0-SNAPSHOT</version>
             </dependency>
+            <dependency>
+                <groupId>no.difi.virksert</groupId>
+                <artifactId>virksert-server</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
 
             <!-- Guava -->
             <dependency>
@@ -95,19 +107,7 @@
             <dependency>
                 <groupId>no.difi.vefa</groupId>
                 <artifactId>peppol-common</artifactId>
-                <version>0.9.7</version>
-            </dependency>
-            <dependency>
-                <groupId>com.github.difi.vefa-peppol</groupId>
-                <artifactId>peppol-common</artifactId>
-                <version>6e66455654</version>
-            </dependency>
-
-            <!-- MySQL -->
-            <dependency>
-                <groupId>mysql</groupId>
-                <artifactId>mysql-connector-java</artifactId>
-                <version>5.1.41</version>
+                <version>0.9.8</version>
             </dependency>
 
         </dependencies>
@@ -178,12 +178,5 @@
             </plugin>
         </plugins>
     </build>
-
-    <repositories>
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
-    </repositories>
 
 </project>

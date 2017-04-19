@@ -53,9 +53,9 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
                 <!-- <ul sec:authorize="isAuthenticated()" class="nav navbar-nav"> -->
-                <li><a th:href="@{/participant}">Participants</a></li>
-                <li><a th:href="@{/process}">Processes</a></li>
-                <li sec:authorize="hasAnyAuthority('ADMIN')"><a th:href="@{/user}">Users</a></li>
+                <li th:classappend="${#httpServletRequest.getRequestURI() == '/participant' ? 'active':''}"><a th:href="@{/participant}">Participants</a></li>
+                <li th:classappend="${#httpServletRequest.getRequestURI() == '/process' ? 'active':''}"><a th:href="@{/process}">Processes</a></li>
+                <li th:classappend="${#httpServletRequest.getRequestURI() == '/user' ? 'active':''}" sec:authorize="hasAnyAuthority('ADMIN')"><a th:href="@{/user}">Users</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <th:block sec:authorize="isAuthenticated()">
