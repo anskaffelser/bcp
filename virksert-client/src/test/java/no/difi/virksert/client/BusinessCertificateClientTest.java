@@ -24,11 +24,13 @@ package no.difi.virksert.client;
 
 import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.difi.vefa.peppol.common.model.ProcessIdentifier;
+import no.difi.vefa.peppol.common.model.Scheme;
 import no.difi.virksert.api.Mode;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.net.URI;
+import java.security.cert.X509Certificate;
 
 /**
  * @author erlend
@@ -39,7 +41,14 @@ public class BusinessCertificateClientTest {
     public void simple() throws Exception {
         BusinessCertificateClient client = BusinessCertificateClient
                 .of(URI.create("http://localhost:8080/"), Mode.TEST);
-        Assert.assertNotNull(client.fetchCertificate(
-                ParticipantIdentifier.of("991825827"), ProcessIdentifier.of("some:process")));
+
+        X509Certificate certificate = client.fetchCertificate(
+                ParticipantIdentifier.of("9908:991825827"),
+                ProcessIdentifier.of("urn:www.cenbii.eu:profile:bii01:ver2.0", Scheme.of("busdox-procid-ubl"))
+        );
+
+        Assert.assertNotNull(certificate);
+
+        System.out.println(certificate.getSubjectX500Principal());
     }
 }

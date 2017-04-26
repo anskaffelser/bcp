@@ -84,7 +84,7 @@ public class BusinessCertificateClient {
                                             ProcessIdentifier processIdentifier)
             throws VirksertClientException {
         URI currentUri = uri.resolve(String.format("api/v1/%s/%s",
-                participantIdentifier.urlencoded(), processIdentifier.getIdentifier()));
+                participantIdentifier.urlencoded(), processIdentifier.urlencoded()));
 
         try {
             HttpURLConnection connection = (HttpURLConnection) currentUri.toURL().openConnection();
