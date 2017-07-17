@@ -47,7 +47,7 @@ public class BusinessCertificateValidatorTest {
         businessCertificateValidator = BusinessCertificateValidator.of(Mode.TEST);
     }
 
-    @Test
+    @Test(enabled = false)
     public void simpleTest() throws Exception {
         Assert.assertNotNull(businessCertificateValidator.getValidator());
 
