@@ -19,8 +19,10 @@
   ~ See the Licence for the specific language governing
   ~ permissions and limitations under the Licence.
   -->
+<ValidatorRecipe xmlns="http://difi.no/xsd/certvalidator/1.0" name="virksert-norway-test" version="2017-07-17">
 
-<ValidatorRecipe xmlns="http://difi.no/xsd/certvalidator/1.0" name="virksert-norway-test" version="2017-03-07">
+    <!-- Rules for Commfides are degraded to make issued certificates pass. -->
+
     <Validator>
         <Expiration millis="0"/>
         <Signing type="PUBLIC_SIGNED"/>
@@ -31,21 +33,37 @@
         <CriticalExtensionRequired>
             <Value>2.5.29.15</Value>
         </CriticalExtensionRequired>
-        <Chain>
-            <RootBucketReference>root</RootBucketReference>
-            <IntermediateBucketReference>intermediate</IntermediateBucketReference>
-            <Policy>2.16.578.1.26.1.3.5</Policy>
-            <Policy>2.16.578.1.29.13.1.1.0</Policy>
-            <Policy>2.16.578.1.26.1.3.2</Policy>
-            <Policy>2.16.578.1.26.1.0.3.2</Policy>
-            <Policy>2.16.578.1.29.913.1.1.0</Policy>
-            <Policy>2.16.578.1.1.1.1.100</Policy>
-        </Chain>
+        <Junction type="OR">
+            <Junction type="AND">
+                <PrincipleName field="O" principal="ISSUER">
+                    <Value>Commfides Norge AS - 988 312 495</Value>
+                </PrincipleName>
+                <Chain>
+                    <RootBucketReference>root</RootBucketReference>
+                    <IntermediateBucketReference>intermediate</IntermediateBucketReference>
+                </Chain>
+            </Junction>
+            <Chain>
+                <RootBucketReference>root</RootBucketReference>
+                <IntermediateBucketReference>intermediate</IntermediateBucketReference>
+                <Policy>2.16.578.1.26.1.3.5</Policy>
+                <Policy>2.16.578.1.29.13.1.1.0</Policy>
+                <Policy>2.16.578.1.26.1.3.2</Policy>
+                <Policy>2.16.578.1.26.1.0.3.2</Policy>
+                <Policy>2.16.578.1.29.913.1.1.0</Policy>
+                <Policy>2.16.578.1.1.1.1.100</Policy>
+            </Chain>
+        </Junction>
         <Class>no.difi.certvalidator.extra.NorwegianOrganizationNumberRule</Class>
         <CRL/>
-        <OCSP>
-            <IntermediateBucketReference>intermediate</IntermediateBucketReference>
-        </OCSP>
+        <Junction type="OR">
+            <PrincipleName field="O" principal="ISSUER">
+                <Value>Commfides Norge AS - 988 312 495</Value>
+            </PrincipleName>
+            <OCSP>
+                <IntermediateBucketReference>intermediate</IntermediateBucketReference>
+            </OCSP>
+        </Junction>
     </Validator>
 
     <CertificateBucket name="root">

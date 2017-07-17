@@ -37,19 +37,18 @@ import java.security.cert.X509Certificate;
  */
 public class BusinessCertificateValidatorTest {
 
-    private X509Certificate certificate;
-
     private BusinessCertificateValidator businessCertificateValidator;
 
     @BeforeClass
     public void beforeClass() throws CertificateValidationException, BusinessCertificateException {
-        certificate = Validator.getCertificate(getClass().getResourceAsStream("/bc-test-difi.cer"));
         businessCertificateValidator = BusinessCertificateValidator.of(Mode.TEST);
     }
 
-    @Test(enabled = false)
-    public void simpleTest() throws Exception {
+    @Test
+    public void simpleDifi() throws Exception {
         Assert.assertNotNull(businessCertificateValidator.getValidator());
+
+        X509Certificate certificate = Validator.getCertificate(getClass().getResourceAsStream("/bc-test-difi.cer"));
 
         businessCertificateValidator.validate(certificate);
         businessCertificateValidator.validate(certificate.getEncoded());
