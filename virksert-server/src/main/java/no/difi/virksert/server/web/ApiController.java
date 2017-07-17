@@ -26,6 +26,7 @@ import no.difi.vefa.peppol.common.api.QualifiedIdentifier;
 import no.difi.vefa.peppol.common.lang.PeppolParsingException;
 import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.difi.vefa.peppol.common.model.ProcessIdentifier;
+import no.difi.virksert.api.Role;
 import no.difi.virksert.jaxb.v1.model.*;
 import no.difi.virksert.server.domain.Certificate;
 import no.difi.virksert.server.domain.Participant;
@@ -41,6 +42,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.JAXBContext;
@@ -112,6 +114,15 @@ public class ApiController {
             method = RequestMethod.GET)
     public void getCertificate(@PathVariable String participantParam, @PathVariable String processParam,
                                HttpServletResponse response) throws IOException, JAXBException, VirksertServerException {
+        getCertificate(participantParam, processParam, Role.REQUEST, response);
+    }
+
+    @RequestMapping(
+            value = "/{participantParam}/{processParam}/{role}",
+            method = RequestMethod.GET)
+    public void getCertificate(@PathVariable String participantParam, @PathVariable String processParam,
+                               @PathVariable Role role, HttpServletResponse response)
+            throws IOException, JAXBException, VirksertServerException {
         try {
             Participant participant = participantService.get(ParticipantIdentifier.parse(participantParam));
             Process process = processService.get(ProcessIdentifier.parse(processParam));
@@ -156,7 +167,7 @@ public class ApiController {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({InvalidInputException.class})
+    @ExceptionHandler({InvalidInputException.class, MethodArgumentTypeMismatchException.class})
     public String handleInvalidInputException(Exception e) {
         return e.getMessage();
     }

@@ -27,6 +27,7 @@ import no.difi.certvalidator.api.CertificateValidationException;
 import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.difi.vefa.peppol.common.model.ProcessIdentifier;
 import no.difi.virksert.api.Mode;
+import no.difi.virksert.api.Role;
 import no.difi.virksert.client.lang.VirksertClientException;
 import no.difi.virksert.jaxb.v1.model.CertificateType;
 import no.difi.virksert.jaxb.v1.model.ParticipantType;
@@ -83,8 +84,15 @@ public class BusinessCertificateClient {
     public X509Certificate fetchCertificate(ParticipantIdentifier participantIdentifier,
                                             ProcessIdentifier processIdentifier)
             throws VirksertClientException {
-        URI currentUri = uri.resolve(String.format("api/v1/%s/%s",
-                participantIdentifier.urlencoded(), processIdentifier.urlencoded()));
+        return fetchCertificate(participantIdentifier, processIdentifier, Role.REQUEST);
+    }
+
+    public X509Certificate fetchCertificate(ParticipantIdentifier participantIdentifier,
+                                            ProcessIdentifier processIdentifier,
+                                            Role role)
+            throws VirksertClientException {
+        URI currentUri = uri.resolve(String.format("api/v1/%s/%s/%s",
+                participantIdentifier.urlencoded(), processIdentifier.urlencoded(), role.name()));
 
         try {
             HttpURLConnection connection = (HttpURLConnection) currentUri.toURL().openConnection();
