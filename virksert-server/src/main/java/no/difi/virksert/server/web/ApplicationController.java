@@ -23,12 +23,13 @@
 package no.difi.virksert.server.web;
 
 import no.difi.virksert.server.domain.Application;
+import no.difi.virksert.server.domain.User;
 import no.difi.virksert.server.form.ApplicationForm;
 import no.difi.virksert.server.lang.VirksertServerException;
-import no.difi.virksert.server.security.VirksertAuthenticationToken;
 import no.difi.virksert.server.service.ApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -41,6 +42,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * @author erlend
  */
 @Controller
+@PreAuthorize("hasAnyAuthority('USER')")
 @RequestMapping("/application")
 public class ApplicationController {
 
@@ -48,10 +50,8 @@ public class ApplicationController {
     private ApplicationService applicationService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String list(VirksertAuthenticationToken authentication, ModelMap modelMap) {
-        System.out.println(authentication);
-
-        modelMap.put("list", applicationService.findByParticipant(authentication.getPrincipal().getParticipant()));
+    public String list(@AuthenticationPrincipal User user, ModelMap modelMap) {
+        modelMap.put("list", applicationService.findByParticipant(user.getParticipant()));
 
         return "application/list";
     }
@@ -71,14 +71,17 @@ public class ApplicationController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String addSubmit(@ModelAttribute ApplicationForm form, BindingResult bindingResult, ModelMap modelMap)
+    public String addSubmit(@AuthenticationPrincipal User user, @ModelAttribute ApplicationForm form,
+                            BindingResult bindingResult, ModelMap modelMap)
             throws VirksertServerException {
         if (bindingResult.hasErrors()) {
             modelMap.put("form", form);
             return "application/form";
         }
 
-        applicationService.save(form.update(Application.newInstance()));
+        Application application = form.update(Application.newInstance());
+        application.setParticipant(user.getParticipant());
+        applicationService.save(application);
 
         return "redirect:/application";
     }

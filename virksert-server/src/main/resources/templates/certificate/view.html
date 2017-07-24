@@ -1,4 +1,26 @@
 <!DOCTYPE html>
+<!--
+  ~  Copyright 2017 Norwegian Agency for Public Management and eGovernment (Difi)
+  ~
+  ~  Licensed under the EUPL, Version 1.1 or – as soon they
+  ~  will be approved by the European Commission - subsequent
+  ~  versions of the EUPL (the "Licence");
+  ~
+  ~  You may not use this work except in compliance with the Licence.
+  ~
+  ~  You may obtain a copy of the Licence at:
+  ~
+  ~  https://joinup.ec.europa.eu/community/eupl/og_page/eupl
+  ~
+  ~  Unless required by applicable law or agreed to in
+  ~  writing, software distributed under the Licence is
+  ~  distributed on an "AS IS" basis,
+  ~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+  ~  express or implied.
+  ~  See the Licence for the specific language governing
+  ~  permissions and limitations under the Licence.
+  -->
+
 <html layout:decorator="layout" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org">
 <body>
@@ -7,16 +29,13 @@
 
     <ol class="breadcrumb">
         <li><a th:href="@{/}">Home</a></li>
-        <li><a th:href="@{/participant}">Participants</a></li>
-        <li><a th:href="@{/participant/{ps}::{pi}(ps=${participant.scheme}, pi=${participant.identifier})}"
-               th:text="${participant.name}">Participant</a></li>
-        <li><a th:href="@{/participant/{ps}::{pi}/certificate(ps=${participant.scheme}, pi=${participant.identifier})}">Certificates</a>
+        <li><a th:href="@{/certificate}">Certificates</a>
         </li>
         <li class="active" th:text="${certificate.name}">Certificate</li>
     </ol>
 
     <div class="page-header">
-        <a th:href="@{/participant/{ps}::{pi}/certificate/{i}/download(ps=${participant.scheme}, pi=${participant.identifier}, i=${certificate.identifier})}"
+        <a th:href="@{/certificate/{i}/download(i=${certificate.identifier})}"
            class="btn btn-primary pull-right">Download certificate</a>
 
         <h1 th:text="${certificate.name}">Certificate</h1>
@@ -35,7 +54,7 @@
 
     <h2>Connected processes</h2>
 
-    <form th:if="${processesAvailable.size() > 0}" method="post" th:action="@{/participant/{ps}::{pi}/certificate/{i}/connect(ps=${participant.scheme}, pi=${participant.identifier}, i=${certificate.identifier})}" class="form-inline pull-right">
+    <form th:if="${processesAvailable.size() > 0}" method="post" th:action="@{/certificate/{i}/connect(i=${certificate.identifier})}" class="form-inline pull-right">
         <div class="input-group">
             <select name="process" class="form-control" id="process">
                 <option th:each="p : ${processesAvailable}"

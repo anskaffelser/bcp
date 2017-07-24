@@ -1,4 +1,26 @@
 <!DOCTYPE html>
+<!--
+  ~  Copyright 2017 Norwegian Agency for Public Management and eGovernment (Difi)
+  ~
+  ~  Licensed under the EUPL, Version 1.1 or – as soon they
+  ~  will be approved by the European Commission - subsequent
+  ~  versions of the EUPL (the "Licence");
+  ~
+  ~  You may not use this work except in compliance with the Licence.
+  ~
+  ~  You may obtain a copy of the Licence at:
+  ~
+  ~  https://joinup.ec.europa.eu/community/eupl/og_page/eupl
+  ~
+  ~  Unless required by applicable law or agreed to in
+  ~  writing, software distributed under the Licence is
+  ~  distributed on an "AS IS" basis,
+  ~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+  ~  express or implied.
+  ~  See the Licence for the specific language governing
+  ~  permissions and limitations under the Licence.
+  -->
+
 <html layout:decorator="layout" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org">
 <body>
 
@@ -6,10 +28,7 @@
 
     <ol class="breadcrumb">
         <li><a th:href="@{/}">Home</a></li>
-        <li><a th:href="@{/participant}">Participants</a></li>
-        <li><a th:href="@{/participant/{ps}::{pi}(ps=${participant.scheme}, pi=${participant.identifier})}"
-               th:text="${participant.name}">Participant</a></li>
-        <li><a th:href="@{/participant/{ps}::{pi}/certificate(ps=${participant.scheme}, pi=${participant.identifier})}">Certificates</a></li>
+        <li><a th:href="@{/certificate}">Certificates</a></li>
         <li class="active">Upload certificate</li>
     </ol>
 
@@ -18,7 +37,7 @@
         <h1>Upload certificate</h1>
     </div>
 
-    <form method="post" enctype="multipart/form-data" th:action="@{/participant/{ps}::{pi}/certificate/upload(ps=${participant.scheme}, pi=${participant.identifier})}" th:object="${form}" class="form-horizontal">
+    <form method="post" enctype="multipart/form-data" th:action="${#httpServletRequest.requestURI}" th:object="${form}" class="form-horizontal">
 
         <div class="form-group">
             <label for="name" class="col-sm-2 control-label">Internal name</label>

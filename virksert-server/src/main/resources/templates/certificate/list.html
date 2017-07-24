@@ -1,4 +1,26 @@
 <!DOCTYPE html>
+<!--
+  ~  Copyright 2017 Norwegian Agency for Public Management and eGovernment (Difi)
+  ~
+  ~  Licensed under the EUPL, Version 1.1 or – as soon they
+  ~  will be approved by the European Commission - subsequent
+  ~  versions of the EUPL (the "Licence");
+  ~
+  ~  You may not use this work except in compliance with the Licence.
+  ~
+  ~  You may obtain a copy of the Licence at:
+  ~
+  ~  https://joinup.ec.europa.eu/community/eupl/og_page/eupl
+  ~
+  ~  Unless required by applicable law or agreed to in
+  ~  writing, software distributed under the Licence is
+  ~  distributed on an "AS IS" basis,
+  ~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+  ~  express or implied.
+  ~  See the Licence for the specific language governing
+  ~  permissions and limitations under the Licence.
+  -->
+
 <html layout:decorator="layout" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org">
 <body>
@@ -7,9 +29,6 @@
 
     <ol class="breadcrumb">
         <li><a th:href="@{/}">Home</a></li>
-        <li><a th:href="@{/participant}">Participants</a></li>
-        <li><a th:href="@{/participant/{ps}::{pi}(ps=${participant.scheme}, pi=${participant.identifier})}"
-               th:text="${participant.name}">Participant</a></li>
         <li class="active">Certificates</li>
     </ol>
 
@@ -18,8 +37,7 @@
     </div>
 
     <div class="pull-right" sec:authorize="!hasRole('ADMIN')">
-        <a th:href="@{/participant/{ps}::{pi}/certificate/upload(ps=${participant.scheme}, pi=${participant.identifier})}"
-           class="btn btn-default">Upload certificate</a>
+        <a th:href="@{/certificate/upload}" class="btn btn-default">Upload certificate</a>
     </div>
 
     <table class="table table-striped" id="list">
@@ -31,9 +49,10 @@
         <th:block th:each="certificate : ${list}">
             <tr>
                 <td>
-                    <a th:href="@{/participant/{ps}::{pi}/certificate/{i}(ps=${participant.scheme}, pi=${participant.identifier}, i=${certificate.identifier})}"
+                    <a th:href="@{/certificate/{i}(i=${certificate.identifier})}"
                        th:text="${certificate.name}"></a></td>
-                <td th:text="${certificate.serialNumber}"></td></tr>
+                <td th:text="${certificate.serialNumber}"></td>
+            </tr>
         </th:block>
         </tbody>
     </table>
