@@ -35,7 +35,7 @@
     <groupId>no.difi.virksert</groupId>
     <artifactId>virksert-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.9.0-SNAPSHOT</version>
 
     <name>Virksert :: Parent</name>
 
@@ -71,17 +71,17 @@
             <dependency>
                 <groupId>no.difi.virksert</groupId>
                 <artifactId>virksert-common</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>0.9.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>no.difi.virksert</groupId>
                 <artifactId>virksert-client</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>0.9.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>no.difi.virksert</groupId>
                 <artifactId>virksert-server</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>0.9.0-SNAPSHOT</version>
             </dependency>
 
             <!-- Guava -->

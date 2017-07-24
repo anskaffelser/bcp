@@ -27,7 +27,7 @@
     <parent>
         <artifactId>virksert-parent</artifactId>
         <groupId>no.difi.virksert</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <version>0.9.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 

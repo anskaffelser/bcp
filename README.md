@@ -1,1 +1,1 @@
-# VirkSert
+# Business Certificate Publisher (BCP)

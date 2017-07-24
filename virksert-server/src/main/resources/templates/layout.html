@@ -11,22 +11,6 @@
 
     <link th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}" rel="stylesheet"/>
     <style>
-        dd {
-            margin-bottom: 12pt;
-        }
-
-        a.gate {
-            font-size: 15pt;
-            text-align: center;
-            display: block;
-            padding: 10pt;
-        }
-        a.gate span {
-            font-size: 30pt;
-            display: block;
-        }
-    </style>
-    <style>
         .disabled, .disabled a {
             color: #aaa;
         }
@@ -118,7 +102,7 @@
             <ul class="nav nav-pills nav-stacked" sec:authorize="hasAuthority('USER')">
                 <!-- <li th:classappend="${#httpServletRequest.getRequestURI().startsWith('/participant') ? 'active':''}"><a th:href="@{/participant}">Participants</a></li> -->
                 <li th:classappend="${#httpServletRequest.getRequestURI().startsWith('/certificate') ? 'active':''}"><a th:href="@{/certificate}">Certificates</a></li>
-                <li th:classappend="${#httpServletRequest.getRequestURI().startsWith('/application') ? 'active':''}"><a th:href="@{/application}">Application</a></li>
+                <li th:classappend="${#httpServletRequest.getRequestURI().startsWith('/application') ? 'active':''}"><a th:href="@{/application}">Applications</a></li>
                 <li th:classappend="${#httpServletRequest.getRequestURI().startsWith('/process') ? 'active':''}"><a th:href="@{/process}">Processes</a></li>
                 <li th:classappend="${#httpServletRequest.getRequestURI().startsWith('/user') ? 'active':''}"><a th:href="@{/user}">Users</a></li>
             </ul>
