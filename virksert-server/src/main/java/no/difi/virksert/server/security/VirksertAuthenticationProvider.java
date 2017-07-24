@@ -57,7 +57,7 @@ public class VirksertAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public boolean supports(Class<?> aClass) {
-        LOGGER.info("Supports: {}", aClass);
+        // LOGGER.info("Supports: {}", aClass);
         // return VirksertAuthenticationToken.class.equals(aClass);
         return true;
     }
