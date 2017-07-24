@@ -31,7 +31,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface LoginRepository extends CrudRepository<Login, Long> {
 
-    void deleteByRemoteTypeAndRemoteId(Login.Type remoteType, long remoteId);
+    void deleteByUser(User user);
 
     Login findByParticipantAndCode(Participant participant, String code);
 

@@ -41,10 +41,8 @@ public class Login implements Serializable {
     @ManyToOne
     private Participant participant;
 
-    @Enumerated(EnumType.STRING)
-    private Type remoteType;
-
-    private long remoteId;
+    @ManyToOne
+    private User user;
 
     private String code;
 
@@ -66,20 +64,12 @@ public class Login implements Serializable {
         this.participant = participant;
     }
 
-    public Type getRemoteType() {
-        return remoteType;
+    public User getUser() {
+        return user;
     }
 
-    public void setRemoteType(Type remoteType) {
-        this.remoteType = remoteType;
-    }
-
-    public long getRemoteId() {
-        return remoteId;
-    }
-
-    public void setRemoteId(long remoteId) {
-        this.remoteId = remoteId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getCode() {
@@ -102,15 +92,9 @@ public class Login implements Serializable {
     public String toString() {
         return "Login{" +
                 "id=" + id +
-                ", remoteType=" + remoteType +
-                ", remoteId=" + remoteId +
+                ", user=" + user +
                 ", code='" + code + '\'' +
                 ", timestamp=" + timestamp +
                 '}';
-    }
-
-    public enum Type {
-        USER,
-        CERTIFICATE
     }
 }

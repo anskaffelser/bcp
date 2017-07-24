@@ -55,12 +55,11 @@ public class LoginService {
         if (user != null) {
             Login login = new Login();
             login.setCode(UUID.randomUUID().toString());
-            login.setRemoteId(user.getId());
-            login.setRemoteType(Login.Type.USER);
+            login.setUser(user);
             login.setTimestamp(new Date());
             login.setParticipant(participant);
 
-            loginRepository.deleteByRemoteTypeAndRemoteId(login.getRemoteType(), login.getRemoteId());
+            loginRepository.deleteByUser(user);
             loginRepository.save(login);
 
             emailService.send(email, "OTP for Business Certificate Publisher",
@@ -69,19 +68,14 @@ public class LoginService {
     }
 
     @Transactional
-    public Object redeem(Participant participant, String code) {
+    public User redeem(Participant participant, String code) {
         Login login = loginRepository.findByParticipantAndCode(participant, code);
 
         if (login == null)
             return null;
         else {
             loginRepository.delete(login);
-
-            if (login.getRemoteType().equals(Login.Type.USER)) {
-                return userService.findById(login.getRemoteId());
-            } else {
-                return null;
-            }
+            return login.getUser();
         }
     }
 }

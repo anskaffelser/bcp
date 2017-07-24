@@ -69,22 +69,18 @@ public class VirksertAuthenticationProvider implements AuthenticationProvider {
             if (!"admin".equals(authentication.getPrincipal()))
                 participant = participantService.get(ParticipantIdentifier.of((String) authentication.getPrincipal()));
 
-            Object o = loginService.redeem(participant, (String) authentication.getCredentials());
+            User o = loginService.redeem(participant, (String) authentication.getCredentials());
 
-            if (o instanceof User) {
-                List<GrantedAuthority> authorities = new ArrayList<>();
+            List<GrantedAuthority> authorities = new ArrayList<>();
 
-                if (participant == null)
-                    authorities.add(new SimpleGrantedAuthority("ADMIN"));
-                else {
-                    authorities.add(new SimpleGrantedAuthority("USER"));
-                    authorities.add(new SimpleGrantedAuthority(participant.toVefa().toString()));
-                }
-
-                return new UsernamePasswordAuthenticationToken(o, new Date(), authorities);
+            if (participant == null)
+                authorities.add(new SimpleGrantedAuthority("ADMIN"));
+            else {
+                authorities.add(new SimpleGrantedAuthority("USER"));
+                authorities.add(new SimpleGrantedAuthority(participant.toVefa().toString()));
             }
 
-            return null;
+            return new UsernamePasswordAuthenticationToken(o, new Date(), authorities);
         } catch (VirksertServerException e) {
             LOGGER.warn(e.getMessage(), e);
             return null;

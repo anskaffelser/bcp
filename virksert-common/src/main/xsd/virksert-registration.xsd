@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~  Copyright 2017 Norwegian Agency for Public Management and eGovernment (Difi)
+  ~
+  ~  Licensed under the EUPL, Version 1.1 or – as soon they
+  ~  will be approved by the European Commission - subsequent
+  ~  versions of the EUPL (the "Licence");
+  ~
+  ~  You may not use this work except in compliance with the Licence.
+  ~
+  ~  You may obtain a copy of the Licence at:
+  ~
+  ~  https://joinup.ec.europa.eu/community/eupl/og_page/eupl
+  ~
+  ~  Unless required by applicable law or agreed to in
+  ~  writing, software distributed under the Licence is
+  ~  distributed on an "AS IS" basis,
+  ~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+  ~  express or implied.
+  ~  See the Licence for the specific language governing
+  ~  permissions and limitations under the Licence.
+  -->
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:xmldsig="http://www.w3.org/2000/09/xmldsig#"
+           xmlns="urn:fdc:difi.no:2017:virksert:registration"
+           targetNamespace="urn:fdc:difi.no:2017:virksert:registration"
+           elementFormDefault="qualified">
+
+    <xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="xmldsig-core-schema.xsd"/>
+
+    <xs:element name="Registration" type="RegistrationType"/>
+    <xs:complexType name="RegistrationType">
+        <xs:sequence>
+            <xs:element name="Timestamp" type="xs:dateTime"/>
+            <xs:element name="User" type="UserType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="xmldsig:Signature" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="UserType">
+        <xs:sequence>
+            <xs:element name="Name" type="xs:string"/>
+            <xs:element name="Login" type="LoginType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="LoginType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="type" type="xs:string" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+</xs:schema>
