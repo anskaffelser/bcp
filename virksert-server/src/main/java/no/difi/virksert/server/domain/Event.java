@@ -23,6 +23,7 @@
 package no.difi.virksert.server.domain;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * @author erlend
@@ -33,7 +34,9 @@ import javax.persistence.*;
                 @Index(columnList = "timestamp,participant_id")
         }
 )
-public class Event {
+public class Event implements Serializable {
+
+    private static final long serialVersionUID = -6297943985288359917L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

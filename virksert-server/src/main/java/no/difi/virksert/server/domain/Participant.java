@@ -26,6 +26,7 @@ import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.difi.vefa.peppol.common.model.Scheme;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
@@ -35,7 +36,9 @@ import java.util.List;
         },
         uniqueConstraints = @UniqueConstraint(columnNames = {"scheme", "identifier"})
 )
-public class Participant {
+public class Participant implements Serializable {
+
+    private static final long serialVersionUID = -3992726170847867427L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

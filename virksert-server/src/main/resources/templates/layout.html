@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
     <!--/*  Each token will be replaced by their respective titles in the resulting page. */-->
-    <title layout:title-pattern="$CONTENT_TITLE | $DECORATOR_TITLE">Virksomhetssertifikat</title>
+    <title layout:title-pattern="$CONTENT_TITLE | $DECORATOR_TITLE" th:text="${@app.title}">app.title</title>
 
     <link th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}" rel="stylesheet"/>
     <style>
@@ -74,7 +74,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" th:href="@{/}">Virksomhetssertifikat</a>
+            <a class="navbar-brand" th:href="@{/}" th:text="${@app.title}">app.title</a>
         </div>
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">

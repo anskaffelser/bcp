@@ -43,6 +43,7 @@
         <xs:sequence>
             <xs:element name="ParticipantIdentifier" type="IdentifierType"/>
             <xs:element name="ProcessIdentifier" type="IdentifierType"/>
+            <xs:element name="Role" type="RoleType" minOccurs="0"/>
             <xs:element name="Certificate" type="CertificateType" maxOccurs="unbounded"/>
             <xs:element ref="xmldsig:Signature" minOccurs="0"/>
         </xs:sequence>
@@ -64,5 +65,12 @@
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
+
+    <xs:simpleType name="RoleType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="REQUEST"/>
+            <xs:enumeration value="RESPONSE"/>
+        </xs:restriction>
+    </xs:simpleType>
 
 </xs:schema>

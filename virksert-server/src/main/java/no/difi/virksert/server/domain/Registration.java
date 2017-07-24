@@ -25,6 +25,7 @@ package no.difi.virksert.server.domain;
 import no.difi.virksert.api.Role;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * @author erlend
@@ -36,7 +37,9 @@ import javax.persistence.*;
         },
         uniqueConstraints = @UniqueConstraint(columnNames = {"certificate_id", "process_id"})
 )
-public class Registration {
+public class Registration implements Serializable {
+
+    private static final long serialVersionUID = -326289302326969043L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
