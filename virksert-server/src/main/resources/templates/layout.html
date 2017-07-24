@@ -89,7 +89,11 @@
                 </li>
                 <th:block sec:authorize="isAuthenticated()">
                     <li>
-                        <p th:text="${#authentication.principal.name}" class="navbar-text"></p>
+                        <p class="navbar-text">
+                            <span th:text="${#authentication.principal.name}"></span>
+                            <span>@</span>
+                            <span th:text="${#authentication.principal.participant == null ? 'ADMIN' : #authentication.principal.participant.title}"></span>
+                        </p>
                     </li>
                     <li>
                         <form th:action="@{/signout}" method="post">

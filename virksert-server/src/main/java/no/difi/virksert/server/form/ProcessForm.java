@@ -28,9 +28,7 @@ import no.difi.virksert.server.domain.Process;
 /**
  * @author erlend
  */
-public class ProcessForm {
-
-    private boolean exists;
+public class ProcessForm extends AbstractForm {
 
     private String identifier;
 
@@ -43,21 +41,17 @@ public class ProcessForm {
     private Process.Type type = Process.Type.ONE_WAY;
 
     public ProcessForm() {
-        exists = false;
+        super(false);
     }
 
     public ProcessForm(Process process) {
-        exists = true;
+        super(true);
 
         setIdentifier(process.getIdentifier());
         setScheme(process.getScheme());
         setTitle(process.getTitle());
         setDomain(process.getDomain());
         setType(process.getType());
-    }
-
-    public boolean isExists() {
-        return exists;
     }
 
     public String getIdentifier() {

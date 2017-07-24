@@ -20,38 +20,28 @@
  *  permissions and limitations under the Licence.
  */
 
-package no.difi.virksert.server.form;
+package no.difi.virksert.server.security;
 
-import no.difi.virksert.server.domain.Domain;
+import no.difi.virksert.server.domain.User;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+
+import java.util.Collection;
+import java.util.Date;
 
 /**
  * @author erlend
  */
-public class DomainForm extends AbstractForm {
+public class VirksertAuthenticationToken extends UsernamePasswordAuthenticationToken {
 
-    private String title;
+    private static final long serialVersionUID = -5240599738400104675L;
 
-    public DomainForm() {
-        super(false);
+    public VirksertAuthenticationToken(User user, Collection<? extends GrantedAuthority> authorities) {
+        super(user, new Date(), authorities);
     }
 
-    public DomainForm(Domain domain) {
-        super(true);
-
-        setTitle(domain.getTitle());
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public Domain update(Domain domain) {
-        domain.setTitle(getTitle());
-
-        return domain;
+    @Override
+    public User getPrincipal() {
+        return (User) super.getPrincipal();
     }
 }

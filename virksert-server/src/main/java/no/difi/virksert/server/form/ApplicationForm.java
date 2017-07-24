@@ -22,23 +22,23 @@
 
 package no.difi.virksert.server.form;
 
-import no.difi.virksert.server.domain.Domain;
+import no.difi.virksert.server.domain.Application;
 
 /**
  * @author erlend
  */
-public class DomainForm extends AbstractForm {
+public class ApplicationForm extends AbstractForm {
 
     private String title;
 
-    public DomainForm() {
+    public ApplicationForm() {
         super(false);
     }
 
-    public DomainForm(Domain domain) {
+    public ApplicationForm(Application application) {
         super(true);
 
-        setTitle(domain.getTitle());
+        setTitle(application.getTitle());
     }
 
     public String getTitle() {
@@ -49,9 +49,9 @@ public class DomainForm extends AbstractForm {
         this.title = title;
     }
 
-    public Domain update(Domain domain) {
-        domain.setTitle(getTitle());
+    public Application update(Application application) {
+        application.setTitle(getTitle());
 
-        return domain;
+        return application;
     }
 }

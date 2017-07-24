@@ -101,7 +101,6 @@ public class DomainController {
         return "redirect:/domain";
     }
 
-
     @RequestMapping(value = "/{domain}/delete", method = RequestMethod.GET)
     public String deleteForm(@PathVariable Domain domain, ModelMap modelMap) throws VirksertServerException {
         modelMap.put("domain", domain);

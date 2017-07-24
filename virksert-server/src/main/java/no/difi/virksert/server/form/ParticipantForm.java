@@ -26,9 +26,7 @@ import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.difi.virksert.server.domain.Participant;
 import no.difi.virksert.server.domain.Process;
 
-public class ParticipantForm {
-
-    private boolean exists;
+public class ParticipantForm extends AbstractForm {
 
     private String identifier;
 
@@ -37,19 +35,15 @@ public class ParticipantForm {
     private String name;
 
     public ParticipantForm() {
-        exists = false;
+        super(false);
     }
 
     public ParticipantForm(Participant participant) {
-        exists = true;
+        super(true);
 
         setIdentifier(participant.getIdentifier());
         setScheme(participant.getScheme());
         setName(participant.getName());
-    }
-
-    public boolean isExists() {
-        return exists;
     }
 
     public String getIdentifier() {

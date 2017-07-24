@@ -20,38 +20,25 @@
  *  permissions and limitations under the Licence.
  */
 
-package no.difi.virksert.server.form;
+package no.difi.virksert.server.mvc;
 
-import no.difi.virksert.server.domain.Domain;
+import no.difi.virksert.server.domain.Application;
+import no.difi.virksert.server.service.ApplicationService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
 
 /**
  * @author erlend
  */
-public class DomainForm extends AbstractForm {
+@Component
+public class ApplicationConverter implements Converter<String, Application> {
 
-    private String title;
+    @Autowired
+    private ApplicationService applicationService;
 
-    public DomainForm() {
-        super(false);
-    }
-
-    public DomainForm(Domain domain) {
-        super(true);
-
-        setTitle(domain.getTitle());
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public Domain update(Domain domain) {
-        domain.setTitle(getTitle());
-
-        return domain;
+    @Override
+    public Application convert(String s) {
+        return applicationService.get(s);
     }
 }

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html layout:decorator="layout" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<body>
+
+<div layout:fragment="content">
+
+    <ol class="breadcrumb">
+        <li><a th:href="@{/}">Home</a></li>
+        <li class="active">Applications</li>
+    </ol>
+
+    <div class="page-header">
+        <div class="pull-right" sec:authorize="hasAnyAuthority('ADMIN')">
+            <a th:href="@{/application/add}" class="btn btn-link">Add application</a>
+        </div>
+
+        <h1>Application</h1>
+    </div>
+
+    <table class="table table-striped">
+        <thead>
+        <th>Title</th>
+        </thead>
+        <tbody>
+        <th:block th:each="item : ${list}">
+            <tr>
+                <td><a th:text="${item.title}" th:href="@{/application/{identifier}(identifier=${item.identifier})}">Application title</a></td>
+                <td style="text-align: right;">
+                    <a th:href="@{/application/{identifier}/edit(identifier=${item.identifier})}">Edit</a>
+                    |
+                    <a th:href="@{/application/{identifier}/delete(identifier=${item.identifier})}">Delete</a>
+                </td>
+            </tr>
+        </th:block>
+        </tbody>
+    </table>
+
+</div>
+
+</body>
+</html>

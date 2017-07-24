@@ -32,7 +32,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
@@ -40,7 +39,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -59,7 +57,9 @@ public class VirksertAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public boolean supports(Class<?> aClass) {
-        return UsernamePasswordAuthenticationToken.class.equals(aClass);
+        LOGGER.info("Supports: {}", aClass);
+        // return VirksertAuthenticationToken.class.equals(aClass);
+        return true;
     }
 
     @Override
@@ -80,7 +80,7 @@ public class VirksertAuthenticationProvider implements AuthenticationProvider {
                 authorities.add(new SimpleGrantedAuthority(participant.toVefa().toString()));
             }
 
-            return new UsernamePasswordAuthenticationToken(o, new Date(), authorities);
+            return new VirksertAuthenticationToken(o, authorities);
         } catch (VirksertServerException e) {
             LOGGER.warn(e.getMessage(), e);
             return null;

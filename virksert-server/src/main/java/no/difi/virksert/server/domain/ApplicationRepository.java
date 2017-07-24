@@ -20,38 +20,21 @@
  *  permissions and limitations under the Licence.
  */
 
-package no.difi.virksert.server.form;
+package no.difi.virksert.server.domain;
 
-import no.difi.virksert.server.domain.Domain;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * @author erlend
  */
-public class DomainForm extends AbstractForm {
+@Repository
+public interface ApplicationRepository extends CrudRepository<Application, Long> {
 
-    private String title;
+    Application findByIdentifier(String identifier);
 
-    public DomainForm() {
-        super(false);
-    }
+    List<Application> findByParticipant(Participant participant);
 
-    public DomainForm(Domain domain) {
-        super(true);
-
-        setTitle(domain.getTitle());
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public Domain update(Domain domain) {
-        domain.setTitle(getTitle());
-
-        return domain;
-    }
 }

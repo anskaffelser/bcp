@@ -22,36 +22,18 @@
 
 package no.difi.virksert.server.form;
 
-import no.difi.virksert.server.domain.Domain;
-
 /**
  * @author erlend
  */
-public class DomainForm extends AbstractForm {
+abstract class AbstractForm {
 
-    private String title;
+    private boolean exists;
 
-    public DomainForm() {
-        super(false);
+    public AbstractForm(boolean exists) {
+        this.exists = exists;
     }
 
-    public DomainForm(Domain domain) {
-        super(true);
-
-        setTitle(domain.getTitle());
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public Domain update(Domain domain) {
-        domain.setTitle(getTitle());
-
-        return domain;
+    public boolean isExists() {
+        return exists;
     }
 }
