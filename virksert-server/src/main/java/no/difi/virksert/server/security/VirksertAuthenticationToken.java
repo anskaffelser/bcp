@@ -22,12 +22,16 @@
 
 package no.difi.virksert.server.security;
 
+import no.difi.virksert.server.domain.Participant;
 import no.difi.virksert.server.domain.User;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author erlend
@@ -36,6 +40,10 @@ public class VirksertAuthenticationToken extends UsernamePasswordAuthenticationT
 
     private static final long serialVersionUID = -5240599738400104675L;
 
+    public static VirksertAuthenticationToken newInstance(User user) {
+        return new VirksertAuthenticationToken(user, createGrantedAuthorities(user, user.getParticipant()));
+    }
+
     public VirksertAuthenticationToken(User user, Collection<? extends GrantedAuthority> authorities) {
         super(user, new Date(), authorities);
     }
@@ -43,5 +51,21 @@ public class VirksertAuthenticationToken extends UsernamePasswordAuthenticationT
     @Override
     public User getPrincipal() {
         return (User) super.getPrincipal();
+    }
+
+    protected static List<GrantedAuthority> createGrantedAuthorities(User user, Participant participant) {
+        List<GrantedAuthority> authorities = new ArrayList<>();
+
+        if (participant == null)
+            authorities.add(new SimpleGrantedAuthority("ADMIN"));
+        else {
+            authorities.add(new SimpleGrantedAuthority("USER"));
+            authorities.add(new SimpleGrantedAuthority(participant.toVefa().toString()));
+        }
+
+        if (user instanceof MasqueradeUser)
+            authorities.add(new SimpleGrantedAuthority("MASQUERADE"));
+
+        return authorities;
     }
 }

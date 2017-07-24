@@ -92,11 +92,16 @@
                         <p class="navbar-text">
                             <span th:text="${#authentication.principal.name}"></span>
                             <span>@</span>
-                            <span th:text="${#authentication.principal.participant == null ? 'ADMIN' : #authentication.principal.participant.title}"></span>
+                            <span th:text="${#authentication.principal.participant == null ? 'ADMIN' : #authentication.principal.participant.name}"></span>
                         </p>
                     </li>
-                    <li>
+                    <li sec:authorize="!hasAnyAuthority('MASQUERADE')">
                         <form th:action="@{/signout}" method="post">
+                            <button type="submit" class="btn btn-warning navbar-btn">Sign out</button>
+                        </form>
+                    </li>
+                    <li sec:authorize="hasAnyAuthority('MASQUERADE')">
+                        <form th:action="@{/masquerade/back}" method="get">
                             <button type="submit" class="btn btn-warning navbar-btn">Sign out</button>
                         </form>
                     </li>

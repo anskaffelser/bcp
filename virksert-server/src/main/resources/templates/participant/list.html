@@ -22,12 +22,16 @@
         <thead>
         <th style="width: 25%;">Identifier</th>
         <th>Title</th>
+        <th style="width: 20%;">&nbsp;</th>
         </thead>
         <tbody>
         <th:block th:each="participant : ${list}">
             <tr>
                 <td th:text="${participant.identifier}"></td>
                 <td><a th:text="${participant.name}" th:href="@{/participant/{scheme}::{identifier}(scheme=${participant.scheme}, identifier=${participant.identifier})}">Participant name</a></td>
+                <td style="text-align: right;">
+                    <a th:href="@{/masquerade/perform/{scheme}::{identifier}(scheme=${participant.scheme}, identifier=${participant.identifier})}">Masquerade</a>
+                </td>
             </tr>
         </th:block>
         </tbody>
