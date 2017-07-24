@@ -48,20 +48,6 @@ public class ProcessService {
     @Autowired
     private ProcessRepository processRepository;
 
-    @PostConstruct
-    public void postConstruct() {
-        if (processRepository.count() > 0)
-            return;
-
-        save(new Process("busdox-procid-ubl", "urn:www.cenbii.eu:profile:bii01:ver2.0", "Catalogue Only", Process.Type.ONE_WAY));
-        save(new Process("busdox-procid-ubl", "urn:www.cenbii.eu:profile:bii03:ver2.0", "Order Only", Process.Type.ONE_WAY));
-        save(new Process("busdox-procid-ubl", "urn:www.cenbii.eu:profile:bii04:ver2.0", "Invoice", Process.Type.ONE_WAY));
-        save(new Process("busdox-procid-ubl", "urn:www.cenbii.eu:profile:bii05:ver2.0", "Billing", Process.Type.ONE_WAY));
-        save(new Process("busdox-procid-ubl", "urn:www.cenbii.eu:profile:bii28:ver2.0", "Ordering", Process.Type.TWO_WAY));
-        save(new Process("busdox-procid-ubl", "urn:www.cenbii.eu:profile:bii30:ver2.0", "Despatch Advice", Process.Type.TWO_WAY));
-        save(new Process("busdox-procid-ubl", "urn:www.cenbii.eu:profile:biixx:ver2.0", "Credit Note Only", Process.Type.ONE_WAY));
-    }
-
     public Process get(ProcessIdentifier processIdentifier) throws ProcessNotFoundException {
         return Optional.ofNullable(processRepository.findByIdentifierAndScheme(
                 processIdentifier.getIdentifier(), processIdentifier.getScheme().getValue()))
@@ -73,7 +59,7 @@ public class ProcessService {
     }
 
     public Page<Process> findAll(int page) {
-        return processRepository.findAll(new PageRequest(page, 20, Sort.Direction.ASC, "scheme", "identifier"));
+        return processRepository.findAll(new PageRequest(page, 20, Sort.Direction.ASC, "domain.title", "title"));
     }
 
     public List<Process> findByCertificate(Certificate certificate) {

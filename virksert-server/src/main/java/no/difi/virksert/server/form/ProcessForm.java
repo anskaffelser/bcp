@@ -22,6 +22,7 @@
 
 package no.difi.virksert.server.form;
 
+import no.difi.virksert.server.domain.Domain;
 import no.difi.virksert.server.domain.Process;
 
 /**
@@ -37,6 +38,8 @@ public class ProcessForm {
 
     private String title;
 
+    private Domain domain;
+
     private Process.Type type = Process.Type.ONE_WAY;
 
     public ProcessForm() {
@@ -49,6 +52,7 @@ public class ProcessForm {
         setIdentifier(process.getIdentifier());
         setScheme(process.getScheme());
         setTitle(process.getTitle());
+        setDomain(process.getDomain());
         setType(process.getType());
     }
 
@@ -80,6 +84,14 @@ public class ProcessForm {
         this.title = title;
     }
 
+    public Domain getDomain() {
+        return domain;
+    }
+
+    public void setDomain(Domain domain) {
+        this.domain = domain;
+    }
+
     public Process.Type getType() {
         return type;
     }
@@ -92,6 +104,7 @@ public class ProcessForm {
         process.setIdentifier(getIdentifier());
         process.setScheme(getScheme());
         process.setTitle(getTitle());
+        process.setDomain(getDomain());
         process.setType(getType());
 
         return process;

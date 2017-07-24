@@ -26,6 +26,34 @@
             display: block;
         }
     </style>
+    <style>
+        .disabled, .disabled a {
+            color: #aaa;
+        }
+        .nav-pills {
+            padding-bottom: 10pt;
+            margin-bottom: 10pt;
+            border-bottom: 1px solid #ddd;
+        }
+        dd {
+            margin-bottom: 10pt;
+        }
+        dl {
+            margin-bottom: 40pt;
+        }
+        .wrappable {
+            word-break: break-all;
+            word-wrap: break-word;
+        }
+        input[type="checkbox"] {
+            transform:scale(2, 2);
+            margin: 5pt 0;
+        }
+        .form-group-lg .checkbox {
+            font-size: 18px;
+            margin: 5pt 0 5pt 5pt;
+        }
+    </style>
     <th:block layout:fragment="style"/>
 
     <!--[if lt IE 9]>
@@ -36,8 +64,8 @@
 <body>
 
 <nav class="navbar navbar-default">
-    <div class="container">
-        <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="container-fluid">
+        <!--/* Brand and toggle get grouped for better mobile display */-->
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
                     data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
@@ -46,21 +74,22 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" th:href="@{/}" href="#">Virksomhetssertifikat</a>
+            <a class="navbar-brand" th:href="@{/}">Virksomhetssertifikat</a>
         </div>
 
-        <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav">
-                <!-- <ul sec:authorize="isAuthenticated()" class="nav navbar-nav"> -->
-                <li th:classappend="${#httpServletRequest.getRequestURI() == '/participant' ? 'active':''}"><a th:href="@{/participant}">Participants</a></li>
-                <li th:classappend="${#httpServletRequest.getRequestURI() == '/process' ? 'active':''}"><a th:href="@{/process}">Processes</a></li>
-                <li th:classappend="${#httpServletRequest.getRequestURI() == '/user' ? 'active':''}" sec:authorize="hasAnyAuthority('ADMIN')"><a th:href="@{/user}">Users</a></li>
+            <ul class="nav navbar-nav" sec:authorize="isAnonymous()">
+                <li th:classappend="${#httpServletRequest.getRequestURI().startsWith('/process') ? 'active':''}"><a th:href="@{/process}">Processes</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
+                <li sec:authorize="isAnonymous()">
+                    <form th:action="@{/signin}" method="get">
+                        <button type="submit" class="btn btn-warning navbar-btn">Sign in</button>
+                    </form>
+                </li>
                 <th:block sec:authorize="isAuthenticated()">
                     <li>
-                        <p th:text="${#authentication.name}" class="navbar-text"></p>
+                        <p th:text="${#authentication.principal.name}" class="navbar-text"></p>
                     </li>
                     <li>
                         <form th:action="@{/signout}" method="post">
@@ -68,22 +97,52 @@
                         </form>
                     </li>
                 </th:block>
-                <li sec:authorize="isAnonymous()">
-                    <form th:action="@{/signin}" method="get">
-                        <button type="submit" class="btn btn-primary navbar-btn">Sign in</button>
-                    </form>
-                </li>
             </ul>
         </div>
     </div>
 </nav>
 
-<div class="container" layout:fragment="content">
+<div id="main" class="container-fluid" sec:authorize="isAuthenticated()">
+    <div class="row">
+        <div class="col-md-2 col-sm-3" style="padding-left: 0;">
+
+            <ul class="nav nav-pills nav-stacked" sec:authorize="hasAuthority('USER')">
+                <!-- <li th:classappend="${#httpServletRequest.getRequestURI().startsWith('/participant') ? 'active':''}"><a th:href="@{/participant}">Participants</a></li> -->
+                <li th:classappend="${#httpServletRequest.getRequestURI().startsWith('/certificate') ? 'active':''}"><a th:href="@{/certificate}">Certificates</a></li>
+                <li th:classappend="${#httpServletRequest.getRequestURI().startsWith('/application') ? 'active':''}"><a th:href="@{/application}">Application</a></li>
+                <li th:classappend="${#httpServletRequest.getRequestURI().startsWith('/process') ? 'active':''}"><a th:href="@{/process}">Processes</a></li>
+                <li th:classappend="${#httpServletRequest.getRequestURI().startsWith('/user') ? 'active':''}"><a th:href="@{/user}">Users</a></li>
+            </ul>
+
+            <ul class="nav nav-pills nav-stacked" sec:authorize="hasAuthority('ADMIN')">
+                <li th:classappend="${#httpServletRequest.getRequestURI().startsWith('/participant') ? 'active':''}"><a th:href="@{/participant}">Participants</a></li>
+                <li th:classappend="${#httpServletRequest.getRequestURI().startsWith('/domain') ? 'active':''}"><a th:href="@{/domain}">Domains</a></li>
+                <li th:classappend="${#httpServletRequest.getRequestURI().startsWith('/process') ? 'active':''}"><a th:href="@{/process}">Processes</a></li>
+                <li th:classappend="${#httpServletRequest.getRequestURI().startsWith('/user') ? 'active':''}"><a th:href="@{/user}">Users</a></li>
+            </ul>
+
+        </div>
+        <div class="col-md-10 col-sm-9">
+            <div layout:fragment="content"></div>
+        </div>
+    </div>
+</div>
+
+<div id="main" class="container" layout:fragment="content" sec:authorize="!isAuthenticated()">
 
 </div>
 
+
 <script th:src="@{/webjars/jquery/1.11.1/jquery.min.js}"></script>
 <script th:src="@{/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js}"></script>
+<script language="JavaScript">
+    jQuery(function($) {
+        /* Set focus on first input element in #main. */
+        var inputs = $("#main input, #main select");
+        if (inputs.size() > 0)
+            inputs.get(0).focus();
+    });
+</script>
 <th:block layout:fragment="script"/>
 
 </body>

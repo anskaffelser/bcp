@@ -1,6 +1,7 @@
 @startuml
 
 class Certificate
+class Domain
 class Event
 class Login
 class Participant
@@ -8,6 +9,7 @@ class Process
 class Registration
 class User
 
+Domain -left-{ "0..n" Process
 Registration "0..n" }-up- Process
 Registration "0..n" }-right- Participant
 Registration "0..n" }-- Certificate

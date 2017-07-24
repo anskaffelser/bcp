@@ -7,7 +7,7 @@
 
     <ol class="breadcrumb">
         <li><a th:href="@{/}">Home</a></li>
-        <li><a th:href="@{/user}">Processes</a></li>
+        <li><a th:href="@{/process}">Processes</a></li>
         <li><a th:href="@{/process/{scheme}::{identifier}(scheme=${process.scheme}, identifier=${process.identifier})}" th:text="${process.title}">Process</a></li>
         <li class="active">Delete process</li>
     </ol>
@@ -16,7 +16,7 @@
         <h1>Delete process</h1>
     </div>
 
-    <p class="lead">Are you sure you want to delete the process <strong th:text="${process.title}">User</strong>?</p>
+    <p class="lead">Are you sure you want to delete the process <strong th:text="${process.title}">Process</strong>?</p>
 
     <form method="post" th:action="${#httpServletRequest.requestURI}" class="form-horizontal">
 

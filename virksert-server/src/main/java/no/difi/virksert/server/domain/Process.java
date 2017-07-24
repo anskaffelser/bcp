@@ -26,6 +26,7 @@ import no.difi.vefa.peppol.common.model.ProcessIdentifier;
 import no.difi.vefa.peppol.common.model.Scheme;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -38,7 +39,9 @@ import java.util.List;
         },
         uniqueConstraints = @UniqueConstraint(columnNames = {"scheme", "identifier"})
 )
-public class Process {
+public class Process implements Serializable {
+
+    private static final long serialVersionUID = 8359063394761561110L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -50,6 +53,9 @@ public class Process {
 
     private String title;
 
+    @ManyToOne
+    private Domain domain;
+
     private Type type = Type.ONE_WAY;
 
     @OneToMany
@@ -59,10 +65,11 @@ public class Process {
     public Process() {
     }
 
-    public Process(String scheme, String identifier, String title, Type type) {
+    public Process(String scheme, String identifier, String title, Domain domain, Type type) {
         this.identifier = identifier;
         this.scheme = scheme;
         this.title = title;
+        this.domain = domain;
         this.type = type;
     }
 
@@ -96,6 +103,14 @@ public class Process {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public Domain getDomain() {
+        return domain;
+    }
+
+    public void setDomain(Domain domain) {
+        this.domain = domain;
     }
 
     public Type getType() {

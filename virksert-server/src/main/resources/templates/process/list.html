@@ -20,21 +20,22 @@
 
     <table class="table table-striped">
         <thead>
-        <th style="width: 15%;">Scheme</th>
-        <th style="width: 25%;">Identifier</th>
         <th>Title</th>
-        <th style="width: 20%;">&nbsp;</th>
+        <th>Domain</th>
+        <th style="width: 25%;">Identifier</th>
+        <th style="width: 20%;" sec:authorize="hasAnyAuthority('ADMIN')">&nbsp;</th>
         </thead>
         <tbody>
         <th:block th:each="process : ${list}">
             <tr>
-                <td th:text="${process.scheme}"></td>
-                <td th:text="${process.identifier}"></td>
                 <td><a th:text="${process.title}"
                        th:href="@{/process/{scheme}::{identifier}(scheme=${process.scheme}, identifier=${process.identifier})}">Process
                     title</a></td>
-                <td style="text-align: right;">
-                    <a th:href="@{/process/{scheme}::{identifier}/edit(scheme=${process.scheme}, identifier=${process.identifier})}">Edit</a> |
+                <td th:text="${process.domain == null ? '' : process.domain.title}"></td>
+                <td><span th:title="${process.scheme}" th:text="${process.identifier}"></span></td>
+                <td style="text-align: right;" sec:authorize="hasAnyAuthority('ADMIN')">
+                    <a th:href="@{/process/{scheme}::{identifier}/edit(scheme=${process.scheme}, identifier=${process.identifier})}">Edit</a>
+                    |
                     <a th:href="@{/process/{scheme}::{identifier}/delete(scheme=${process.scheme}, identifier=${process.identifier})}">Delete</a>
                 </td>
             </tr>

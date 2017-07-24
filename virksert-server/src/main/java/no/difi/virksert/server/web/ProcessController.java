@@ -26,6 +26,7 @@ import no.difi.virksert.server.domain.Process;
 import no.difi.virksert.server.domain.User;
 import no.difi.virksert.server.form.ProcessForm;
 import no.difi.virksert.server.lang.VirksertServerException;
+import no.difi.virksert.server.service.DomainService;
 import no.difi.virksert.server.service.ProcessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -41,6 +42,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/process")
 @PreAuthorize("hasAnyAuthority('ADMIN')")
 public class ProcessController {
+
+    @Autowired
+    private DomainService domainService;
 
     @Autowired
     private ProcessService processService;
@@ -64,6 +68,7 @@ public class ProcessController {
 
     @RequestMapping(value = "/add", method = RequestMethod.GET)
     public String addForm(ModelMap modelMap) {
+        modelMap.put("domains", domainService.findAll());
         modelMap.put("form", new ProcessForm());
 
         return "process/form";
@@ -72,6 +77,7 @@ public class ProcessController {
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public String addSubmit(@ModelAttribute ProcessForm form, BindingResult bindingResult, ModelMap modelMap) {
         if (bindingResult.hasErrors()) {
+            modelMap.put("domains", domainService.findAll());
             modelMap.put("form", form);
             return "process/form";
         }
@@ -83,6 +89,7 @@ public class ProcessController {
 
     @RequestMapping(value = "/{process:.+}/edit", method = RequestMethod.GET)
     public String editForm(@PathVariable Process process, ModelMap modelMap) {
+        modelMap.put("domains", domainService.findAll());
         modelMap.put("form", new ProcessForm(process));
 
         return "process/form";
@@ -91,6 +98,7 @@ public class ProcessController {
     @RequestMapping(value = "/{process:.+}/edit", method = RequestMethod.POST)
     public String editSubmit(@PathVariable Process process, @ModelAttribute ProcessForm form, BindingResult bindingResult, ModelMap modelMap) {
         if (bindingResult.hasErrors()) {
+            modelMap.put("domains", domainService.findAll());
             modelMap.put("form", form);
             return "process/form";
         }
