@@ -22,10 +22,12 @@
 
 package no.difi.virksert.server.domain;
 
+import no.difi.virksert.api.Role;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -33,6 +35,7 @@ import java.util.stream.Stream;
 /**
  * @author erlend
  */
+@Repository
 public interface CertificateRepository extends CrudRepository<Certificate, Long> {
 
     Page<Certificate> findByParticipant(Participant participant, Pageable pageable);
@@ -41,7 +44,7 @@ public interface CertificateRepository extends CrudRepository<Certificate, Long>
 
     int countByParticipant(Participant participant);
 
-    @Query("select r.certificate from Registration r where r.participant = ?1 and r.process = ?2")
-    List<Certificate> findByParticipantAndProcess(Participant participant, Process process);
+    @Query("select r.certificate from Registration r where r.participant = ?1 and r.process = ?2 and r.role = ?3")
+    List<Certificate> findByParticipantAndProcessAndRole(Participant participant, Process process, Role role);
 
 }

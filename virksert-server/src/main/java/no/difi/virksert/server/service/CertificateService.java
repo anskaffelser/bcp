@@ -25,6 +25,7 @@ package no.difi.virksert.server.service;
 import no.difi.certvalidator.Validator;
 import no.difi.certvalidator.api.CertificateValidationException;
 import no.difi.certvalidator.extra.NorwegianOrganizationNumberRule;
+import no.difi.virksert.api.Role;
 import no.difi.virksert.security.BusinessCertificateValidator;
 import no.difi.virksert.server.domain.Certificate;
 import no.difi.virksert.server.domain.CertificateRepository;
@@ -105,9 +106,10 @@ public class CertificateService {
         return certificateRepository.countByParticipant(participant);
     }
 
-    public List<Certificate> findByParticipantAndProcess(Participant participant, Process process)
+    public List<Certificate> findByParticipantAndProcess(Participant participant, Process process, Role role)
             throws NoCertificatesException {
-        List<Certificate> certificates = certificateRepository.findByParticipantAndProcess(participant, process);
+        List<Certificate> certificates = certificateRepository
+                .findByParticipantAndProcessAndRole(participant, process, role);
 
         if (certificates.size() == 0)
             throw new NoCertificatesException("No certificates found.");

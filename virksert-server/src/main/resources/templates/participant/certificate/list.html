@@ -26,7 +26,6 @@
         <thead>
         <th>Internal name</th>
         <th style="width: 25%;">Serial number</th>
-        <th style="width: 10%;">Usage</th>
         </thead>
         <tbody>
         <th:block th:each="certificate : ${list}">
@@ -34,9 +33,7 @@
                 <td>
                     <a th:href="@{/participant/{ps}::{pi}/certificate/{i}(ps=${participant.scheme}, pi=${participant.identifier}, i=${certificate.identifier})}"
                        th:text="${certificate.name}"></a></td>
-                <td th:text="${certificate.serialNumber}"></td>
-                <td th:text="${certificate.registrations.size()}"></td>
-            </tr>
+                <td th:text="${certificate.serialNumber}"></td></tr>
         </th:block>
         </tbody>
     </table>

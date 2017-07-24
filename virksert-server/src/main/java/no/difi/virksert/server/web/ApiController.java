@@ -35,7 +35,6 @@ import no.difi.virksert.server.lang.*;
 import no.difi.virksert.server.service.CertificateService;
 import no.difi.virksert.server.service.ParticipantService;
 import no.difi.virksert.server.service.ProcessService;
-import no.difi.virksert.server.service.RegistrationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,9 +79,6 @@ public class ApiController {
 
     @Autowired
     private ProcessService processService;
-
-    @Autowired
-    private RegistrationService registrationService;
 
     @RequestMapping(
             value = "/{participantParam}",
@@ -131,7 +127,7 @@ public class ApiController {
             processType.setParticipantIdentifier(createIdentifier(participant.toVefa()));
             processType.setProcessIdentifier(createIdentifier(process.toVefa()));
 
-            certificateService.findByParticipantAndProcess(participant, process).stream()
+            certificateService.findByParticipantAndProcess(participant, process, role).stream()
                     .map(ApiController::createCertificate)
                     .forEach(processType.getCertificate()::add);
 
@@ -167,9 +163,15 @@ public class ApiController {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({InvalidInputException.class, MethodArgumentTypeMismatchException.class})
+    @ExceptionHandler({InvalidInputException.class})
     public String handleInvalidInputException(Exception e) {
         return e.getMessage();
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({MethodArgumentTypeMismatchException.class})
+    public String handleConverterException(Exception e) {
+        return "Invalid input.";
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

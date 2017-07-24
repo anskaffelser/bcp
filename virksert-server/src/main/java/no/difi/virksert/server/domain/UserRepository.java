@@ -23,12 +23,14 @@
 package no.difi.virksert.server.domain;
 
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 /**
  * @author erlend
  */
+@Repository
 public interface UserRepository extends CrudRepository<User, Long> {
 
     User findByParticipantAndEmail(Participant participant, String email);

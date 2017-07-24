@@ -35,7 +35,7 @@
 
     <h2>Connected processes</h2>
 
-    <form method="post" th:action="@{/participant/{ps}::{pi}/certificate/{i}/connect(ps=${participant.scheme}, pi=${participant.identifier}, i=${certificate.identifier})}" class="form-inline pull-right">
+    <form th:if="${processesAvailable.size() > 0}" method="post" th:action="@{/participant/{ps}::{pi}/certificate/{i}/connect(ps=${participant.scheme}, pi=${participant.identifier}, i=${certificate.identifier})}" class="form-inline pull-right">
         <div class="input-group">
             <select name="process" class="form-control" id="process">
                 <option th:each="p : ${processesAvailable}"

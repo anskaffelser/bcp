@@ -22,6 +22,8 @@
 
 package no.difi.virksert.server.domain;
 
+import no.difi.virksert.api.Role;
+
 import javax.persistence.*;
 
 /**
@@ -48,6 +50,9 @@ public class Registration {
 
     @ManyToOne
     private Certificate certificate;
+
+    @Enumerated(EnumType.STRING)
+    private Role role = Role.REQUEST;
 
     public long getId() {
         return id;
@@ -79,5 +84,13 @@ public class Registration {
 
     public void setCertificate(Certificate certificate) {
         this.certificate = certificate;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

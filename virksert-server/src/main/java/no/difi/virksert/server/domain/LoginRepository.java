@@ -23,10 +23,12 @@
 package no.difi.virksert.server.domain;
 
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  * @author erlend
  */
+@Repository
 public interface LoginRepository extends CrudRepository<Login, Long> {
 
     void deleteByRemoteTypeAndRemoteId(Login.Type remoteType, long remoteId);

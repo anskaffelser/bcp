@@ -1,0 +1,19 @@
+@startuml
+
+class Certificate
+class Event
+class Login
+class Participant
+class Process
+class Registration
+class User
+
+Registration "0..n" }-up- Process
+Registration "0..n" }-right- Participant
+Registration "0..n" }-- Certificate
+User "0..n" }-- Participant
+Participant --{ "0..n" Certificate
+Participant --{ "0..n" Event
+Participant --{ "0..n" Login
+
+@enduml

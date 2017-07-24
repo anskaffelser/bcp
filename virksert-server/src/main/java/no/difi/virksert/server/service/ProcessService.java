@@ -28,8 +28,6 @@ import no.difi.virksert.server.domain.Participant;
 import no.difi.virksert.server.domain.Process;
 import no.difi.virksert.server.domain.ProcessRepository;
 import no.difi.virksert.server.lang.ProcessNotFoundException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -47,8 +45,6 @@ import java.util.Optional;
 @Service
 public class ProcessService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ProcessService.class);
-
     @Autowired
     private ProcessRepository processRepository;
 
@@ -57,13 +53,13 @@ public class ProcessService {
         if (processRepository.count() > 0)
             return;
 
-        save(new Process("busdox-procid-ubl", "urn:www.cenbii.eu:profile:bii01:ver2.0", "Catalogue Only"));
-        save(new Process("busdox-procid-ubl", "urn:www.cenbii.eu:profile:bii03:ver2.0", "Order Only"));
-        save(new Process("busdox-procid-ubl", "urn:www.cenbii.eu:profile:bii04:ver2.0", "Invoice"));
-        save(new Process("busdox-procid-ubl", "urn:www.cenbii.eu:profile:bii05:ver2.0", "Billing"));
-        save(new Process("busdox-procid-ubl", "urn:www.cenbii.eu:profile:bii28:ver2.0", "Ordering"));
-        save(new Process("busdox-procid-ubl", "urn:www.cenbii.eu:profile:bii30:ver2.0", "Despatch Advice"));
-        save(new Process("busdox-procid-ubl", "urn:www.cenbii.eu:profile:biixx:ver2.0", "Credit Note Only"));
+        save(new Process("busdox-procid-ubl", "urn:www.cenbii.eu:profile:bii01:ver2.0", "Catalogue Only", Process.Type.ONE_WAY));
+        save(new Process("busdox-procid-ubl", "urn:www.cenbii.eu:profile:bii03:ver2.0", "Order Only", Process.Type.ONE_WAY));
+        save(new Process("busdox-procid-ubl", "urn:www.cenbii.eu:profile:bii04:ver2.0", "Invoice", Process.Type.ONE_WAY));
+        save(new Process("busdox-procid-ubl", "urn:www.cenbii.eu:profile:bii05:ver2.0", "Billing", Process.Type.ONE_WAY));
+        save(new Process("busdox-procid-ubl", "urn:www.cenbii.eu:profile:bii28:ver2.0", "Ordering", Process.Type.TWO_WAY));
+        save(new Process("busdox-procid-ubl", "urn:www.cenbii.eu:profile:bii30:ver2.0", "Despatch Advice", Process.Type.TWO_WAY));
+        save(new Process("busdox-procid-ubl", "urn:www.cenbii.eu:profile:biixx:ver2.0", "Credit Note Only", Process.Type.ONE_WAY));
     }
 
     public Process get(ProcessIdentifier processIdentifier) throws ProcessNotFoundException {

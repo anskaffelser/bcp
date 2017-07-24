@@ -23,9 +23,11 @@
 package no.difi.virksert.server.domain;
 
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  * @author erlend
  */
+@Repository
 public interface EventRepository extends CrudRepository<Event, Long> {
 }

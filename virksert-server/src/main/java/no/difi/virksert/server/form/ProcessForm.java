@@ -37,6 +37,8 @@ public class ProcessForm {
 
     private String title;
 
+    private Process.Type type = Process.Type.ONE_WAY;
+
     public ProcessForm() {
         exists = false;
     }
@@ -47,6 +49,7 @@ public class ProcessForm {
         setIdentifier(process.getIdentifier());
         setScheme(process.getScheme());
         setTitle(process.getTitle());
+        setType(process.getType());
     }
 
     public boolean isExists() {
@@ -77,10 +80,19 @@ public class ProcessForm {
         this.title = title;
     }
 
+    public Process.Type getType() {
+        return type;
+    }
+
+    public void setType(Process.Type type) {
+        this.type = type;
+    }
+
     public Process update(Process process) {
         process.setIdentifier(getIdentifier());
         process.setScheme(getScheme());
         process.setTitle(getTitle());
+        process.setType(getType());
 
         return process;
     }

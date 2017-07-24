@@ -50,6 +50,8 @@ public class Process {
 
     private String title;
 
+    private Type type = Type.ONE_WAY;
+
     @OneToMany
     private List<Registration> registrations;
 
@@ -57,10 +59,11 @@ public class Process {
     public Process() {
     }
 
-    public Process(String scheme, String identifier, String title) {
+    public Process(String scheme, String identifier, String title, Type type) {
         this.identifier = identifier;
         this.scheme = scheme;
         this.title = title;
+        this.type = type;
     }
 
     public long getId() {
@@ -95,6 +98,14 @@ public class Process {
         this.title = title;
     }
 
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+
     public ProcessIdentifier toVefa() {
         return ProcessIdentifier.of(identifier, Scheme.of(scheme));
     }
@@ -105,5 +116,10 @@ public class Process {
 
     public void setRegistrations(List<Registration> registrations) {
         this.registrations = registrations;
+    }
+
+    public static enum Type {
+        ONE_WAY,
+        TWO_WAY
     }
 }
