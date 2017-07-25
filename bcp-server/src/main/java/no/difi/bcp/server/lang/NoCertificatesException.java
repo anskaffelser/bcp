@@ -25,7 +25,7 @@ package no.difi.bcp.server.lang;
 /**
  * @author erlend
  */
-public class NoCertificatesException extends VirksertServerException {
+public class NoCertificatesException extends BcpServerException {
 
     public NoCertificatesException(String message) {
         super(message);

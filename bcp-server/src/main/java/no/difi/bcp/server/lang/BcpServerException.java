@@ -25,13 +25,13 @@ package no.difi.bcp.server.lang;
 /**
  * @author erlend
  */
-public class VirksertServerException extends Exception {
+public class BcpServerException extends Exception {
 
-    public VirksertServerException(String message) {
+    public BcpServerException(String message) {
         super(message);
     }
 
-    public VirksertServerException(String message, Throwable cause) {
+    public BcpServerException(String message, Throwable cause) {
         super(message, cause);
     }
 }

@@ -23,8 +23,8 @@
 
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
            xmlns:xmldsig="http://www.w3.org/2000/09/xmldsig#"
-           xmlns="urn:fdc:difi.no:2017:virksert:registration"
-           targetNamespace="urn:fdc:difi.no:2017:virksert:registration"
+           xmlns="urn:fdc:difi.no:2017:bcp:registration"
+           targetNamespace="urn:fdc:difi.no:2017:bcp:registration"
            elementFormDefault="qualified">
 
     <xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="xmldsig-core-schema.xsd"/>

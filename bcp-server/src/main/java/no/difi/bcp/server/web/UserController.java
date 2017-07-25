@@ -24,7 +24,7 @@ package no.difi.bcp.server.web;
 
 import no.difi.bcp.server.domain.User;
 import no.difi.bcp.server.form.UserForm;
-import no.difi.bcp.server.lang.VirksertServerException;
+import no.difi.bcp.server.lang.BcpServerException;
 import no.difi.bcp.server.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -78,14 +78,14 @@ public class UserController {
     }
 
     @RequestMapping(value = "/{identifier}", method = RequestMethod.GET)
-    public String view(@AuthenticationPrincipal User principal, @PathVariable String identifier, ModelMap modelMap) throws VirksertServerException {
+    public String view(@AuthenticationPrincipal User principal, @PathVariable String identifier, ModelMap modelMap) throws BcpServerException {
         modelMap.put("user", userService.findUserByIdentifier(principal.getParticipant(), identifier));
 
         return "user/view";
     }
 
     @RequestMapping(value = "/{identifier}/edit", method = RequestMethod.GET)
-    public String editForm(@AuthenticationPrincipal User principal, @PathVariable String identifier, ModelMap modelMap) throws VirksertServerException {
+    public String editForm(@AuthenticationPrincipal User principal, @PathVariable String identifier, ModelMap modelMap) throws BcpServerException {
         User user = userService.findUserByIdentifier(principal.getParticipant(), identifier);
 
         modelMap.put("form", new UserForm(user));
@@ -96,7 +96,7 @@ public class UserController {
 
     @RequestMapping(value = "/{identifier}/edit", method = RequestMethod.POST)
     public String editSubmit(@AuthenticationPrincipal User principal, @PathVariable String identifier, @Valid UserForm form, BindingResult bindingResult,
-                             ModelMap modelMap) throws VirksertServerException {
+                             ModelMap modelMap) throws BcpServerException {
         User user = userService.findUserByIdentifier(principal.getParticipant(), identifier);
 
         if (bindingResult.hasErrors()) {
@@ -113,7 +113,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/{identifier}/delete", method = RequestMethod.GET)
-    public String deleteForm(@AuthenticationPrincipal User principal, @PathVariable String identifier, ModelMap modelMap) throws VirksertServerException {
+    public String deleteForm(@AuthenticationPrincipal User principal, @PathVariable String identifier, ModelMap modelMap) throws BcpServerException {
         User user = userService.findUserByIdentifier(principal.getParticipant(), identifier);
 
         modelMap.put("user", user);
@@ -122,7 +122,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/{identifier}/delete", method = RequestMethod.POST)
-    public String deleteSubmit(@AuthenticationPrincipal User principal, @PathVariable String identifier, ModelMap modelMap) throws VirksertServerException {
+    public String deleteSubmit(@AuthenticationPrincipal User principal, @PathVariable String identifier, ModelMap modelMap) throws BcpServerException {
         User user = userService.findUserByIdentifier(principal.getParticipant(), identifier);
         userService.delete(user);
 

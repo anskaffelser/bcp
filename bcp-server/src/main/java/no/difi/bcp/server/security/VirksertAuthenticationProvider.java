@@ -25,7 +25,7 @@ package no.difi.bcp.server.security;
 import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.difi.bcp.server.domain.Participant;
 import no.difi.bcp.server.domain.User;
-import no.difi.bcp.server.lang.VirksertServerException;
+import no.difi.bcp.server.lang.BcpServerException;
 import no.difi.bcp.server.service.LoginService;
 import no.difi.bcp.server.service.ParticipantService;
 import org.slf4j.Logger;
@@ -67,7 +67,7 @@ public class VirksertAuthenticationProvider implements AuthenticationProvider {
             User user = loginService.redeem(participant, (String) authentication.getCredentials());
 
             return VirksertAuthenticationToken.newInstance(user);
-        } catch (VirksertServerException e) {
+        } catch (BcpServerException e) {
             LOGGER.warn(e.getMessage(), e);
             return null;
         }

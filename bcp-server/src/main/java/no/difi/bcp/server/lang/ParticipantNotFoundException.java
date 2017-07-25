@@ -27,7 +27,7 @@ import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 /**
  * @author erlend
  */
-public class ParticipantNotFoundException extends VirksertServerException {
+public class ParticipantNotFoundException extends BcpServerException {
 
     public ParticipantNotFoundException(String message) {
         super(message);

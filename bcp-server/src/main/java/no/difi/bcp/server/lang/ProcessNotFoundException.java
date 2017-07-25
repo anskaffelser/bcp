@@ -27,7 +27,7 @@ import no.difi.vefa.peppol.common.model.ProcessIdentifier;
 /**
  * @author erlend
  */
-public class ProcessNotFoundException extends VirksertServerException {
+public class ProcessNotFoundException extends BcpServerException {
 
     public ProcessNotFoundException(String message) {
         super(message);

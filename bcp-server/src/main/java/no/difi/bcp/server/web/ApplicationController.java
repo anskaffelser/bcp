@@ -25,7 +25,7 @@ package no.difi.bcp.server.web;
 import no.difi.bcp.server.domain.Application;
 import no.difi.bcp.server.domain.User;
 import no.difi.bcp.server.form.ApplicationForm;
-import no.difi.bcp.server.lang.VirksertServerException;
+import no.difi.bcp.server.lang.BcpServerException;
 import no.difi.bcp.server.service.ApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -73,7 +73,7 @@ public class ApplicationController {
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public String addSubmit(@AuthenticationPrincipal User user, @ModelAttribute ApplicationForm form,
                             BindingResult bindingResult, ModelMap modelMap)
-            throws VirksertServerException {
+            throws BcpServerException {
         if (bindingResult.hasErrors()) {
             modelMap.put("form", form);
             return "application/form";
@@ -96,7 +96,7 @@ public class ApplicationController {
     @RequestMapping(value = "/{app}/edit", method = RequestMethod.POST)
     public String editSubmit(@PathVariable Application app, @ModelAttribute ApplicationForm form,
                              BindingResult bindingResult, ModelMap modelMap)
-            throws VirksertServerException {
+            throws BcpServerException {
         if (bindingResult.hasErrors()) {
             modelMap.put("form", form);
             return "participant/form";

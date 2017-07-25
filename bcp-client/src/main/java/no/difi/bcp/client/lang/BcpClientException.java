@@ -27,13 +27,13 @@ import no.difi.bcp.lang.BcpException;
 /**
  * @author erlend
  */
-public class VirksertClientException extends BcpException {
+public class BcpClientException extends BcpException {
 
-    public VirksertClientException(String message) {
+    public BcpClientException(String message) {
         super(message);
     }
 
-    public VirksertClientException(String message, Throwable cause) {
+    public BcpClientException(String message, Throwable cause) {
         super(message, cause);
     }
 }

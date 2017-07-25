@@ -24,7 +24,7 @@ package no.difi.bcp.server.web;
 
 import no.difi.bcp.server.domain.Domain;
 import no.difi.bcp.server.form.DomainForm;
-import no.difi.bcp.server.lang.VirksertServerException;
+import no.difi.bcp.server.lang.BcpServerException;
 import no.difi.bcp.server.service.DomainService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -70,7 +70,7 @@ public class DomainController {
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public String addSubmit(@ModelAttribute DomainForm form, BindingResult bindingResult, ModelMap modelMap)
-            throws VirksertServerException {
+            throws BcpServerException {
         if (bindingResult.hasErrors()) {
             modelMap.put("form", form);
             return "participant/form";
@@ -90,7 +90,7 @@ public class DomainController {
 
     @RequestMapping(value = "/{domain}/edit", method = RequestMethod.POST)
     public String editSubmit(@PathVariable Domain domain, @ModelAttribute DomainForm form, BindingResult bindingResult, ModelMap modelMap)
-            throws VirksertServerException {
+            throws BcpServerException {
         if (bindingResult.hasErrors()) {
             modelMap.put("form", form);
             return "participant/form";
@@ -102,14 +102,14 @@ public class DomainController {
     }
 
     @RequestMapping(value = "/{domain}/delete", method = RequestMethod.GET)
-    public String deleteForm(@PathVariable Domain domain, ModelMap modelMap) throws VirksertServerException {
+    public String deleteForm(@PathVariable Domain domain, ModelMap modelMap) throws BcpServerException {
         modelMap.put("domain", domain);
 
         return "domain/delete";
     }
 
     @RequestMapping(value = "/{domain}/delete", method = RequestMethod.POST)
-    public String deleteSubmit(@PathVariable Domain domain) throws VirksertServerException {
+    public String deleteSubmit(@PathVariable Domain domain) throws BcpServerException {
         // processService.delete(domain);
 
         return "redirect:/domain";

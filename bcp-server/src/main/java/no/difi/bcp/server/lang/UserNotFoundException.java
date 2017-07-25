@@ -25,7 +25,7 @@ package no.difi.bcp.server.lang;
 /**
  * @author erlend
  */
-public class UserNotFoundException extends VirksertServerException {
+public class UserNotFoundException extends BcpServerException {
     public UserNotFoundException() {
         this("Unable to find user.");
     }

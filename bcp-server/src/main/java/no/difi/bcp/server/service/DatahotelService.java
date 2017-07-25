@@ -27,7 +27,7 @@ import no.difi.datahotel.client.DatahotelBuilder;
 import no.difi.datahotel.client.Result;
 import no.difi.datahotel.client.lang.DatahotelException;
 import no.difi.bcp.server.lang.RemoteDatasourceException;
-import no.difi.bcp.server.lang.VirksertServerException;
+import no.difi.bcp.server.lang.BcpServerException;
 import no.difi.bcp.server.util.DatahotelOrganization;
 import org.springframework.stereotype.Service;
 
@@ -45,7 +45,7 @@ public class DatahotelService {
     private Datahotel<DatahotelOrganization> underenheter =
             DatahotelBuilder.create(DatahotelOrganization.class, "brreg/underenheter").build();
 
-    public Optional<DatahotelOrganization> findByIdentifier(String identifier) throws VirksertServerException {
+    public Optional<DatahotelOrganization> findByIdentifier(String identifier) throws BcpServerException {
         try {
             Result<DatahotelOrganization> result = enhetsregisteret.field("orgnr", identifier).fetch();
 

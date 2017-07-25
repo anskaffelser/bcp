@@ -25,7 +25,7 @@ package no.difi.bcp.server.lang;
 /**
  * @author erlend
  */
-public class InvalidInputException extends VirksertServerException {
+public class InvalidInputException extends BcpServerException {
 
     public InvalidInputException(String message) {
         super(message);

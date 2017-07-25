@@ -26,7 +26,7 @@ import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.difi.bcp.server.domain.Participant;
 import no.difi.bcp.server.domain.ParticipantRepository;
 import no.difi.bcp.server.lang.ParticipantNotFoundException;
-import no.difi.bcp.server.lang.VirksertServerException;
+import no.difi.bcp.server.lang.BcpServerException;
 import no.difi.bcp.server.util.DatahotelOrganization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -60,7 +60,7 @@ public class ParticipantService {
     }
 
     @Transactional
-    public void save(Participant participant) throws VirksertServerException {
+    public void save(Participant participant) throws BcpServerException {
         if (participant.getId() == 0) {
             if (participant.getIdentifier().startsWith("9908:")) {
                 Optional<DatahotelOrganization> org =

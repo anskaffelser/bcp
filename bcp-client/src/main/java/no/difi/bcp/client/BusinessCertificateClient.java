@@ -23,7 +23,7 @@
 package no.difi.bcp.client;
 
 import com.google.common.io.ByteStreams;
-import no.difi.bcp.client.lang.VirksertClientException;
+import no.difi.bcp.client.lang.BcpClientException;
 import no.difi.certvalidator.api.CertificateValidationException;
 import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.difi.vefa.peppol.common.model.ProcessIdentifier;
@@ -83,14 +83,14 @@ public class BusinessCertificateClient {
 
     public X509Certificate fetchCertificate(ParticipantIdentifier participantIdentifier,
                                             ProcessIdentifier processIdentifier)
-            throws VirksertClientException {
+            throws BcpClientException {
         return fetchCertificate(participantIdentifier, processIdentifier, Role.REQUEST);
     }
 
     public X509Certificate fetchCertificate(ParticipantIdentifier participantIdentifier,
                                             ProcessIdentifier processIdentifier,
                                             Role role)
-            throws VirksertClientException {
+            throws BcpClientException {
         URI currentUri = uri.resolve(String.format("api/v1/%s/%s/%s",
                 participantIdentifier.urlencoded(), processIdentifier.urlencoded(), role.name()));
 
@@ -101,7 +101,7 @@ public class BusinessCertificateClient {
                 case 400:
                 case 404:
                 case 500:
-                    throw new VirksertClientException(new String(ByteStreams.toByteArray(connection.getInputStream())));
+                    throw new BcpClientException(new String(ByteStreams.toByteArray(connection.getInputStream())));
                 case 200:
                     try (InputStream inputStream = connection.getInputStream();
                          BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream)) {
@@ -117,14 +117,14 @@ public class BusinessCertificateClient {
                             }
                         }
 
-                        throw new VirksertClientException("No valid certificate found.");
+                        throw new BcpClientException("No valid certificate found.");
                     }
                 default:
-                    throw new VirksertClientException(String.format(
+                    throw new BcpClientException(String.format(
                             "Unknown error: %s", connection.getResponseMessage()));
             }
         } catch (Exception e) {
-            throw new VirksertClientException(e.getMessage(), e);
+            throw new BcpClientException(e.getMessage(), e);
         }
     }
 }

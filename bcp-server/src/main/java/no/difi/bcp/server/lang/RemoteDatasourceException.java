@@ -25,7 +25,7 @@ package no.difi.bcp.server.lang;
 /**
  * @author erlend
  */
-public class RemoteDatasourceException extends VirksertServerException {
+public class RemoteDatasourceException extends BcpServerException {
 
     public RemoteDatasourceException(String message, Throwable cause) {
         super(message, cause);

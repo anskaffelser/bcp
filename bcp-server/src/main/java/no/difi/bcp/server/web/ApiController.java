@@ -84,7 +84,7 @@ public class ApiController {
             value = "/{participantParam}",
             method = RequestMethod.GET)
     public void listSupportedProcesses(@PathVariable String participantParam, HttpServletResponse response)
-            throws IOException, JAXBException, VirksertServerException {
+            throws IOException, JAXBException, BcpServerException {
         try {
             Participant participant = participantService.get(ParticipantIdentifier.parse(participantParam));
 
@@ -109,7 +109,7 @@ public class ApiController {
             value = "/{participantParam}/{processParam:.+}",
             method = RequestMethod.GET)
     public void getCertificate(@PathVariable String participantParam, @PathVariable String processParam,
-                               HttpServletResponse response) throws IOException, JAXBException, VirksertServerException {
+                               HttpServletResponse response) throws IOException, JAXBException, BcpServerException {
         getCertificate(participantParam, processParam, Role.REQUEST, response);
     }
 
@@ -118,7 +118,7 @@ public class ApiController {
             method = RequestMethod.GET)
     public void getCertificate(@PathVariable String participantParam, @PathVariable String processParam,
                                @PathVariable Role role, HttpServletResponse response)
-            throws IOException, JAXBException, VirksertServerException {
+            throws IOException, JAXBException, BcpServerException {
         try {
             Participant participant = participantService.get(ParticipantIdentifier.parse(participantParam));
             Process process = processService.get(ProcessIdentifier.parse(processParam));

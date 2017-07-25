@@ -24,7 +24,7 @@ package no.difi.bcp.server.web;
 
 import no.difi.bcp.server.domain.Process;
 import no.difi.bcp.server.form.ProcessForm;
-import no.difi.bcp.server.lang.VirksertServerException;
+import no.difi.bcp.server.lang.BcpServerException;
 import no.difi.bcp.server.service.DomainService;
 import no.difi.bcp.server.service.ProcessService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,14 +108,14 @@ public class ProcessController {
     }
 
     @RequestMapping(value = "/{process:.+}/delete", method = RequestMethod.GET)
-    public String deleteForm(@PathVariable Process process, ModelMap modelMap) throws VirksertServerException {
+    public String deleteForm(@PathVariable Process process, ModelMap modelMap) throws BcpServerException {
         modelMap.put("process", process);
 
         return "process/delete";
     }
 
     @RequestMapping(value = "/{process:.+}/delete", method = RequestMethod.POST)
-    public String deleteSubmit(@PathVariable Process process) throws VirksertServerException {
+    public String deleteSubmit(@PathVariable Process process) throws BcpServerException {
         processService.delete(process);
 
         return "redirect:/process";

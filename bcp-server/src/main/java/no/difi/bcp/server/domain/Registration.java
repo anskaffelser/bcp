@@ -35,7 +35,7 @@ import java.io.Serializable;
         indexes = {
                 @Index(columnList = "participant_id,process_id")
         },
-        uniqueConstraints = @UniqueConstraint(columnNames = {"certificate_id", "process_id"})
+        uniqueConstraints = @UniqueConstraint(columnNames = {"certificate_id", "process_id", "role"})
 )
 public class Registration implements Serializable {
 
@@ -53,6 +53,9 @@ public class Registration implements Serializable {
 
     @ManyToOne
     private Certificate certificate;
+
+    @ManyToOne
+    private Application application;
 
     @Enumerated(EnumType.STRING)
     private Role role = Role.REQUEST;
@@ -87,6 +90,14 @@ public class Registration implements Serializable {
 
     public void setCertificate(Certificate certificate) {
         this.certificate = certificate;
+    }
+
+    public Application getApplication() {
+        return application;
+    }
+
+    public void setApplication(Application application) {
+        this.application = application;
     }
 
     public Role getRole() {
