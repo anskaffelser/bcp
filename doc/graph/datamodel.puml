@@ -1,5 +1,6 @@
 @startuml
 
+class Application
 class Certificate
 class Domain
 class Event
@@ -9,13 +10,14 @@ class Process
 class Registration
 class User
 
-Domain -left-{ "0..n" Process
-Registration "0..n" }-up- Process
-Registration "0..n" }-right- Participant
-Registration "0..n" }-- Certificate
-User "0..n" }-- Participant
-Participant --{ "0..n" Certificate
-Participant --{ "0..n" Event
-Participant --{ "0..n" Login
+Domain --{ Process
+Registration }-- Process
+Registration }-- Application
+Application }--{ "uses" Certificate
+Application "customer of" --{ "owned by" Participant
+User }-- Participant
+Participant --{ "owns" Certificate
+Participant --{ Event
+Participant --{ Login
 
 @enduml

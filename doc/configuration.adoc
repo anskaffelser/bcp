@@ -1,0 +1,13 @@
+= Configuration
+
+[rows="1,3", options="header"]
+|===
+| Key | Description
+| bcp.mail.from | Configuration of "From" in email.
+| bcp.mode | Mode to be used. Most usual values are "PRODUCTION" and "TEST"
+| bcp.title | Title of the application.
+|===
+
+.Spring resources
+* link:https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-sql.html#boot-features-configure-datasource[Configuration of DataSource]
+* link:https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-email.html[Configuration of email]

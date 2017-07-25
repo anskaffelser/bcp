@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html layout:decorator="layout" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div layout:fragment="content">
+
+    <div class="page-header">
+        <h1 th:if="${form.exists}">Edit process</h1>
+        <h1 th:if="${!form.exists}">New process</h1>
+    </div>
+
+    <form method="post" th:action="${#httpServletRequest.requestURI}" th:object="${form}" class="form-horizontal">
+
+        <div class="form-group">
+            <label for="identifier" class="col-sm-2 control-label">Identifier</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="identifier" th:field="*{identifier}"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="scheme" class="col-sm-2 control-label">Scheme</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="scheme" th:field="*{scheme}"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="title" class="col-sm-2 control-label">Title</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" id="title" th:field="*{title}"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="domain" class="col-sm-2 control-label">Domain</label>
+            <div class="col-sm-3">
+                <select class="form-control" id="domain" th:field="*{domain}">
+                    <option th:each="item : ${domains}"
+                            th:value="${item.identifier}" th:text="${item.title}">
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="type" class="col-sm-2 control-label">Type</label>
+            <div class="col-sm-3">
+                <select class="form-control" id="type" th:field="*{type}">
+                    <option th:each="state : ${T(no.difi.bcp.server.domain.Process.Type).values()}"
+                            th:value="${{state}}" th:text="${state}">
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+
+    </form>
+
+</div>
+
+</body>
+</html>

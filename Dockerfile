@@ -4,14 +4,14 @@ ADD . $MAVEN_HOME/project
 
 RUN cd $MAVEN_HOME/project \
  && mvn -B clean package -Pdist \
- && mv $MAVEN_HOME/project/target/virksert-server /virksert \
+ && mv $MAVEN_HOME/project/target/bcp-server /bcp \
  && rm -r $MAVEN_HOME/project \
- && mkdir /virksert/conf /virksert/ext /virksert/cache
+ && mkdir /bcp/conf /bcp/ext /bcp/cache
 
-VOLUME /virksert/conf
+VOLUME /bcp/conf
 
 EXPOSE 8080
 
-WORKDIR /virksert
+WORKDIR /bcp
 
-ENTRYPOINT ["sh", "/virksert/bin/run.sh"]
+ENTRYPOINT ["sh", "/bcp/bin/run.sh"]
