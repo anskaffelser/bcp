@@ -15,9 +15,18 @@
         <h1 th:text="${item.title}">Application</h1>
     </div>
 
-    <h2>Certificates</h2>
+    <div th:if="${item.certificates.size() == 0 or true}" class="jumbotron">
+        <h1>Get started!</h1>
+        <p>...</p>
+        <p>
+            <a th:if="${item.certificates.size() == 0}" th:href="@{/application/{identifier}/certificates(identifier=${item.identifier})}" class="btn btn-primary btn-lg" role="button">Choose certificates</a>
+            <a th:href="@{/application/{identifier}/processes(identifier=${item.identifier})}" class="btn btn-primary btn-lg" role="button">Choose processes</a>
+        </p>
+    </div>
 
     <th:block th:if="${item.certificates.size() > 0}">
+        <h2>Certificates</h2>
+
         <div class="pull-right">
             <a th:href="@{/application/{identifier}/certificates(identifier=${item.identifier})}">Choose certificates</a>
         </div>
@@ -38,19 +47,13 @@
         </table>
     </th:block>
 
-    <div th:if="${item.certificates.size() == 0}" class="jumbotron">
-        <h1>Get started!</h1>
-        <p>...</p>
-        <p><a th:href="@{/application/{identifier}/certificates(identifier=${item.identifier})}" class="btn btn-primary btn-lg" role="button">Choose certificates</a></p>
-    </div>
+    <th:block th:if="false">
+        <h2>Processes</h2>
 
-    <h2>Profiles</h2>
-
-    <div class="jumbotron">
-        <h1>Get started!</h1>
-        <p>...</p>
-        <p><a th:href="@{/application/{identifier}/profiles(identifier=${item.identifier})}" class="btn btn-primary btn-lg" role="button">Choose profiles</a></p>
-    </div>
+        <div class="pull-right">
+            <a th:href="@{/application/{identifier}/processes(identifier=${item.identifier})}">Choose processes</a>
+        </div>
+    </th:block>
 
 </div>
 

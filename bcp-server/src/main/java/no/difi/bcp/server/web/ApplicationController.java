@@ -23,22 +23,28 @@
 package no.difi.bcp.server.web;
 
 import no.difi.bcp.server.domain.Application;
+import no.difi.bcp.server.domain.Process;
 import no.difi.bcp.server.domain.User;
 import no.difi.bcp.server.form.ApplicationCertificateForm;
 import no.difi.bcp.server.form.ApplicationForm;
+import no.difi.bcp.server.form.ApplicationProcessForm;
 import no.difi.bcp.server.lang.BcpServerException;
 import no.difi.bcp.server.service.ApplicationService;
 import no.difi.bcp.server.service.CertificateService;
+import no.difi.bcp.server.service.ProcessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import javax.validation.Valid;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * @author erlend
@@ -53,6 +59,9 @@ public class ApplicationController {
 
     @Autowired
     private CertificateService certificateService;
+
+    @Autowired
+    private ProcessService processService;
 
     @RequestMapping(method = RequestMethod.GET)
     public String list(@AuthenticationPrincipal User user, ModelMap modelMap) {
@@ -77,7 +86,7 @@ public class ApplicationController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String addSubmit(@AuthenticationPrincipal User user, @ModelAttribute ApplicationForm form,
+    public String addSubmit(@AuthenticationPrincipal User user, @Valid ApplicationForm form,
                             BindingResult bindingResult, ModelMap modelMap)
             throws BcpServerException {
         if (bindingResult.hasErrors()) {
@@ -102,7 +111,7 @@ public class ApplicationController {
 
     @PreAuthorize("#app.participant.id == principal.participant.id")
     @RequestMapping(value = "/{app}/edit", method = RequestMethod.POST)
-    public String editSubmit(@PathVariable Application app, @ModelAttribute ApplicationForm form,
+    public String editSubmit(@PathVariable Application app, @Valid ApplicationForm form,
                              BindingResult bindingResult, ModelMap modelMap) {
         if (bindingResult.hasErrors()) {
             modelMap.put("form", form);
@@ -126,7 +135,7 @@ public class ApplicationController {
 
     @PreAuthorize("#app.participant.id == principal.participant.id")
     @RequestMapping(value = "/{app}/certificates", method = RequestMethod.POST)
-    public String certificatesSubmit(@PathVariable Application app, @ModelAttribute ApplicationCertificateForm form,
+    public String certificatesSubmit(@PathVariable Application app, @Valid ApplicationCertificateForm form,
                                      BindingResult bindingResult, ModelMap modelMap) {
         if (bindingResult.hasErrors()) {
             modelMap.put("form", form);
@@ -138,5 +147,28 @@ public class ApplicationController {
         applicationService.save(form.update(app));
 
         return String.format("redirect:/application/%s", app.getIdentifier());
+    }
+
+    @RequestMapping(value = "/{app}/processes", method = RequestMethod.GET)
+    public String processesForm(@PathVariable Application app, ModelMap modelMap) {
+        modelMap.put("form", new ApplicationProcessForm());
+        modelMap.put("item", app);
+        modelMap.put("list", processService.findAll()/*.stream()
+                .collect(Collectors.toMap(Process::getDomain, Function.identity()))*/);
+
+        return "application/processes";
+    }
+
+    @RequestMapping(value = "/{app}/processes", method = RequestMethod.POST)
+    public String processesSubmit(@PathVariable Application app, @Valid ApplicationProcessForm form,
+                                  BindingResult bindingResult, ModelMap modelMap) {
+        modelMap.put("form", form);
+        modelMap.put("item", app);
+        modelMap.put("list", processService.findAll()/*.stream()
+                .collect(Collectors.toMap(Process::getDomain, Function.identity()))*/);
+
+        System.out.println(form.getProcesses());
+
+        return "application/processes";
     }
 }

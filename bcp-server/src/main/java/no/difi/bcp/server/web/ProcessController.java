@@ -32,7 +32,12 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.validation.Valid;
 
 /**
  * @author erlend
@@ -74,7 +79,7 @@ public class ProcessController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String addSubmit(@ModelAttribute ProcessForm form, BindingResult bindingResult, ModelMap modelMap) {
+    public String addSubmit(@Valid ProcessForm form, BindingResult bindingResult, ModelMap modelMap) {
         if (bindingResult.hasErrors()) {
             modelMap.put("domains", domainService.findAll());
             modelMap.put("form", form);
@@ -95,7 +100,7 @@ public class ProcessController {
     }
 
     @RequestMapping(value = "/{process:.+}/edit", method = RequestMethod.POST)
-    public String editSubmit(@PathVariable Process process, @ModelAttribute ProcessForm form, BindingResult bindingResult, ModelMap modelMap) {
+    public String editSubmit(@PathVariable Process process, @Valid ProcessForm form, BindingResult bindingResult, ModelMap modelMap) {
         if (bindingResult.hasErrors()) {
             modelMap.put("domains", domainService.findAll());
             modelMap.put("form", form);

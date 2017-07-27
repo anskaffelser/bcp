@@ -10,14 +10,15 @@ class Process
 class Registration
 class User
 
-Domain --{ Process
-Registration }-- Process
+Domain -left-{ Process
+Registration }-right- Process
 Registration }-- Application
 Application }--{ "uses" Certificate
 Application "customer of" --{ "owned by" Participant
-User }-- Participant
 Participant --{ "owns" Certificate
 Participant --{ Event
-Participant --{ Login
+Participant -right-{ Login
+Participant --{ User
+Login "0..1" -- User
 
 @enduml

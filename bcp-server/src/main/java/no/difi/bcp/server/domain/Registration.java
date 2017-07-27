@@ -23,6 +23,7 @@
 package no.difi.bcp.server.domain;
 
 import no.difi.bcp.api.Role;
+import no.difi.bcp.server.form.ApplicationProcessForm;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -106,5 +107,9 @@ public class Registration implements Serializable {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public ApplicationProcessForm.ProcessSet toProcessSet() {
+        return new ApplicationProcessForm.ProcessSet(process, role);
     }
 }

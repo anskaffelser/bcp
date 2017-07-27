@@ -31,11 +31,11 @@
         <li><a th:href="@{/}">Home</a></li>
         <li><a th:href="@{/application}">Applications</a></li>
         <li><a th:href="@{/application/{identifier}(identifier=${item.identifier})}" th:text="${item.title}">Application</a></li>
-        <li class="active">Update certificates</li>
+        <li class="active">Choose certificates</li>
     </ol>
 
     <div class="page-header">
-        <h1>Update certificates</h1>
+        <h1>Choose certificates</h1>
     </div>
 
     <form method="post" th:action="${#httpServletRequest.requestURI}" th:object="${form}" class="form-horizontal">

@@ -36,6 +36,8 @@ import java.util.List;
 @Repository
 public interface ProcessRepository extends CrudRepository<Process, Long> {
 
+    Process findByIdentifier(String identifier);
+
     Process findByIdentifierAndScheme(String identifier, String Scheme);
 
     Page<Process> findAll(Pageable pageable);

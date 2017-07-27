@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html layout:decorator="layout" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div layout:fragment="content">
+
+    <ol class="breadcrumb">
+        <li><a th:href="@{/}">Home</a></li>
+        <li><a th:href="@{/application}">Applications</a></li>
+        <li><a th:href="@{/application/{identifier}(identifier=${item.identifier})}"
+               th:text="${item.title}">Application</a></li>
+        <li class="active">Choose processes</li>
+    </ol>
+
+    <div class="page-header">
+        <h1>Choose processes</h1>
+    </div>
+
+    <form method="post" th:action="${#httpServletRequest.requestURI}" th:object="${form}">
+
+        <table th:if="${list.size() != 0}" class="table table-striped">
+            <thead>
+            <th>Process</th>
+            <th style="width: 15%;">&nbsp;</th>
+            <th style="width: 15%;">&nbsp;</th>
+            </thead>
+            <tbody>
+            <th:block th:each="proc : ${list}">
+                <tr>
+                    <td><span th:text="${proc.title}" th:title="${proc.identifier}"></span></td>
+                    <td>
+                        <label>
+                            <input type="checkbox" th:field="*{processes}" th:value="${proc.toVefa() + '/' + 'REQUEST'}"/>
+                            REQUEST
+                        </label>
+                    </td>
+                    <td th:if="${proc.type.toString() == 'ONE_WAY'}">&nbsp;</td>
+                    <td th:if="${proc.type.toString() == 'TWO_WAY'}">
+                        <label>
+                            <input type="checkbox" th:field="*{processes}" th:value="${proc.toVefa() + '/' + 'RESPONSE'}"/>
+                            RESPONSE
+                        </label>
+                    </td>
+                </tr>
+            </th:block>
+            </tbody>
+        </table>
+
+        <div class="pull-right">
+            <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+
+    </form>
+
+</div>
+
+</body>
+</html>

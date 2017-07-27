@@ -25,9 +25,14 @@ package no.difi.bcp.server.domain;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * @author erlend
  */
 @Repository
 public interface RegistrationRepository extends CrudRepository<Registration, Long> {
+
+    List<Registration> findByApplication(Application application);
+
 }

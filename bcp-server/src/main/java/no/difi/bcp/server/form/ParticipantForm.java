@@ -24,9 +24,14 @@ package no.difi.bcp.server.form;
 
 import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.difi.bcp.server.domain.Participant;
+import org.hibernate.validator.constraints.NotEmpty;
+
+import javax.validation.constraints.Pattern;
 
 public class ParticipantForm extends AbstractForm {
 
+    @NotEmpty
+    @Pattern(regexp = "[0-9]{4}:[0-9]+")
     private String identifier;
 
     private String scheme = ParticipantIdentifier.DEFAULT_SCHEME.getValue();

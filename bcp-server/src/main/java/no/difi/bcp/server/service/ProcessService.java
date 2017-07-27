@@ -53,6 +53,10 @@ public class ProcessService {
                 .orElseThrow(() -> new ProcessNotFoundException(processIdentifier));
     }
 
+    public Process get(String identifier) {
+        return processRepository.findByIdentifier(identifier);
+    }
+
     public List<Process> findAll() {
         return processRepository.findAll();
     }
