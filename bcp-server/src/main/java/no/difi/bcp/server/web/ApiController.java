@@ -22,19 +22,19 @@
 
 package no.difi.bcp.server.web;
 
-import no.difi.vefa.peppol.common.api.QualifiedIdentifier;
-import no.difi.vefa.peppol.common.lang.PeppolParsingException;
-import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
-import no.difi.vefa.peppol.common.model.ProcessIdentifier;
 import no.difi.bcp.api.Role;
 import no.difi.bcp.jaxb.v1.model.*;
 import no.difi.bcp.server.domain.Certificate;
 import no.difi.bcp.server.domain.Participant;
 import no.difi.bcp.server.domain.Process;
 import no.difi.bcp.server.lang.*;
-import no.difi.bcp.server.service.CertificateService;
 import no.difi.bcp.server.service.ParticipantService;
 import no.difi.bcp.server.service.ProcessService;
+import no.difi.bcp.server.service.RegistrationService;
+import no.difi.vefa.peppol.common.api.QualifiedIdentifier;
+import no.difi.vefa.peppol.common.lang.PeppolParsingException;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
+import no.difi.vefa.peppol.common.model.ProcessIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,13 +72,13 @@ public class ApiController {
     }
 
     @Autowired
-    private CertificateService certificateService;
-
-    @Autowired
     private ParticipantService participantService;
 
     @Autowired
     private ProcessService processService;
+
+    @Autowired
+    private RegistrationService registrationService;
 
     @RequestMapping(
             value = "/{participantParam}",
@@ -91,11 +91,10 @@ public class ApiController {
             ParticipantType participantType = new ParticipantType();
             participantType.setParticipantIdentifier(createIdentifier(participant.toVefa()));
 
-            // TODO
-            /*processService.findByParticipant(participant).stream()
+            registrationService.findProcesses(participant).stream()
                     .map(Process::toVefa)
                     .map(ApiController::createIdentifier)
-                    .forEach(participantType.getProcessReference()::add);*/
+                    .forEach(participantType.getProcessReference()::add);
 
             response.setContentType(MediaType.APPLICATION_XML_VALUE);
 
@@ -128,7 +127,7 @@ public class ApiController {
             processType.setParticipantIdentifier(createIdentifier(participant.toVefa()));
             processType.setProcessIdentifier(createIdentifier(process.toVefa()));
 
-            certificateService.findByParticipantAndProcess(participant, process, role).stream()
+            registrationService.findCertificates(participant, process, role).stream()
                     .map(ApiController::createCertificate)
                     .forEach(processType.getCertificate()::add);
 

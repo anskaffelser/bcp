@@ -48,9 +48,15 @@ public class Application implements Serializable {
 
     @ManyToMany
     @JoinTable(name = "application_certificate",
-            joinColumns = @JoinColumn(name = "application_id", nullable = false, updatable = false),
-            inverseJoinColumns = @JoinColumn(name = "certificate_id", nullable = false, updatable = false))
+            joinColumns = @JoinColumn(name = "application_id"),
+            inverseJoinColumns = @JoinColumn(name = "certificate_id"))
     private List<Certificate> certificates;
+
+    @ManyToMany
+    @JoinTable(name = "application_participant",
+            joinColumns = @JoinColumn(name = "application_id"),
+            inverseJoinColumns = @JoinColumn(name = "participant_id"))
+    private List<Participant> customers;
 
     public static Application newInstance() {
         Application application = new Application();
@@ -97,5 +103,13 @@ public class Application implements Serializable {
 
     public void setCertificates(List<Certificate> certificates) {
         this.certificates = certificates;
+    }
+
+    public List<Participant> getCustomers() {
+        return customers;
+    }
+
+    public void setCustomers(List<Participant> customers) {
+        this.customers = customers;
     }
 }

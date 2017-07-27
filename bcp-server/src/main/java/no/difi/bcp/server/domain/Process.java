@@ -61,7 +61,6 @@ public class Process implements Serializable {
     @OneToMany
     private List<Registration> registrations;
 
-
     public Process() {
     }
 

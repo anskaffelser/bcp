@@ -24,6 +24,7 @@ package no.difi.bcp.server.domain;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -144,6 +145,10 @@ public class Certificate implements Serializable {
 
     public long getExpiration() {
         return expiration;
+    }
+
+    public Date getExpirationDate() {
+        return new Date(expiration);
     }
 
     public void setExpiration(long expiration) {

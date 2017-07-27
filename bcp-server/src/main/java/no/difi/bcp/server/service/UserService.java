@@ -28,8 +28,8 @@ import no.difi.bcp.server.domain.UserRepository;
 import no.difi.bcp.server.lang.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.UUID;
 
@@ -42,18 +42,17 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Transactional(readOnly = true)
     public User findById(long id) {
         return userRepository.findOne(id);
     }
 
+    @Transactional(readOnly = true)
     public List<User> findByParticipant(Participant participant) {
         return userRepository.findByParticipant(participant);
     }
 
-    public long count(Participant participant) {
-        return userRepository.countByParticipant(participant);
-    }
-
+    @Transactional
     public User findUser(Participant participant, String email) {
         User user = userRepository.findByParticipantAndEmail(participant, email);
 
@@ -67,6 +66,7 @@ public class UserService {
         return user;
     }
 
+    @Transactional(readOnly = true)
     public User findUserByIdentifier(Participant participant, String identifier) throws UserNotFoundException {
         User user = userRepository.findByParticipantAndIdentifier(participant, identifier);
 

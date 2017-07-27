@@ -12,6 +12,11 @@
     </ol>
 
     <div class="page-header">
+        <div class="pull-right">
+            <a th:if="${enabled}" th:href="@{/application/{identifier}/toggle(identifier=${item.identifier})}" class="btn btn-success">Enabled</a>
+            <a th:if="${!enabled}" th:href="@{/application/{identifier}/toggle(identifier=${item.identifier})}" class="btn btn-warning">Disabled</a>
+        </div>
+
         <h1 th:text="${item.title}">Application</h1>
     </div>
 
@@ -31,7 +36,7 @@
             <a th:href="@{/application/{identifier}/certificates(identifier=${item.identifier})}">Choose certificates</a>
         </div>
 
-        <table class="table table-striped" id="list">
+        <table class="table table-striped" id="certificates">
             <thead>
             <th>Name</th>
             <th style="width: 25%;">Serial number</th>
@@ -54,15 +59,17 @@
             <a th:href="@{/application/{identifier}/processes(identifier=${item.identifier})}">Choose processes</a>
         </div>
 
-        <table class="table table-striped" id="list">
+        <table class="table table-striped" id="processes">
             <thead>
-            <th>Name</th>
+            <th>Process</th>
+            <th>Domain</th>
             <th style="width: 25%;">Role</th>
             </thead>
             <tbody>
             <th:block th:each="item : ${processes}">
                 <tr>
                     <td><a th:href="@{/process/{i}(i=${item.process.toVefa()})}" th:text="${item.process.title}"></a></td>
+                    <td th:text="${item.process.domain.title}"></td>
                     <td th:text="${item.role}"></td>
                 </tr>
             </th:block>

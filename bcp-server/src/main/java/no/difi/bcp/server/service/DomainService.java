@@ -26,8 +26,8 @@ import no.difi.bcp.server.domain.Domain;
 import no.difi.bcp.server.domain.DomainRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -39,10 +39,12 @@ public class DomainService {
     @Autowired
     private DomainRepository domainRepository;
 
+    @Transactional(readOnly = true)
     public List<Domain> findAll() {
         return domainRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     public Domain get(String identifier) {
         return domainRepository.findByIdentifier(identifier);
     }

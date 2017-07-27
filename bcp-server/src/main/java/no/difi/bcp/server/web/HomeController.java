@@ -22,7 +22,12 @@
 
 package no.difi.bcp.server.web;
 
+import no.difi.bcp.server.domain.User;
+import no.difi.bcp.server.service.ApplicationService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -32,9 +37,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/")
 public class HomeController {
 
+    @Autowired
+    private ApplicationService applicationService;
+
     @RequestMapping
-    public String home() {
-        return "home";
+    public String home(@AuthenticationPrincipal User user, ModelMap modelMap) {
+        if (user.getParticipant() == null) {
+            // Admin
+            return "home_admin";
+        } else {
+            // User
+            modelMap.put("applications", applicationService.findByCustomer(user.getParticipant()));
+
+            return "home_user";
+        }
     }
 
 }

@@ -22,19 +22,17 @@
 
 package no.difi.bcp.server.service;
 
-import no.difi.vefa.peppol.common.model.ProcessIdentifier;
-import no.difi.bcp.server.domain.Certificate;
-import no.difi.bcp.server.domain.Participant;
 import no.difi.bcp.server.domain.Process;
 import no.difi.bcp.server.domain.ProcessRepository;
 import no.difi.bcp.server.lang.ProcessNotFoundException;
+import no.difi.vefa.peppol.common.model.ProcessIdentifier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,20 +45,24 @@ public class ProcessService {
     @Autowired
     private ProcessRepository processRepository;
 
+    @Transactional(readOnly = true)
     public Process get(ProcessIdentifier processIdentifier) throws ProcessNotFoundException {
         return Optional.ofNullable(processRepository.findByIdentifierAndScheme(
                 processIdentifier.getIdentifier(), processIdentifier.getScheme().getValue()))
                 .orElseThrow(() -> new ProcessNotFoundException(processIdentifier));
     }
 
+    @Transactional(readOnly = true)
     public Process get(String identifier) {
         return processRepository.findByIdentifier(identifier);
     }
 
+    @Transactional(readOnly = true)
     public List<Process> findAll() {
         return processRepository.findAll(new Sort(Sort.Direction.ASC, "domain.title", "title"));
     }
 
+    @Transactional(readOnly = true)
     public Page<Process> findAll(int page) {
         return processRepository.findAll(new PageRequest(page, 20, Sort.Direction.ASC, "domain.title", "title"));
     }
@@ -70,6 +72,7 @@ public class ProcessService {
         processRepository.save(process);
     }
 
+    @Transactional
     public void delete(Process process) {
         processRepository.delete(process);
     }

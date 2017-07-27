@@ -28,6 +28,9 @@
 
         <dt>Serial number</dt>
         <dd th:text="${certificate.serialNumber}"></dd>
+
+        <dt>Expiration</dt>
+        <dd th:text="${#dates.format(certificate.expirationDate, 'yyyy-MM-dd')}"></dd>
     </dl>
 
 </div>

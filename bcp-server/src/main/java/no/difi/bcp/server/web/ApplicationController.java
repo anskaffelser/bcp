@@ -75,9 +75,10 @@ public class ApplicationController {
 
     @PreAuthorize("#app.participant.id == principal.participant.id")
     @RequestMapping(value = "/{app}", method = RequestMethod.GET)
-    public String view(@PathVariable Application app, ModelMap modelMap) {
+    public String view(@AuthenticationPrincipal User user, @PathVariable Application app, ModelMap modelMap) {
         modelMap.put("item", app);
         modelMap.put("processes", registrationService.findByApplication(app));
+        modelMap.put("enabled", applicationService.isEnabled(app, user.getParticipant()));
 
         return "application/view";
     }
@@ -153,6 +154,7 @@ public class ApplicationController {
         return String.format("redirect:/application/%s", app.getIdentifier());
     }
 
+    @PreAuthorize("#app.participant.id == principal.participant.id")
     @RequestMapping(value = "/{app}/processes", method = RequestMethod.GET)
     public String processesForm(@PathVariable Application app, ModelMap modelMap) {
         modelMap.put("form", new ApplicationProcessForm(registrationService.findByApplication(app).stream()
@@ -164,6 +166,7 @@ public class ApplicationController {
         return "application/processes";
     }
 
+    @PreAuthorize("#app.participant.id == principal.participant.id")
     @RequestMapping(value = "/{app}/processes", method = RequestMethod.POST)
     public String processesSubmit(@PathVariable Application app, @Valid ApplicationProcessForm form,
                                   BindingResult bindingResult, ModelMap modelMap) {
@@ -176,6 +179,27 @@ public class ApplicationController {
         }
 
         registrationService.update(app, form);
+
+        return String.format("redirect:/application/%s", app.getIdentifier());
+    }
+
+    @PreAuthorize("#app.participant.id == principal.participant.id")
+    @RequestMapping(value = "/{app}/toggle", method = RequestMethod.GET)
+    public String toggleForm(@AuthenticationPrincipal User user, @PathVariable Application app, ModelMap modelMap) {
+        modelMap.put("item", app);
+        modelMap.put("enabled", applicationService.isEnabled(app, user.getParticipant()));
+
+        return "application/toggle";
+    }
+
+    @PreAuthorize("#app.participant.id == principal.participant.id")
+    @RequestMapping(value = "/{app}/toggle", method = RequestMethod.POST)
+    public String toggleSubmit(@AuthenticationPrincipal User user, @PathVariable Application app) {
+        if (applicationService.isEnabled(app, user.getParticipant())) {
+            applicationService.disableCustomer(app, user.getParticipant());
+        } else {
+            applicationService.enableCustomer(app, user.getParticipant());
+        }
 
         return String.format("redirect:/application/%s", app.getIdentifier());
     }

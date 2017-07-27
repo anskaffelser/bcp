@@ -26,10 +26,13 @@ import no.difi.bcp.server.domain.Application;
 import no.difi.bcp.server.domain.ApplicationRepository;
 import no.difi.bcp.server.domain.Participant;
 import no.difi.bcp.server.form.ApplicationCertificateForm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -38,15 +41,29 @@ import java.util.List;
 @Service
 public class ApplicationService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationService.class);
+
     @Autowired
     private ApplicationRepository applicationRepository;
 
+    @Transactional(readOnly = true)
     public Application get(String identifier) {
         return applicationRepository.findByIdentifier(identifier);
     }
 
+    @Transactional(readOnly = true)
+    public boolean isEnabled(Application application, Participant participant) {
+        return applicationRepository.countByIdAndCustomers(application.getId(), participant) != 0;
+    }
+
+    @Transactional(readOnly = true)
     public List<Application> findByParticipant(Participant participant) {
         return applicationRepository.findByParticipant(participant);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Application> findByCustomer(Participant participant) {
+        return applicationRepository.findByCustomers(participant, new Sort(Sort.Direction.ASC, "title"));
     }
 
     @Transactional
@@ -57,5 +74,19 @@ public class ApplicationService {
     @Transactional
     public void update(Application application, ApplicationCertificateForm form) {
         applicationRepository.save(form.update(application));
+    }
+
+    @Transactional
+    public void enableCustomer(Application application, Participant participant) {
+        LOGGER.info("Enable customer '{}' for '{}'.", participant.getName(), application.getTitle());
+        application.getCustomers().add(participant);
+        applicationRepository.save(application);
+    }
+
+    @Transactional
+    public void disableCustomer(Application application, Participant participant) {
+        LOGGER.info("Disable customer '{}' for '{}'.", participant.getName(), application.getTitle());
+        application.getCustomers().remove(participant);
+        applicationRepository.save(application);
     }
 }

@@ -22,18 +22,18 @@
 
 package no.difi.bcp.server.service;
 
-import no.difi.bcp.server.domain.Application;
-import no.difi.bcp.server.domain.ProcessSet;
-import no.difi.bcp.server.domain.Registration;
-import no.difi.bcp.server.domain.RegistrationRepository;
+import no.difi.bcp.api.Role;
+import no.difi.bcp.server.domain.*;
+import no.difi.bcp.server.domain.Process;
 import no.difi.bcp.server.form.ApplicationProcessForm;
+import no.difi.bcp.server.lang.NoCertificatesException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,8 +48,9 @@ public class RegistrationService {
     @Autowired
     private RegistrationRepository registrationRepository;
 
+    @Transactional(readOnly = true)
     public List<Registration> findByApplication(Application application) {
-        return registrationRepository.findByApplication(application, new Sort(Sort.Direction.ASC, "process.title"));
+        return registrationRepository.findByApplication(application, new Sort(Sort.Direction.ASC, "process.domain.title", "process.title"));
     }
 
     @Transactional
@@ -57,7 +58,7 @@ public class RegistrationService {
         registrationRepository.save(registration);
     }
 
-    @Transactional()
+    @Transactional
     public void update(Application application, ApplicationProcessForm form) {
         List<Registration> registrations = registrationRepository.findByApplication(application, null);
 
@@ -82,5 +83,21 @@ public class RegistrationService {
                     .findFirst()
                     .ifPresent(registrationRepository::delete);
         }
+    }
+
+    @Transactional(readOnly = true)
+    public List<Process> findProcesses(Participant participant) {
+        return registrationRepository.findProcesses(participant);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Certificate> findCertificates(Participant participant, Process process, Role role)
+            throws NoCertificatesException {
+        List<Certificate> certificates = registrationRepository.findCertificates(participant, process, role);
+
+        if (certificates.size() == 0)
+            throw new NoCertificatesException("No certificates found.");
+
+        return certificates;
     }
 }

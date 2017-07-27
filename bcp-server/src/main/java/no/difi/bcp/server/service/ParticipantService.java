@@ -33,8 +33,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.Optional;
 
 /**
@@ -49,12 +49,14 @@ public class ParticipantService {
     @Autowired
     private DatahotelService datahotelService;
 
+    @Transactional(readOnly = true)
     public Participant get(ParticipantIdentifier participantIdentifier) throws ParticipantNotFoundException {
         return Optional.ofNullable(participantRepository.findByIdentifierAndScheme(
                 participantIdentifier.getIdentifier(), participantIdentifier.getScheme().getValue()))
                 .orElseThrow(() -> new ParticipantNotFoundException(participantIdentifier));
     }
 
+    @Transactional(readOnly = true)
     public Page<Participant> findAll(int page) {
         return participantRepository.findAll(new PageRequest(page, 20, Sort.Direction.ASC, "name"));
     }

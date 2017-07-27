@@ -22,14 +22,11 @@
 
 package no.difi.bcp.server.service;
 
-import no.difi.bcp.api.Role;
 import no.difi.bcp.security.BusinessCertificateValidator;
 import no.difi.bcp.server.domain.Certificate;
 import no.difi.bcp.server.domain.CertificateRepository;
 import no.difi.bcp.server.domain.Participant;
-import no.difi.bcp.server.domain.Process;
 import no.difi.bcp.server.form.UploadForm;
-import no.difi.bcp.server.lang.NoCertificatesException;
 import no.difi.certvalidator.Validator;
 import no.difi.certvalidator.api.CertificateValidationException;
 import no.difi.certvalidator.extra.NorwegianOrganizationNumberRule;
@@ -41,13 +38,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -63,14 +59,17 @@ public class CertificateService {
     @Autowired
     private BusinessCertificateValidator validator;
 
+    @Transactional(readOnly = true)
     public Page<Certificate> findAll(Participant participant, int page) {
         return certificateRepository.findByParticipant(participant, new PageRequest(page, 20));
     }
 
+    @Transactional(readOnly = true)
     public List<Certificate> findAll(Participant participant) {
         return certificateRepository.findByParticipant(participant);
     }
 
+    @Transactional(readOnly = true)
     public Certificate get(String identifier) {
         return certificateRepository.findByIdentifier(identifier);
     }
@@ -80,6 +79,7 @@ public class CertificateService {
         return insert(participant, uploadForm.getFile().getInputStream());
     }
 
+    @Transactional
     public Certificate insert(Participant participant, InputStream inputStream)
             throws CertificateEncodingException, CertificateValidationException {
         X509Certificate cert = Validator.getCertificate(inputStream);
@@ -115,15 +115,5 @@ public class CertificateService {
             certificate.setIdentifier(UUID.randomUUID().toString());
 
         certificateRepository.save(certificate);
-    }
-
-    public List<Certificate> findByParticipantAndProcess(Participant participant, Process process, Role role)
-            throws NoCertificatesException {
-        List<Certificate> certificates = Collections.emptyList(); // TODO
-
-        if (certificates.size() == 0)
-            throw new NoCertificatesException("No certificates found.");
-
-        return certificates;
     }
 }

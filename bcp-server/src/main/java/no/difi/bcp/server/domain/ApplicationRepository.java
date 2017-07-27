@@ -22,6 +22,7 @@
 
 package no.difi.bcp.server.domain;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -36,5 +37,9 @@ public interface ApplicationRepository extends CrudRepository<Application, Long>
     Application findByIdentifier(String identifier);
 
     List<Application> findByParticipant(Participant participant);
+
+    List<Application> findByCustomers(Participant customer, Sort sort);
+
+    int countByIdAndCustomers(long id, Participant customer);
 
 }
