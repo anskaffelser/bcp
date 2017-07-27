@@ -15,6 +15,43 @@
         <h1 th:text="${item.title}">Application</h1>
     </div>
 
+    <h2>Certificates</h2>
+
+    <th:block th:if="${item.certificates.size() > 0}">
+        <div class="pull-right">
+            <a th:href="@{/application/{identifier}/certificates(identifier=${item.identifier})}">Choose certificates</a>
+        </div>
+
+        <table class="table table-striped" id="list">
+            <thead>
+            <th>Name</th>
+            <th style="width: 25%;">Serial number</th>
+            </thead>
+            <tbody>
+            <th:block th:each="item : ${item.certificates}">
+                <tr>
+                    <td><a th:href="@{/certificate/{i}(i=${item.identifier})}" th:text="${item.name}"></a></td>
+                    <td th:text="${item.serialNumber}"></td>
+                </tr>
+            </th:block>
+            </tbody>
+        </table>
+    </th:block>
+
+    <div th:if="${item.certificates.size() == 0}" class="jumbotron">
+        <h1>Get started!</h1>
+        <p>...</p>
+        <p><a th:href="@{/application/{identifier}/certificates(identifier=${item.identifier})}" class="btn btn-primary btn-lg" role="button">Choose certificates</a></p>
+    </div>
+
+    <h2>Profiles</h2>
+
+    <div class="jumbotron">
+        <h1>Get started!</h1>
+        <p>...</p>
+        <p><a th:href="@{/application/{identifier}/profiles(identifier=${item.identifier})}" class="btn btn-primary btn-lg" role="button">Choose profiles</a></p>
+    </div>
+
 </div>
 
 </body>

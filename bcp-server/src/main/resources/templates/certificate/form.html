@@ -21,34 +21,28 @@
   ~  permissions and limitations under the Licence.
   -->
 
-<html layout:decorator="layout" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org">
+<html layout:decorator="layout" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
 <body>
 
 <div layout:fragment="content">
 
-    <ol class="breadcrumb">
-        <li><a th:href="@{/}">Home</a></li>
-        <li><a th:href="@{/certificate}">Certificates</a></li>
-        <li class="active">Upload certificate</li>
-    </ol>
-
-
     <div class="page-header">
-        <h1>Upload certificate</h1>
+        <h1>Edit certificate</h1>
     </div>
 
-    <form method="post" enctype="multipart/form-data" th:action="${#httpServletRequest.requestURI}" th:object="${form}" class="form-horizontal">
+    <form method="post" th:action="${#httpServletRequest.requestURI}" th:object="${form}" class="form-horizontal">
 
         <div class="form-group">
-            <label for="file" class="col-sm-2 control-label">Certificate file</label>
+            <label for="name" class="col-sm-2 control-label">Name</label>
             <div class="col-sm-6">
-                <input type="file" class="form-control" id="file" th:field="*{file}"/>
+                <input type="text" class="form-control" id="name" th:field="*{name}"/>
             </div>
         </div>
 
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-primary">Upload</button>
+                <button type="submit" class="btn btn-primary">Save</button>
             </div>
         </div>
 

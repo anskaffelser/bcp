@@ -37,7 +37,11 @@ import java.util.List;
 @Repository
 public interface CertificateRepository extends CrudRepository<Certificate, Long> {
 
+    List<Certificate> findByParticipant(Participant participant);
+
     Page<Certificate> findByParticipant(Participant participant, Pageable pageable);
+
+    Certificate findByIdentifier(String identifier);
 
     Certificate findByParticipantAndIdentifier(Participant participant, String identifier);
 

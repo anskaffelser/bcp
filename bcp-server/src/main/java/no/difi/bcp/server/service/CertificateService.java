@@ -22,9 +22,6 @@
 
 package no.difi.bcp.server.service;
 
-import no.difi.certvalidator.Validator;
-import no.difi.certvalidator.api.CertificateValidationException;
-import no.difi.certvalidator.extra.NorwegianOrganizationNumberRule;
 import no.difi.bcp.api.Role;
 import no.difi.bcp.security.BusinessCertificateValidator;
 import no.difi.bcp.server.domain.Certificate;
@@ -33,6 +30,13 @@ import no.difi.bcp.server.domain.Participant;
 import no.difi.bcp.server.domain.Process;
 import no.difi.bcp.server.form.UploadForm;
 import no.difi.bcp.server.lang.NoCertificatesException;
+import no.difi.certvalidator.Validator;
+import no.difi.certvalidator.api.CertificateValidationException;
+import no.difi.certvalidator.extra.NorwegianOrganizationNumberRule;
+import org.bouncycastle.asn1.x500.X500Name;
+import org.bouncycastle.asn1.x500.style.BCStyle;
+import org.bouncycastle.asn1.x500.style.IETFUtils;
+import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -62,22 +66,36 @@ public class CertificateService {
         return certificateRepository.findByParticipant(participant, new PageRequest(page, 20));
     }
 
+    public List<Certificate> findAll(Participant participant) {
+        return certificateRepository.findByParticipant(participant);
+    }
+
+    public Certificate get(String identifier) {
+        return certificateRepository.findByIdentifier(identifier);
+    }
+
     public Certificate get(Participant participant, String identifier) {
         return certificateRepository.findByParticipantAndIdentifier(participant, identifier);
     }
 
     public Certificate insert(Participant participant, UploadForm uploadForm)
             throws CertificateEncodingException, CertificateValidationException, IOException {
-        return insert(participant, uploadForm.getFile().getInputStream(), uploadForm.getName());
+        return insert(participant, uploadForm.getFile().getInputStream());
     }
 
-    public Certificate insert(Participant participant, InputStream inputStream, String name)
+    public Certificate insert(Participant participant, InputStream inputStream)
             throws CertificateEncodingException, CertificateValidationException {
         X509Certificate cert = Validator.getCertificate(inputStream);
         validator.validate(cert);
 
         new NorwegianOrganizationNumberRule(s -> String.format("9908:%s", s).equals(participant.getIdentifier()))
                 .validate(cert);
+
+        X500Name x500name = new JcaX509CertificateHolder(cert).getSubject();
+        String name = IETFUtils.valueToString(x500name.getRDNs(BCStyle.O)[0].getFirst().getValue());
+
+        if (x500name.getRDNs(BCStyle.OU).length > 0)
+            name = String.format("%s - %s", name, IETFUtils.valueToString(x500name.getRDNs(BCStyle.OU)[0].getFirst().getValue()));
 
         Certificate certificate = new Certificate();
         certificate.setCertificate(cert.getEncoded());

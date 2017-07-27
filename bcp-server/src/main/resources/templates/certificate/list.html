@@ -1,26 +1,4 @@
 <!DOCTYPE html>
-<!--
-  ~  Copyright 2017 Norwegian Agency for Public Management and eGovernment (Difi)
-  ~
-  ~  Licensed under the EUPL, Version 1.1 or – as soon they
-  ~  will be approved by the European Commission - subsequent
-  ~  versions of the EUPL (the "Licence");
-  ~
-  ~  You may not use this work except in compliance with the Licence.
-  ~
-  ~  You may obtain a copy of the Licence at:
-  ~
-  ~  https://joinup.ec.europa.eu/community/eupl/og_page/eupl
-  ~
-  ~  Unless required by applicable law or agreed to in
-  ~  writing, software distributed under the Licence is
-  ~  distributed on an "AS IS" basis,
-  ~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
-  ~  express or implied.
-  ~  See the Licence for the specific language governing
-  ~  permissions and limitations under the Licence.
-  -->
-
 <html layout:decorator="layout" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org">
 <body>
@@ -33,25 +11,35 @@
     </ol>
 
     <div class="page-header">
+        <div class="pull-right">
+            <a th:href="@{/certificate/upload}" class="btn btn-link">Upload certificate</a>
+        </div>
+
         <h1>Certificates</h1>
     </div>
 
-    <div class="pull-right" sec:authorize="!hasRole('ADMIN')">
-        <a th:href="@{/certificate/upload}" class="btn btn-default">Upload certificate</a>
+    <div th:if="${list.totalElements == 0}" class="jumbotron">
+        <h1>Get started!</h1>
+        <p>...</p>
+        <p><a th:href="@{/certificate/upload}" class="btn btn-primary btn-lg" role="button">Upload certificate</a></p>
     </div>
 
-    <table class="table table-striped" id="list">
+    <table th:if="${list.totalElements != 0}" class="table table-striped" id="list">
         <thead>
-        <th>Internal name</th>
+        <th>Name</th>
         <th style="width: 25%;">Serial number</th>
+        <th style="width: 20%;">&nbsp;</th>
         </thead>
         <tbody>
-        <th:block th:each="certificate : ${list}">
+        <th:block th:each="item : ${list}">
             <tr>
-                <td>
-                    <a th:href="@{/certificate/{i}(i=${certificate.identifier})}"
-                       th:text="${certificate.name}"></a></td>
-                <td th:text="${certificate.serialNumber}"></td>
+                <td><a th:href="@{/certificate/{i}(i=${item.identifier})}" th:text="${item.name}"></a></td>
+                <td th:text="${item.serialNumber}"></td>
+                <td style="text-align: right;">
+                    <a th:href="@{/certificate/{identifier}/edit(identifier=${item.identifier})}">Edit</a>
+                    |
+                    <a th:href="@{/certificate/{identifier}/delete(identifier=${item.identifier})}">Delete</a>
+                </td>
             </tr>
         </th:block>
         </tbody>

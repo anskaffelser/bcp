@@ -24,9 +24,11 @@ package no.difi.bcp.server.web;
 
 import no.difi.bcp.server.domain.Application;
 import no.difi.bcp.server.domain.User;
+import no.difi.bcp.server.form.ApplicationCertificateForm;
 import no.difi.bcp.server.form.ApplicationForm;
 import no.difi.bcp.server.lang.BcpServerException;
 import no.difi.bcp.server.service.ApplicationService;
+import no.difi.bcp.server.service.CertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -49,6 +51,9 @@ public class ApplicationController {
     @Autowired
     private ApplicationService applicationService;
 
+    @Autowired
+    private CertificateService certificateService;
+
     @RequestMapping(method = RequestMethod.GET)
     public String list(@AuthenticationPrincipal User user, ModelMap modelMap) {
         modelMap.put("list", applicationService.findByParticipant(user.getParticipant()));
@@ -56,6 +61,7 @@ public class ApplicationController {
         return "application/list";
     }
 
+    @PreAuthorize("#app.participant.id == principal.participant.id")
     @RequestMapping(value = "/{app}", method = RequestMethod.GET)
     public String view(@PathVariable Application app, ModelMap modelMap) {
         modelMap.put("item", app);
@@ -86,6 +92,7 @@ public class ApplicationController {
         return "redirect:/application";
     }
 
+    @PreAuthorize("#app.participant.id == principal.participant.id")
     @RequestMapping(value = "/{app}/edit", method = RequestMethod.GET)
     public String editForm(@PathVariable Application app, ModelMap modelMap) {
         modelMap.put("form", new ApplicationForm(app));
@@ -93,10 +100,10 @@ public class ApplicationController {
         return "application/form";
     }
 
+    @PreAuthorize("#app.participant.id == principal.participant.id")
     @RequestMapping(value = "/{app}/edit", method = RequestMethod.POST)
     public String editSubmit(@PathVariable Application app, @ModelAttribute ApplicationForm form,
-                             BindingResult bindingResult, ModelMap modelMap)
-            throws BcpServerException {
+                             BindingResult bindingResult, ModelMap modelMap) {
         if (bindingResult.hasErrors()) {
             modelMap.put("form", form);
             return "participant/form";
@@ -107,4 +114,29 @@ public class ApplicationController {
         return "redirect:/application";
     }
 
+    @PreAuthorize("#app.participant.id == principal.participant.id")
+    @RequestMapping(value = "/{app}/certificates", method = RequestMethod.GET)
+    public String certificatesForm(@PathVariable Application app, ModelMap modelMap) {
+        modelMap.put("form", new ApplicationCertificateForm(app.getCertificates()));
+        modelMap.put("item", app);
+        modelMap.put("list", certificateService.findAll(app.getParticipant()));
+
+        return "application/certificates";
+    }
+
+    @PreAuthorize("#app.participant.id == principal.participant.id")
+    @RequestMapping(value = "/{app}/certificates", method = RequestMethod.POST)
+    public String certificatesSubmit(@PathVariable Application app, @ModelAttribute ApplicationCertificateForm form,
+                                     BindingResult bindingResult, ModelMap modelMap) {
+        if (bindingResult.hasErrors()) {
+            modelMap.put("form", form);
+            modelMap.put("item", app);
+            modelMap.put("list", certificateService.findAll(app.getParticipant()));
+            return "application/certificates";
+        }
+
+        applicationService.save(form.update(app));
+
+        return String.format("redirect:/application/%s", app.getIdentifier());
+    }
 }

@@ -18,7 +18,13 @@
         <h1>Users</h1>
     </div>
 
-    <table class="table table-striped">
+    <div th:if="${list.size() == 0}" class="jumbotron">
+        <h1>Get started!</h1>
+        <p>...</p>
+        <p><a th:href="@{/user/add}" class="btn btn-primary btn-lg" role="button">Add user</a></p>
+    </div>
+
+    <table th:if="${list.size() != 0}" class="table table-striped">
         <thead>
         <th>Name</th>
         <th>Email</th>
