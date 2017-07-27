@@ -10,32 +10,7 @@
     <title layout:title-pattern="$CONTENT_TITLE | $DECORATOR_TITLE" th:text="${@bcp.title}">bcp.title</title>
 
     <link th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}" rel="stylesheet"/>
-    <style>
-        .nav-pills {
-            padding-bottom: 10pt;
-            margin-bottom: 10pt;
-            border-bottom: 1px solid #ddd;
-        }
-        dd {
-            margin-bottom: 10pt;
-        }
-        dl {
-            margin-bottom: 40pt;
-        }
-        .checkbox input[type="checkbox"] {
-            transform:scale(2, 2);
-            position: relative;
-            margin: 5pt 5pt 5pt -10pt;
-        }
-        .form-group-lg .checkbox {
-            font-size: 18px;
-            margin: 5pt 0 5pt 5pt;
-        }
-        td label {
-            font-weight: normal;
-            margin-bottom: 0;
-        }
-    </style>
+    <link th:href="@{/resources/bcp.css}" rel="stylesheet"/>
     <th:block layout:fragment="style"/>
 
     <!--[if lt IE 9]>
@@ -126,14 +101,7 @@
 
 <script th:src="@{/webjars/jquery/1.11.1/jquery.min.js}"></script>
 <script th:src="@{/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js}"></script>
-<script language="JavaScript">
-    jQuery(function($) {
-        /* Set focus on first input element in #main. */
-        var inputs = $("#main input, #main select");
-        if (inputs.size() > 0)
-            inputs.get(0).focus();
-    });
-</script>
+<script th:src="@{/resources/bcp.js}"></script>
 <th:block layout:fragment="script"/>
 
 </body>

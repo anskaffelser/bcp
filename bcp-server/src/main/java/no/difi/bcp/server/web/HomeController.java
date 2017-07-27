@@ -29,6 +29,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * @author erlend
@@ -40,7 +41,7 @@ public class HomeController {
     @Autowired
     private ApplicationService applicationService;
 
-    @RequestMapping
+    @RequestMapping(method = RequestMethod.GET)
     public String home(@AuthenticationPrincipal User user, ModelMap modelMap) {
         if (user.getParticipant() == null) {
             // Admin
@@ -53,4 +54,8 @@ public class HomeController {
         }
     }
 
+    @RequestMapping(value = "/favicon.ico", method = RequestMethod.GET)
+    public String favicon() {
+        return "forward:/resources/favicon.ico";
+    }
 }

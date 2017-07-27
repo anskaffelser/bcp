@@ -47,6 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/signin", "/signin/*").anonymous()
+                .antMatchers("/favicon.ico").permitAll()
 
                 .and()
                 .formLogin()
