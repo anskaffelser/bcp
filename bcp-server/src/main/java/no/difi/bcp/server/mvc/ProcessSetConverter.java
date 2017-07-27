@@ -23,7 +23,7 @@
 package no.difi.bcp.server.mvc;
 
 import no.difi.bcp.api.Role;
-import no.difi.bcp.server.form.ApplicationProcessForm;
+import no.difi.bcp.server.domain.ProcessSet;
 import no.difi.bcp.server.lang.ProcessNotFoundException;
 import no.difi.bcp.server.service.ProcessService;
 import no.difi.vefa.peppol.common.lang.PeppolParsingException;
@@ -36,17 +36,17 @@ import org.springframework.stereotype.Component;
  * @author erlend
  */
 @Component
-public class ProcessSetConverter implements Converter<String, ApplicationProcessForm.ProcessSet> {
+public class ProcessSetConverter implements Converter<String, ProcessSet> {
 
     @Autowired
     private ProcessService processService;
 
     @Override
-    public ApplicationProcessForm.ProcessSet convert(String s) {
+    public ProcessSet convert(String s) {
         try {
             String[] parts = s.split("/");
 
-            return new ApplicationProcessForm.ProcessSet(
+            return new ProcessSet(
                     processService.get(ProcessIdentifier.parse(parts[0])),
                     Role.valueOf(parts[1])
             );

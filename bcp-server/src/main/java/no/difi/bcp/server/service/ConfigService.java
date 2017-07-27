@@ -28,7 +28,7 @@ import org.springframework.stereotype.Service;
 /**
  * @author erlend
  */
-@Service("app")
+@Service("bcp")
 public class ConfigService {
 
     @Value("${bcp.title:Virksert}")

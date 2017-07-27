@@ -14,7 +14,8 @@ Domain -left-{ Process
 Registration }-right- Process
 Registration }-- Application
 Application }--{ "uses" Certificate
-Application "customer of" --{ "owned by" Participant
+Application }-- "owned by" Participant
+Application "customer of" }-- Participant
 Participant --{ "owns" Certificate
 Participant --{ Event
 Participant -right-{ Login

@@ -15,12 +15,12 @@
         <h1 th:text="${item.title}">Application</h1>
     </div>
 
-    <div th:if="${item.certificates.size() == 0 or true}" class="jumbotron">
+    <div th:if="${item.certificates.size() == 0 or processes.size() == 0}" class="jumbotron">
         <h1>Get started!</h1>
         <p>...</p>
         <p>
             <a th:if="${item.certificates.size() == 0}" th:href="@{/application/{identifier}/certificates(identifier=${item.identifier})}" class="btn btn-primary btn-lg" role="button">Choose certificates</a>
-            <a th:href="@{/application/{identifier}/processes(identifier=${item.identifier})}" class="btn btn-primary btn-lg" role="button">Choose processes</a>
+            <a th:if="${processes.size() == 0}" th:href="@{/application/{identifier}/processes(identifier=${item.identifier})}" class="btn btn-primary btn-lg" role="button">Choose processes</a>
         </p>
     </div>
 
@@ -47,12 +47,27 @@
         </table>
     </th:block>
 
-    <th:block th:if="false">
+    <th:block th:if="${processes.size() != 0}">
         <h2>Processes</h2>
 
         <div class="pull-right">
             <a th:href="@{/application/{identifier}/processes(identifier=${item.identifier})}">Choose processes</a>
         </div>
+
+        <table class="table table-striped" id="list">
+            <thead>
+            <th>Name</th>
+            <th style="width: 25%;">Role</th>
+            </thead>
+            <tbody>
+            <th:block th:each="item : ${processes}">
+                <tr>
+                    <td><a th:href="@{/process/{i}(i=${item.process.toVefa()})}" th:text="${item.process.title}"></a></td>
+                    <td th:text="${item.role}"></td>
+                </tr>
+            </th:block>
+            </tbody>
+        </table>
     </th:block>
 
 </div>

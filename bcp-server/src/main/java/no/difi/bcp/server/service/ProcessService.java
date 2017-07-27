@@ -58,19 +58,11 @@ public class ProcessService {
     }
 
     public List<Process> findAll() {
-        return processRepository.findAll();
+        return processRepository.findAll(new Sort(Sort.Direction.ASC, "domain.title", "title"));
     }
 
     public Page<Process> findAll(int page) {
         return processRepository.findAll(new PageRequest(page, 20, Sort.Direction.ASC, "domain.title", "title"));
-    }
-
-    public List<Process> findByCertificate(Certificate certificate) {
-        return processRepository.findByCertificate(certificate);
-    }
-
-    public List<Process> findByParticipant(Participant participant) {
-        return processRepository.findByParticipant(participant);
     }
 
     @Transactional

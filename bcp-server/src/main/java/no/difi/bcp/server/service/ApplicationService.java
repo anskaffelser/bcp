@@ -25,6 +25,7 @@ package no.difi.bcp.server.service;
 import no.difi.bcp.server.domain.Application;
 import no.difi.bcp.server.domain.ApplicationRepository;
 import no.difi.bcp.server.domain.Participant;
+import no.difi.bcp.server.form.ApplicationCertificateForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,4 +54,8 @@ public class ApplicationService {
         return applicationRepository.save(application);
     }
 
+    @Transactional
+    public void update(Application application, ApplicationCertificateForm form) {
+        applicationRepository.save(form.update(application));
+    }
 }

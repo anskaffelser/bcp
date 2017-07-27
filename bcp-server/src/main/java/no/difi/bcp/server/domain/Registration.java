@@ -34,9 +34,9 @@ import java.io.Serializable;
 @Entity
 @Table(
         indexes = {
-                @Index(columnList = "participant_id,process_id")
+                @Index(columnList = "application_id,process_id")
         },
-        uniqueConstraints = @UniqueConstraint(columnNames = {"certificate_id", "process_id", "role"})
+        uniqueConstraints = @UniqueConstraint(columnNames = {"application_id", "process_id", "role"})
 )
 public class Registration implements Serializable {
 
@@ -47,19 +47,22 @@ public class Registration implements Serializable {
     private long id;
 
     @ManyToOne
-    private Participant participant;
-
-    @ManyToOne
     private Process process;
-
-    @ManyToOne
-    private Certificate certificate;
 
     @ManyToOne
     private Application application;
 
     @Enumerated(EnumType.STRING)
     private Role role = Role.REQUEST;
+
+    public Registration() {
+    }
+
+    public Registration(Application application, ProcessSet processSet) {
+        this.application = application;
+        this.process = processSet.getProcess();
+        this.role = processSet.getRole();
+    }
 
     public long getId() {
         return id;
@@ -69,28 +72,12 @@ public class Registration implements Serializable {
         this.id = id;
     }
 
-    public Participant getParticipant() {
-        return participant;
-    }
-
-    public void setParticipant(Participant participant) {
-        this.participant = participant;
-    }
-
     public Process getProcess() {
         return process;
     }
 
     public void setProcess(Process process) {
         this.process = process;
-    }
-
-    public Certificate getCertificate() {
-        return certificate;
-    }
-
-    public void setCertificate(Certificate certificate) {
-        this.certificate = certificate;
     }
 
     public Application getApplication() {
@@ -109,7 +96,7 @@ public class Registration implements Serializable {
         this.role = role;
     }
 
-    public ApplicationProcessForm.ProcessSet toProcessSet() {
-        return new ApplicationProcessForm.ProcessSet(process, role);
+    public ProcessSet toProcessSet() {
+        return new ProcessSet(process, role);
     }
 }

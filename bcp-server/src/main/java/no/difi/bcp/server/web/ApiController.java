@@ -91,10 +91,11 @@ public class ApiController {
             ParticipantType participantType = new ParticipantType();
             participantType.setParticipantIdentifier(createIdentifier(participant.toVefa()));
 
-            processService.findByParticipant(participant).stream()
+            // TODO
+            /*processService.findByParticipant(participant).stream()
                     .map(Process::toVefa)
                     .map(ApiController::createIdentifier)
-                    .forEach(participantType.getProcessReference()::add);
+                    .forEach(participantType.getProcessReference()::add);*/
 
             response.setContentType(MediaType.APPLICATION_XML_VALUE);
 

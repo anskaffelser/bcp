@@ -24,6 +24,7 @@ package no.difi.bcp.server.domain;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -42,12 +43,6 @@ public interface ProcessRepository extends CrudRepository<Process, Long> {
 
     Page<Process> findAll(Pageable pageable);
 
-    List<Process> findAll();
-
-    @Query("select r.process from Registration r where r.certificate = ?1")
-    List<Process> findByCertificate(Certificate certificate);
-
-    @Query("select distinct r.process from Registration r where r.participant = ?1")
-    List<Process> findByParticipant(Participant participant);
+    List<Process> findAll(Sort sort);
 
 }

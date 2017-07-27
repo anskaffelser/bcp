@@ -18,7 +18,13 @@
         <h1>Participants</h1>
     </div>
 
-    <table class="table table-striped">
+    <div th:if="${list.totalElements == 0}" class="jumbotron">
+        <h1>Get started!</h1>
+        <p>...</p>
+        <p><a th:href="@{/participant/add}" class="btn btn-primary btn-lg" role="button">Add participant</a></p>
+    </div>
+
+    <table th:if="${list.totalElements != 0}" class="table table-striped">
         <thead>
         <th style="width: 25%;">Identifier</th>
         <th>Title</th>

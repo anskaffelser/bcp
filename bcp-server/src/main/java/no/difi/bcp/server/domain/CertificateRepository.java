@@ -22,10 +22,8 @@
 
 package no.difi.bcp.server.domain;
 
-import no.difi.bcp.api.Role;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -42,12 +40,5 @@ public interface CertificateRepository extends CrudRepository<Certificate, Long>
     Page<Certificate> findByParticipant(Participant participant, Pageable pageable);
 
     Certificate findByIdentifier(String identifier);
-
-    Certificate findByParticipantAndIdentifier(Participant participant, String identifier);
-
-    int countByParticipant(Participant participant);
-
-    @Query("select r.certificate from Registration r where r.participant = ?1 and r.process = ?2 and r.role = ?3")
-    List<Certificate> findByParticipantAndProcessAndRole(Participant participant, Process process, Role role);
 
 }

@@ -22,12 +22,20 @@
 
 package no.difi.bcp.server.service;
 
+import no.difi.bcp.server.domain.Application;
+import no.difi.bcp.server.domain.ProcessSet;
 import no.difi.bcp.server.domain.Registration;
 import no.difi.bcp.server.domain.RegistrationRepository;
+import no.difi.bcp.server.form.ApplicationProcessForm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author erlend
@@ -35,11 +43,44 @@ import javax.transaction.Transactional;
 @Service
 public class RegistrationService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationService.class);
+
     @Autowired
     private RegistrationRepository registrationRepository;
+
+    public List<Registration> findByApplication(Application application) {
+        return registrationRepository.findByApplication(application, new Sort(Sort.Direction.ASC, "process.title"));
+    }
 
     @Transactional
     public void save(Registration registration) {
         registrationRepository.save(registration);
+    }
+
+    @Transactional()
+    public void update(Application application, ApplicationProcessForm form) {
+        List<Registration> registrations = registrationRepository.findByApplication(application, null);
+
+        List<ProcessSet> existingSets = registrations.stream()
+                .map(Registration::toProcessSet)
+                .collect(Collectors.toList());
+
+        for (ProcessSet applied : form.getProcesses()) {
+            if (existingSets.contains(applied)) {
+                LOGGER.info("Found: {}", applied);
+                existingSets.remove(applied);
+            } else {
+                LOGGER.info("Add: {}", applied);
+                registrationRepository.save(new Registration(application, applied));
+            }
+        }
+
+        for (ProcessSet removed : existingSets) {
+            LOGGER.info("Remove: {}", removed);
+            registrations.stream()
+                    .filter(removed::equalsRegistration)
+                    .findFirst()
+                    .ifPresent(registrationRepository::delete);
+        }
     }
 }

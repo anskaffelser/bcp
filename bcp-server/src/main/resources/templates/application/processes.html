@@ -22,13 +22,15 @@
         <table th:if="${list.size() != 0}" class="table table-striped">
             <thead>
             <th>Process</th>
+            <th>Domain</th>
             <th style="width: 15%;">&nbsp;</th>
             <th style="width: 15%;">&nbsp;</th>
             </thead>
             <tbody>
             <th:block th:each="proc : ${list}">
                 <tr>
-                    <td><span th:text="${proc.title}" th:title="${proc.identifier}"></span></td>
+                    <td><span th:text="${proc.title}" th:title="${proc.toVefa()}"></span></td>
+                    <td th:text="${proc.domain.title}"></td>
                     <td>
                         <label>
                             <input type="checkbox" th:field="*{processes}" th:value="${proc.toVefa() + '/' + 'REQUEST'}"/>

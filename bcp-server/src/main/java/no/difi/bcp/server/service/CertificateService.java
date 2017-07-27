@@ -47,6 +47,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -72,10 +73,6 @@ public class CertificateService {
 
     public Certificate get(String identifier) {
         return certificateRepository.findByIdentifier(identifier);
-    }
-
-    public Certificate get(Participant participant, String identifier) {
-        return certificateRepository.findByParticipantAndIdentifier(participant, identifier);
     }
 
     public Certificate insert(Participant participant, UploadForm uploadForm)
@@ -120,14 +117,9 @@ public class CertificateService {
         certificateRepository.save(certificate);
     }
 
-    public int countActive(Participant participant) {
-        return certificateRepository.countByParticipant(participant);
-    }
-
     public List<Certificate> findByParticipantAndProcess(Participant participant, Process process, Role role)
             throws NoCertificatesException {
-        List<Certificate> certificates = certificateRepository
-                .findByParticipantAndProcessAndRole(participant, process, role);
+        List<Certificate> certificates = Collections.emptyList(); // TODO
 
         if (certificates.size() == 0)
             throw new NoCertificatesException("No certificates found.");

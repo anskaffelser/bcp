@@ -23,7 +23,7 @@
 package no.difi.bcp.server.web;
 
 import no.difi.bcp.server.domain.Application;
-import no.difi.bcp.server.domain.Process;
+import no.difi.bcp.server.domain.Registration;
 import no.difi.bcp.server.domain.User;
 import no.difi.bcp.server.form.ApplicationCertificateForm;
 import no.difi.bcp.server.form.ApplicationForm;
@@ -32,6 +32,7 @@ import no.difi.bcp.server.lang.BcpServerException;
 import no.difi.bcp.server.service.ApplicationService;
 import no.difi.bcp.server.service.CertificateService;
 import no.difi.bcp.server.service.ProcessService;
+import no.difi.bcp.server.service.RegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -43,7 +44,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -63,6 +63,9 @@ public class ApplicationController {
     @Autowired
     private ProcessService processService;
 
+    @Autowired
+    private RegistrationService registrationService;
+
     @RequestMapping(method = RequestMethod.GET)
     public String list(@AuthenticationPrincipal User user, ModelMap modelMap) {
         modelMap.put("list", applicationService.findByParticipant(user.getParticipant()));
@@ -74,6 +77,7 @@ public class ApplicationController {
     @RequestMapping(value = "/{app}", method = RequestMethod.GET)
     public String view(@PathVariable Application app, ModelMap modelMap) {
         modelMap.put("item", app);
+        modelMap.put("processes", registrationService.findByApplication(app));
 
         return "application/view";
     }
@@ -98,7 +102,7 @@ public class ApplicationController {
         application.setParticipant(user.getParticipant());
         applicationService.save(application);
 
-        return "redirect:/application";
+        return String.format("redirect:/application/%s", application.getIdentifier());
     }
 
     @PreAuthorize("#app.participant.id == principal.participant.id")
@@ -144,17 +148,18 @@ public class ApplicationController {
             return "application/certificates";
         }
 
-        applicationService.save(form.update(app));
+        applicationService.update(app, form);
 
         return String.format("redirect:/application/%s", app.getIdentifier());
     }
 
     @RequestMapping(value = "/{app}/processes", method = RequestMethod.GET)
     public String processesForm(@PathVariable Application app, ModelMap modelMap) {
-        modelMap.put("form", new ApplicationProcessForm());
+        modelMap.put("form", new ApplicationProcessForm(registrationService.findByApplication(app).stream()
+                .map(Registration::toProcessSet)
+                .collect(Collectors.toList())));
         modelMap.put("item", app);
-        modelMap.put("list", processService.findAll()/*.stream()
-                .collect(Collectors.toMap(Process::getDomain, Function.identity()))*/);
+        modelMap.put("list", processService.findAll());
 
         return "application/processes";
     }
@@ -162,13 +167,16 @@ public class ApplicationController {
     @RequestMapping(value = "/{app}/processes", method = RequestMethod.POST)
     public String processesSubmit(@PathVariable Application app, @Valid ApplicationProcessForm form,
                                   BindingResult bindingResult, ModelMap modelMap) {
-        modelMap.put("form", form);
-        modelMap.put("item", app);
-        modelMap.put("list", processService.findAll()/*.stream()
-                .collect(Collectors.toMap(Process::getDomain, Function.identity()))*/);
+        if (bindingResult.hasErrors()) {
+            modelMap.put("form", form);
+            modelMap.put("item", app);
+            modelMap.put("list", processService.findAll());
 
-        System.out.println(form.getProcesses());
+            return "application/processes";
+        }
 
-        return "application/processes";
+        registrationService.update(app, form);
+
+        return String.format("redirect:/application/%s", app.getIdentifier());
     }
 }

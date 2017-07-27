@@ -1,26 +1,4 @@
 <!DOCTYPE html>
-<!--
-  ~  Copyright 2017 Norwegian Agency for Public Management and eGovernment (Difi)
-  ~
-  ~  Licensed under the EUPL, Version 1.1 or – as soon they
-  ~  will be approved by the European Commission - subsequent
-  ~  versions of the EUPL (the "Licence");
-  ~
-  ~  You may not use this work except in compliance with the Licence.
-  ~
-  ~  You may obtain a copy of the Licence at:
-  ~
-  ~  https://joinup.ec.europa.eu/community/eupl/og_page/eupl
-  ~
-  ~  Unless required by applicable law or agreed to in
-  ~  writing, software distributed under the Licence is
-  ~  distributed on an "AS IS" basis,
-  ~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
-  ~  express or implied.
-  ~  See the Licence for the specific language governing
-  ~  permissions and limitations under the Licence.
-  -->
-
 <html layout:decorator="layout" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org">
 <body>
@@ -51,41 +29,6 @@
         <dt>Serial number</dt>
         <dd th:text="${certificate.serialNumber}"></dd>
     </dl>
-
-    <h2>Connected processes</h2>
-
-    <form th:if="${processesAvailable.size() > 0}" method="post" th:action="@{/certificate/{i}/connect(i=${certificate.identifier})}" class="form-inline pull-right">
-        <div class="input-group">
-            <select name="process" class="form-control" id="process">
-                <option th:each="p : ${processesAvailable}"
-                        th:value="${p.scheme} + '::' + ${p.identifier}"
-                        th:text="${p.title} + ' (' + ${p.identifier} + ')'"></option>
-            </select>
-            <span class="input-group-btn">
-                <button class="btn btn-primary" type="submit">Add</button>
-            </span>
-        </div>
-    </form>
-
-    <table class="table table-striped">
-        <thead>
-        <th style="width: 15%;">Scheme</th>
-        <th style="width: 25%;">Identifier</th>
-        <th>Title</th>
-        </thead>
-        <tbody>
-        <th:block th:each="process : ${processesConnected}">
-            <tr>
-                <td th:text="${process.scheme}"></td>
-                <td th:text="${process.identifier}"></td>
-                <td><a th:text="${process.title}"
-                       th:href="@{/process/{scheme}::{identifier}(scheme=${process.scheme}, identifier=${process.identifier})}">Process
-                    title</a></td>
-            </tr>
-        </th:block>
-        </tbody>
-    </table>
-
 
 </div>
 

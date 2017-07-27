@@ -133,6 +133,24 @@ public class Process implements Serializable {
         this.registrations = registrations;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Process process = (Process) o;
+
+        if (!identifier.equals(process.identifier)) return false;
+        return scheme.equals(process.scheme);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = identifier.hashCode();
+        result = 31 * result + scheme.hashCode();
+        return result;
+    }
+
     public static enum Type {
         ONE_WAY,
         TWO_WAY

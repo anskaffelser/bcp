@@ -121,13 +121,7 @@ public class CertificateController {
     @RequestMapping(value = "/{certificate}", method = RequestMethod.GET)
     public String view(@PathVariable Certificate certificate, ModelMap modelMap)
             throws BcpServerException {
-        List<Process> processesConnected = processService.findByCertificate(certificate);
-        List<Process> processesAvailable = processService.findAll();
-        processesAvailable.removeAll(processesConnected);
-
         modelMap.put("certificate", certificate);
-        modelMap.put("processesConnected", processesConnected);
-        modelMap.put("processesAvailable", processesAvailable);
 
         return "certificate/view";
     }
@@ -145,25 +139,6 @@ public class CertificateController {
         writer.write(encoder.encodeToString(certificate.getCertificate()));
         writer.write("\r\n-----END CERTIFICATE-----");
         writer.flush();
-    }
-
-    @PreAuthorize("#certificate.participant.id == principal.participant.id")
-    @RequestMapping(value = "/{certificate}/connect", method = RequestMethod.POST)
-    public String connectProcess(@AuthenticationPrincipal User user, @PathVariable Certificate certificate,
-                                 @RequestParam("process") String processParam) throws IOException, BcpServerException {
-        try {
-            Process process = processService.get(ProcessIdentifier.parse(processParam));
-
-            Registration registration = new Registration();
-            registration.setParticipant(user.getParticipant());
-            registration.setProcess(process);
-            registration.setCertificate(certificate);
-            registrationService.save(registration);
-
-            return String.format("redirect:/certificate/%s", certificate.getIdentifier());
-        } catch (PeppolParsingException e) {
-            throw new InvalidInputException(e.getMessage(), e);
-        }
     }
 
     @PreAuthorize("#certificate.participant.id == principal.participant.id")

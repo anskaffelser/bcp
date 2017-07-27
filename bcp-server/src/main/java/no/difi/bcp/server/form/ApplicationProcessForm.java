@@ -22,8 +22,7 @@
 
 package no.difi.bcp.server.form;
 
-import no.difi.bcp.api.Role;
-import no.difi.bcp.server.domain.Process;
+import no.difi.bcp.server.domain.ProcessSet;
 
 import java.util.List;
 
@@ -34,6 +33,13 @@ public class ApplicationProcessForm {
 
     private List<ProcessSet> processes;
 
+    public ApplicationProcessForm() {
+    }
+
+    public ApplicationProcessForm(List<ProcessSet> processes) {
+        this.processes = processes;
+    }
+
     public List<ProcessSet> getProcesses() {
         return processes;
     }
@@ -42,38 +48,4 @@ public class ApplicationProcessForm {
         this.processes = processes;
     }
 
-    public static class ProcessSet {
-
-        private Process process;
-
-        private Role role;
-
-        public ProcessSet() {
-        }
-
-        public ProcessSet(Process process, Role role) {
-            this.process = process;
-            this.role = role;
-        }
-
-        public Process getProcess() {
-            return process;
-        }
-
-        public void setProcess(Process process) {
-            this.process = process;
-        }
-
-        public Role getRole() {
-            return role;
-        }
-
-        public void setRole(Role role) {
-            this.role = role;
-        }
-
-        public String toString() {
-            return String.format("%s/%s", process.toVefa().toString(), role);
-        }
-    }
 }
