@@ -33,6 +33,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  * @author erlend
@@ -43,18 +44,24 @@ public class MasqueradeController {
 
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     @RequestMapping(value = "/perform/{participant}", method = RequestMethod.GET)
-    public String perform(@AuthenticationPrincipal User user, @PathVariable Participant participant) {
+    public String perform(@AuthenticationPrincipal User user, @PathVariable Participant participant,
+                          RedirectAttributes redirectAttributes) {
         SecurityContextHolder.getContext()
                 .setAuthentication(VirksertAuthenticationToken.newInstance(new MasqueradeUser(user, participant)));
+
+        redirectAttributes.addFlashAttribute("alert-success",
+                String.format("You are now acting on behalf of '%s'.", participant.getName()));
 
         return "redirect:/";
     }
 
     @PreAuthorize("hasAnyAuthority('MASQUERADE')")
     @RequestMapping(value = "/back", method = RequestMethod.GET)
-    public String logout(@AuthenticationPrincipal MasqueradeUser user) {
+    public String logout(@AuthenticationPrincipal MasqueradeUser user, RedirectAttributes redirectAttributes) {
         SecurityContextHolder.getContext()
                 .setAuthentication(VirksertAuthenticationToken.newInstance(user.getOriginal()));
+
+        redirectAttributes.addFlashAttribute("alert-warning", "You are now acting as administrator.");
 
         return "redirect:/";
     }

@@ -3,12 +3,14 @@
       xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <body>
 
-<div layout:fragment="content">
-
+<div layout:fragment="breadcrumb">
     <ol class="breadcrumb">
         <li><a th:href="@{/}">Home</a></li>
         <li class="active">Domains</li>
     </ol>
+</div>
+
+<div layout:fragment="content">
 
     <div class="page-header">
         <div class="pull-right" sec:authorize="hasAnyAuthority('ADMIN')">

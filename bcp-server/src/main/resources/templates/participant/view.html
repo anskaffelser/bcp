@@ -3,13 +3,15 @@
       xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<div layout:fragment="content">
-
+<div layout:fragment="breadcrumb">
     <ol class="breadcrumb">
         <li><a th:href="@{/}">Home</a></li>
         <li><a th:href="@{/participant}">Participants</a></li>
         <li class="active" th:text="${participant.name}">Participant</li>
     </ol>
+</div>
+
+<div layout:fragment="content">
 
     <div class="page-header">
         <h1 th:text="${participant.name}">Participant</h1>

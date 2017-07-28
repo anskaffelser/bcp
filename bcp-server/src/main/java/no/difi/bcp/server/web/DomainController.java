@@ -31,6 +31,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -70,7 +71,7 @@ public class DomainController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String addSubmit(@Valid DomainForm form, BindingResult bindingResult, ModelMap modelMap)
+    public String addSubmit(@Valid @ModelAttribute("form") DomainForm form, BindingResult bindingResult, ModelMap modelMap)
             throws BcpServerException {
         if (bindingResult.hasErrors()) {
             modelMap.put("form", form);
@@ -90,7 +91,8 @@ public class DomainController {
     }
 
     @RequestMapping(value = "/{domain}/edit", method = RequestMethod.POST)
-    public String editSubmit(@PathVariable Domain domain, @Valid DomainForm form, BindingResult bindingResult, ModelMap modelMap)
+    public String editSubmit(@PathVariable Domain domain, @Valid @ModelAttribute("form") DomainForm form,
+                             BindingResult bindingResult, ModelMap modelMap)
             throws BcpServerException {
         if (bindingResult.hasErrors()) {
             modelMap.put("form", form);

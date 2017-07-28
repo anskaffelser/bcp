@@ -3,14 +3,16 @@
       xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<div layout:fragment="content">
-
+<div layout:fragment="breadcrumb">
     <ol class="breadcrumb">
         <li><a th:href="@{/}">Home</a></li>
         <li><a th:href="@{/user}">Users</a></li>
         <li><a th:href="@{/user/{i}(i=${user.identifier})}" th:text="${user.name}">User</a></li>
         <li class="active">Delete user</li>
     </ol>
+</div>
+
+<div layout:fragment="content">
 
     <div class="page-header">
         <h1>Delete user</h1>

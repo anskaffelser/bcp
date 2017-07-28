@@ -30,6 +30,7 @@
     <xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="xmldsig-core-schema.xsd"/>
 
     <xs:element name="Registration" type="RegistrationType"/>
+
     <xs:complexType name="RegistrationType">
         <xs:sequence>
             <xs:element name="Timestamp" type="xs:dateTime"/>
@@ -40,8 +41,9 @@
 
     <xs:complexType name="UserType">
         <xs:sequence>
-            <xs:element name="Name" type="xs:string"/>
-            <xs:element name="Login" type="LoginType"/>
+            <xs:element name="Name" type="xs:string" minOccurs="1"/>
+            <xs:element name="Email" type="xs:string" minOccurs="1"/>
+            <xs:element name="Login" type="LoginType" minOccurs="1"/>
         </xs:sequence>
     </xs:complexType>
 

@@ -3,12 +3,14 @@
       xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<div layout:fragment="content">
-
+<div layout:fragment="breadcrumb">
     <ol class="breadcrumb">
         <li><a th:href="@{/}">Home</a></li>
         <li class="active">Certificates</li>
     </ol>
+</div>
+
+<div layout:fragment="content">
 
     <div class="page-header">
         <div class="pull-right">
@@ -48,21 +50,6 @@
     </table>
 
 </div>
-
-<!--
-<th:block layout:fragment="script">
-    <script src="/webjars/dropzone/4.3.0/min/dropzone.min.js"></script>
-    <script>
-        jQuery("#list").dropzone({
-            url: "<th:block th:text='@{/participant/{ps}::{pi}/certificate/upload(ps=${participant.scheme}, pi=${participant.identifier})}'></th:block>"
-        });
-    </script>
-</th:block>
-
-<th:block layout:fragment="style">
-    <link href="/webjars/dropzone/4.3.0/min/dropzone.min.css" rel="stylesheet"/>
-</th:block>
--->
 
 </body>
 </html>

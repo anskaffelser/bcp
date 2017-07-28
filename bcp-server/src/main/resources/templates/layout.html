@@ -89,12 +89,24 @@
 
         </div>
         <div class="col-md-10 col-sm-9">
-            <div layout:fragment="content"></div>
+
+            <th:block layout:fragment="breadcrumb"/>
+
+            <th:block th:include="fragments :: alerts"/>
+
+            <th:block layout:fragment="content"/>
+
         </div>
     </div>
 </div>
 
-<div id="main" class="container" layout:fragment="content" sec:authorize="!isAuthenticated()">
+<div id="main" class="container" sec:authorize="!isAuthenticated()">
+
+    <th:block layout:fragment="breadcrumb"/>
+
+    <th:block th:include="fragments :: alerts"/>
+
+    <th:block layout:fragment="content"/>
 
 </div>
 

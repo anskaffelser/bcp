@@ -31,10 +31,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
@@ -71,14 +69,18 @@ public class ParticipantController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String addSubmit(@Valid ParticipantForm form, BindingResult bindingResult, ModelMap modelMap)
+    public String addSubmit(@Valid @ModelAttribute("form") ParticipantForm form, BindingResult bindingResult,
+                            ModelMap modelMap, RedirectAttributes redirectAttributes)
             throws BcpServerException {
         if (bindingResult.hasErrors()) {
             modelMap.put("form", form);
             return "participant/form";
         }
 
-        participantService.save(form.update(new Participant()));
+        Participant participant = participantService.save(form.update(new Participant()));
+
+        redirectAttributes.addFlashAttribute("alert-success",
+                String.format("Participant '%s' successfully registered.", participant.getName()));
 
         return "redirect:/participant";
     }

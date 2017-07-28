@@ -22,12 +22,12 @@
 
 package no.difi.bcp.server.service;
 
-import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.difi.bcp.server.domain.Participant;
 import no.difi.bcp.server.domain.ParticipantRepository;
-import no.difi.bcp.server.lang.ParticipantNotFoundException;
 import no.difi.bcp.server.lang.BcpServerException;
+import no.difi.bcp.server.lang.ParticipantNotFoundException;
 import no.difi.bcp.server.util.DatahotelOrganization;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -62,7 +62,7 @@ public class ParticipantService {
     }
 
     @Transactional
-    public void save(Participant participant) throws BcpServerException {
+    public Participant save(Participant participant) throws BcpServerException {
         if (participant.getId() == 0) {
             if (participant.getIdentifier().startsWith("9908:")) {
                 Optional<DatahotelOrganization> org =
@@ -72,6 +72,6 @@ public class ParticipantService {
             }
         }
 
-        participantRepository.save(participant);
+        return participantRepository.save(participant);
     }
 }

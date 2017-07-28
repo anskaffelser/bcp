@@ -39,6 +39,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -91,7 +92,7 @@ public class ApplicationController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String addSubmit(@AuthenticationPrincipal User user, @Valid ApplicationForm form,
+    public String addSubmit(@AuthenticationPrincipal User user, @Valid @ModelAttribute("form") ApplicationForm form,
                             BindingResult bindingResult, ModelMap modelMap)
             throws BcpServerException {
         if (bindingResult.hasErrors()) {
@@ -116,7 +117,7 @@ public class ApplicationController {
 
     @PreAuthorize("#app.participant.id == principal.participant.id")
     @RequestMapping(value = "/{app}/edit", method = RequestMethod.POST)
-    public String editSubmit(@PathVariable Application app, @Valid ApplicationForm form,
+    public String editSubmit(@PathVariable Application app, @Valid @ModelAttribute("form") ApplicationForm form,
                              BindingResult bindingResult, ModelMap modelMap) {
         if (bindingResult.hasErrors()) {
             modelMap.put("form", form);
@@ -140,7 +141,7 @@ public class ApplicationController {
 
     @PreAuthorize("#app.participant.id == principal.participant.id")
     @RequestMapping(value = "/{app}/certificates", method = RequestMethod.POST)
-    public String certificatesSubmit(@PathVariable Application app, @Valid ApplicationCertificateForm form,
+    public String certificatesSubmit(@PathVariable Application app, @Valid @ModelAttribute("form") ApplicationCertificateForm form,
                                      BindingResult bindingResult, ModelMap modelMap) {
         if (bindingResult.hasErrors()) {
             modelMap.put("form", form);
@@ -168,7 +169,7 @@ public class ApplicationController {
 
     @PreAuthorize("#app.participant.id == principal.participant.id")
     @RequestMapping(value = "/{app}/processes", method = RequestMethod.POST)
-    public String processesSubmit(@PathVariable Application app, @Valid ApplicationProcessForm form,
+    public String processesSubmit(@PathVariable Application app, @Valid @ModelAttribute("form") ApplicationProcessForm form,
                                   BindingResult bindingResult, ModelMap modelMap) {
         if (bindingResult.hasErrors()) {
             modelMap.put("form", form);

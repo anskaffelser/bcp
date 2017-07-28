@@ -1,0 +1,32 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <th:block th:fragment="alerts">
+        <div th:if="${#vars['alert-success']}" class="alert alert-success" role="alert" th:text="${#vars['alert-success']}"></div>
+        <div th:if="${#vars['alert-info']}" class="alert alert-info" role="alert" th:text="${#vars['alert-info']}"></div>
+        <div th:if="${#vars['alert-warning']}" class="alert alert-warning" role="alert" th:text="${#vars['alert-warning']}"></div>
+        <div th:if="${#vars['alert-danger']}" class="alert alert-success" role="alert" th:text="${#vars['alert-danger']}"></div>
+    </th:block>
+
+    <th:block th:fragment="pagination(page)">
+        <nav th:with="uri = ${#httpServletRequest.getRequestURI()}" aria-label="Page navigation" class="text-center" th:if="${page.totalPages &gt; 1}">
+            <ul class="pagination">
+                <li th:if="${page.number &gt; 0}">
+                    <a th:href="@{${uri}(page=${page.number + 0})}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li th:if="${page.number + -1 &gt; 0}"><a th:href="@{${uri}(page=${page.number + -1})}" th:text="${page.number + -1}"></a></li>
+                <li th:if="${page.number + 0 &gt; 0}"><a th:href="@{${uri}(page=${page.number + 0})}" th:text="${page.number + 0}"></a></li>
+                <li class="active"><a th:href="@{${uri}(page=${page.number + 1})}" th:text="${page.number + 1}"></a></li>
+                <li th:if="${page.number + 1 &lt; page.totalPages}"><a th:href="@{${uri}(page=${page.number + 2})}" th:text="${page.number + 2}"></a></li>
+                <li th:if="${page.number + 2 &lt; page.totalPages}"><a th:href="@{${uri}(page=${page.number + 3})}" th:text="${page.number + 3}"></a></li>
+                <li th:if="${page.number + 1 &lt; page.totalPages}">
+                    <a th:href="@{${uri}(page=${page.number + 2})}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </th:block>
+
+</html>

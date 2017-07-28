@@ -23,20 +23,13 @@
 package no.difi.bcp.server.web;
 
 import no.difi.bcp.server.domain.Certificate;
-import no.difi.bcp.server.domain.Process;
-import no.difi.bcp.server.domain.Registration;
 import no.difi.bcp.server.domain.User;
 import no.difi.bcp.server.form.CertificateForm;
 import no.difi.bcp.server.form.UploadForm;
 import no.difi.bcp.server.lang.BcpServerException;
 import no.difi.bcp.server.lang.CertificateException;
-import no.difi.bcp.server.lang.InvalidInputException;
 import no.difi.bcp.server.service.CertificateService;
-import no.difi.bcp.server.service.ProcessService;
-import no.difi.bcp.server.service.RegistrationService;
 import no.difi.certvalidator.api.CertificateValidationException;
-import no.difi.vefa.peppol.common.lang.PeppolParsingException;
-import no.difi.vefa.peppol.common.model.ProcessIdentifier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -44,7 +37,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletResponse;
@@ -53,7 +45,6 @@ import java.io.IOException;
 import java.io.Writer;
 import java.security.cert.CertificateEncodingException;
 import java.util.Base64;
-import java.util.List;
 
 /**
  * @author erlend
@@ -67,12 +58,6 @@ public class CertificateController {
 
     @Autowired
     private CertificateService certificateService;
-
-    @Autowired
-    private ProcessService processService;
-
-    @Autowired
-    private RegistrationService registrationService;
 
     @RequestMapping(method = RequestMethod.GET)
     public String list(@AuthenticationPrincipal User user, @RequestParam(defaultValue = "1") int page,
@@ -90,26 +75,13 @@ public class CertificateController {
     }
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
-    public String uploadSubmit(@AuthenticationPrincipal User user, @Valid UploadForm form,
+    public String uploadSubmit(@AuthenticationPrincipal User user, @Valid @ModelAttribute("form") UploadForm form,
                                RedirectAttributes redirectAttributes) throws IOException, BcpServerException {
         try {
-            certificateService.insert(user.getParticipant(), form);
+            Certificate certificate = certificateService.insert(user.getParticipant(), form);
 
-            // redirectAttributes.addFlashAttribute("message", "You successfully uploaded " + file.getOriginalFilename() + "!");
-
-            return "redirect:/certificate";
-        } catch (CertificateValidationException | CertificateEncodingException e) {
-            throw new CertificateException(e.getMessage(), e);
-        }
-    }
-
-    @RequestMapping(value = "/upload/simple", method = RequestMethod.POST)
-    public String uploadSimple(@AuthenticationPrincipal User user, @RequestParam("file") MultipartFile file,
-                               RedirectAttributes redirectAttributes) throws IOException, BcpServerException {
-        try {
-            certificateService.insert(user.getParticipant(), file.getInputStream());
-
-            redirectAttributes.addFlashAttribute("message", "You successfully uploaded " + file.getOriginalFilename() + "!");
+            redirectAttributes.addFlashAttribute("alert-success",
+                    String.format("You successfully uploaded certificate '%s'.", certificate.getName()));
 
             return "redirect:/certificate";
         } catch (CertificateValidationException | CertificateEncodingException e) {
@@ -151,7 +123,7 @@ public class CertificateController {
 
     @PreAuthorize("#certificate.participant.id == principal.participant.id")
     @RequestMapping(value = "/{certificate}/edit", method = RequestMethod.POST)
-    public String editSubmit(@PathVariable Certificate certificate, @Valid CertificateForm form,
+    public String editSubmit(@PathVariable Certificate certificate, @Valid @ModelAttribute("form") CertificateForm form,
                              BindingResult bindingResult, ModelMap modelMap)
             throws BcpServerException {
         if (bindingResult.hasErrors()) {

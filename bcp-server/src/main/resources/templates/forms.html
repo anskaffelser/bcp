@@ -1,0 +1,75 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <th:block th:fragment="text(title, attr)">
+        <div class="form-group" th:classappend="${#fields.hasErrors(attr)} ? 'has-error' : ''">
+            <label th:for="${attr}" class="col-sm-2 control-label" th:text="${title}"></label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" th:id="${attr}" th:field="*{__${attr}__}"/>
+
+                <div class="alert alert-danger" th:if="${#fields.hasErrors(attr)}">
+                    <p th:each="err : ${#fields.errors(attr)}" th:text="${err}"></p>
+                </div>
+            </div>
+        </div>
+    </th:block>
+
+    <th:block th:fragment="password(title, attr)">
+        <div class="form-group form-group-lg" th:classappend="${#fields.hasErrors(attr)} ? 'has-error' : ''">
+            <label th:for="${attr}" class="col-sm-3 control-label" th:text="${title}"></label>
+            <div class="col-sm-6">
+                <input type="password" class="form-control" th:id="${attr}" th:field="*{__${attr}__}"/>
+
+                <div class="alert alert-danger" th:if="${#fields.hasErrors(attr)}">
+                    <p th:each="err : ${#fields.errors(attr)}" th:text="${err}"></p>
+                </div>
+            </div>
+        </div>
+    </th:block>
+
+    <th:block th:fragment="file(title, attr)">
+        <div class="form-group" th:classappend="${#fields.hasErrors(attr)} ? 'has-error' : ''">
+            <label th:for="${attr}" class="col-sm-2 control-label" th:text="${title}"></label>
+            <div class="col-sm-6">
+                <input type="file" class="form-control" th:id="${attr}" th:field="*{__${attr}__}"/>
+
+                <div class="alert alert-danger" th:if="${#fields.hasErrors(attr)}">
+                    <p th:each="err : ${#fields.errors(attr)}" th:text="${err}"></p>
+                </div>
+            </div>
+        </div>
+    </th:block>
+
+    <th:block th:fragment="input(title, attr, type, size)">
+        <div class="form-group form-group-lg"> <!-- th:classappend="${#fields.hasErrors(attr)} ? 'has-error' : ''"> -->
+            <label th:for="${attr}" class="col-sm-3 control-label" th:text="${title}"></label>
+            <div th:class="${'col-sm-' + size}">
+                <input th:type="${type}" class="form-control" th:id="${attr}" th:field="*{__${attr}__}"/>
+
+                <!-- <div class="alert alert-danger" th:if="${#fields.hasErrors(attr)}">
+                    <p th:each="err : ${#fields.errors(attr)}" th:text="${err}"></p>
+                </div> -->
+            </div>
+        </div>
+    </th:block>
+
+    <th:block th:fragment="checkbox(title, attr)">
+        <div class="form-group form-group-lg">
+            <div class="col-sm-offset-3 col-sm-6">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" th:field="*{__${attr}__}"/> <th:block th:text="${title}"/>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </th:block>
+
+    <th:block th:fragment="submit(title)">
+        <div class="form-group" style="margin-top: 20pt;">
+            <div class="col-sm-offset-2 col-sm-6">
+                <button type="submit" class="btn btn-primary" th:text="${title}"></button>
+            </div>
+        </div>
+    </th:block>
+
+</html>

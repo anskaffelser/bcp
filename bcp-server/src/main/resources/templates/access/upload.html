@@ -5,25 +5,22 @@
 <div layout:fragment="breadcrumb">
     <ol class="breadcrumb">
         <li><a th:href="@{/}">Home</a></li>
-        <li><a th:href="@{/process}">Processes</a></li>
-        <li class="active" th:text="${process.title}">Process</li>
+        <li class="active">Update access</li>
     </ol>
 </div>
 
 <div layout:fragment="content">
 
     <div class="page-header">
-        <h1 th:text="${process.title}">Process</h1>
+        <h1>Update access</h1>
     </div>
 
-    <dl>
-        <dt>Scheme</dt>
-        <dd th:text="${process.scheme}"></dd>
+    <form method="post" enctype="multipart/form-data" th:action="${#httpServletRequest.requestURI}" th:object="${form}" class="form-horizontal">
 
-        <dt>Identifier</dt>
-        <dd th:text="${process.identifier}"></dd>
-    </dl>
+        <th:block th:include="forms :: file('Access file', 'file')"/>
+        <th:block th:include="forms :: submit('Upload')"/>
 
+    </form>
 
 </div>
 

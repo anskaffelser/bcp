@@ -83,6 +83,12 @@ public class CertificateService {
     public Certificate insert(Participant participant, InputStream inputStream)
             throws CertificateEncodingException, CertificateValidationException {
         X509Certificate cert = Validator.getCertificate(inputStream);
+        return insert(participant, cert);
+    }
+
+    @Transactional
+    public Certificate insert(Participant participant, X509Certificate cert)
+            throws CertificateEncodingException, CertificateValidationException {
         validator.validate(cert);
 
         new NorwegianOrganizationNumberRule(s -> String.format("9908:%s", s).equals(participant.getIdentifier()))

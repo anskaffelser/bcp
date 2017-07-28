@@ -3,14 +3,16 @@
       xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<div layout:fragment="content">
-
+<div layout:fragment="breadcrumb">
     <ol class="breadcrumb">
         <li><a th:href="@{/}">Home</a></li>
         <li><a th:href="@{/domain}">Processes</a></li>
         <li><a th:href="@{/domain/{identifier}(identifier=${domain.identifier})}" th:text="${domain.title}">Domain</a></li>
         <li class="active">Delete domain</li>
     </ol>
+</div>
+
+<div layout:fragment="content">
 
     <div class="page-header">
         <h1>Delete domain</h1>

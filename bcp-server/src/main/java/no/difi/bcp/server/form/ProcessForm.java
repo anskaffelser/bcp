@@ -24,20 +24,29 @@ package no.difi.bcp.server.form;
 
 import no.difi.bcp.server.domain.Domain;
 import no.difi.bcp.server.domain.Process;
+import org.hibernate.validator.constraints.NotEmpty;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * @author erlend
  */
 public class ProcessForm extends AbstractForm {
 
+    @NotNull
+    @NotEmpty
     private String identifier;
 
+    @NotNull
+    @NotEmpty
     private String scheme;
 
     private String title;
 
+    @NotNull
     private Domain domain;
 
+    @NotNull
     private Process.Type type = Process.Type.ONE_WAY;
 
     public ProcessForm() {

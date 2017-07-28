@@ -3,14 +3,16 @@
       xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<div layout:fragment="content">
-
+<div layout:fragment="breadcrumb">
     <ol class="breadcrumb">
         <li><a th:href="@{/}">Home</a></li>
         <li><a th:href="@{/process}">Processes</a></li>
         <li><a th:href="@{/process/{scheme}::{identifier}(scheme=${process.scheme}, identifier=${process.identifier})}" th:text="${process.title}">Process</a></li>
         <li class="active">Delete process</li>
     </ol>
+</div>
+
+<div layout:fragment="content">
 
     <div class="page-header">
         <h1>Delete process</h1>

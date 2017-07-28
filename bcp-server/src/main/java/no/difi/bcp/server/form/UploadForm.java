@@ -24,11 +24,14 @@ package no.difi.bcp.server.form;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * @author erlend
  */
 public class UploadForm {
 
+    @NotNull
     private MultipartFile file;
 
     public MultipartFile getFile() {

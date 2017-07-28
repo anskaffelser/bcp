@@ -3,8 +3,7 @@
       xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<div layout:fragment="content">
-
+<div layout:fragment="breadcrumb">
     <ol class="breadcrumb">
         <li><a th:href="@{/}">Home</a></li>
         <li><a th:href="@{/application}">Applications</a></li>
@@ -12,6 +11,9 @@
         <li th:if="${!enabled}" class="active">Enable application</li>
         <li th:if="${enabled}" class="active">Disable application</li>
     </ol>
+</div>
+
+<div layout:fragment="content">
 
     <div class="page-header">
         <h1 th:if="${!enabled}">Enable application</h1>

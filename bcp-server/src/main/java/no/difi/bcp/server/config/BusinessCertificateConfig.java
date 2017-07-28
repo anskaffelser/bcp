@@ -22,7 +22,6 @@
 
 package no.difi.bcp.server.config;
 
-import no.difi.certvalidator.Validator;
 import no.difi.bcp.lang.BcpException;
 import no.difi.bcp.security.BusinessCertificateValidator;
 import no.difi.certvalidator.ValidatorGroup;
@@ -58,12 +57,8 @@ public class BusinessCertificateConfig {
     }
 
     @Bean
-    public Validator getValidator(BusinessCertificateValidator businessCertificateValidator) throws BcpException {
-        return businessCertificateValidator.getValidator();
+    public ValidatorGroup getValidator(BusinessCertificateValidator businessCertificateValidator) throws BcpException {
+        return (ValidatorGroup) businessCertificateValidator.getValidator();
     }
 
-    @Bean
-    public ValidatorGroup getValidatorGroup(Validator validator) {
-        return (ValidatorGroup) validator;
-    }
 }

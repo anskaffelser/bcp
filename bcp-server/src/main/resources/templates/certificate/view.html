@@ -3,14 +3,16 @@
       xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<div layout:fragment="content">
-
+<div layout:fragment="breadcrumb">
     <ol class="breadcrumb">
         <li><a th:href="@{/}">Home</a></li>
         <li><a th:href="@{/certificate}">Certificates</a>
         </li>
         <li class="active" th:text="${certificate.name}">Certificate</li>
     </ol>
+</div>
+
+<div layout:fragment="content">
 
     <div class="page-header">
         <a th:href="@{/certificate/{i}/download(i=${certificate.identifier})}"

@@ -3,6 +3,10 @@
       xmlns:th="http://www.thymeleaf.org">
 <body>
 
+<div layout:fragment="breadcrumb">
+
+</div>
+
 <div layout:fragment="content">
 
     <div class="page-header">
@@ -18,11 +22,7 @@
             </div>
         </div>
 
-        <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-primary">Save</button>
-            </div>
-        </div>
+        <th:block th:include="forms :: submit('Save')"/>
 
     </form>
 

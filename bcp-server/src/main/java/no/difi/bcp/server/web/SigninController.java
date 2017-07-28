@@ -34,6 +34,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -74,7 +75,7 @@ public class SigninController {
     }
 
     @RequestMapping(value = "/email", method = RequestMethod.POST)
-    public String emailSubmit(@Valid SigninEmailForm form, BindingResult bindingResult, ModelMap modelMap)
+    public String emailSubmit(@Valid @ModelAttribute("form") SigninEmailForm form, BindingResult bindingResult, ModelMap modelMap)
             throws ParticipantNotFoundException {
         if (bindingResult.hasErrors()) {
             modelMap.put("form", form);

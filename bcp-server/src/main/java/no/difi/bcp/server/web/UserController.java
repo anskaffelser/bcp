@@ -32,6 +32,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -64,7 +65,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String addSubmit(@AuthenticationPrincipal User principal, @Valid UserForm form, BindingResult bindingResult, ModelMap modelMap) {
+    public String addSubmit(@AuthenticationPrincipal User principal, @Valid @ModelAttribute("form") UserForm form, BindingResult bindingResult, ModelMap modelMap) {
         if (bindingResult.hasErrors()) {
             modelMap.put("form", form);
             return "user/form";
@@ -85,7 +86,8 @@ public class UserController {
     }
 
     @RequestMapping(value = "/{identifier}/edit", method = RequestMethod.GET)
-    public String editForm(@AuthenticationPrincipal User principal, @PathVariable String identifier, ModelMap modelMap) throws BcpServerException {
+    public String editForm(@AuthenticationPrincipal User principal, @PathVariable String identifier, ModelMap modelMap)
+            throws BcpServerException {
         User user = userService.findUserByIdentifier(principal.getParticipant(), identifier);
 
         modelMap.put("form", new UserForm(user));
@@ -95,7 +97,8 @@ public class UserController {
     }
 
     @RequestMapping(value = "/{identifier}/edit", method = RequestMethod.POST)
-    public String editSubmit(@AuthenticationPrincipal User principal, @PathVariable String identifier, @Valid UserForm form, BindingResult bindingResult,
+    public String editSubmit(@AuthenticationPrincipal User principal, @PathVariable String identifier,
+                             @Valid @ModelAttribute("form") UserForm form, BindingResult bindingResult,
                              ModelMap modelMap) throws BcpServerException {
         User user = userService.findUserByIdentifier(principal.getParticipant(), identifier);
 
@@ -113,7 +116,8 @@ public class UserController {
     }
 
     @RequestMapping(value = "/{identifier}/delete", method = RequestMethod.GET)
-    public String deleteForm(@AuthenticationPrincipal User principal, @PathVariable String identifier, ModelMap modelMap) throws BcpServerException {
+    public String deleteForm(@AuthenticationPrincipal User principal, @PathVariable String identifier, ModelMap modelMap)
+            throws BcpServerException {
         User user = userService.findUserByIdentifier(principal.getParticipant(), identifier);
 
         modelMap.put("user", user);
@@ -122,7 +126,8 @@ public class UserController {
     }
 
     @RequestMapping(value = "/{identifier}/delete", method = RequestMethod.POST)
-    public String deleteSubmit(@AuthenticationPrincipal User principal, @PathVariable String identifier, ModelMap modelMap) throws BcpServerException {
+    public String deleteSubmit(@AuthenticationPrincipal User principal, @PathVariable String identifier,
+                               ModelMap modelMap) throws BcpServerException {
         User user = userService.findUserByIdentifier(principal.getParticipant(), identifier);
         userService.delete(user);
 
