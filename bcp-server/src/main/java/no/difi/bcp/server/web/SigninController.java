@@ -61,7 +61,6 @@ public class SigninController {
 
     @RequestMapping(value = "/code", method = RequestMethod.GET)
     public String codeForm(@RequestParam(required = false) String participant, ModelMap modelMap) {
-
         modelMap.put("form", new SigninCodeForm(participant));
 
         return "signin/code";
@@ -75,8 +74,8 @@ public class SigninController {
     }
 
     @RequestMapping(value = "/email", method = RequestMethod.POST)
-    public String emailSubmit(@Valid SigninEmailForm form, BindingResult bindingResult,
-                              ModelMap modelMap) throws ParticipantNotFoundException {
+    public String emailSubmit(@Valid SigninEmailForm form, BindingResult bindingResult, ModelMap modelMap)
+            throws ParticipantNotFoundException {
         if (bindingResult.hasErrors()) {
             modelMap.put("form", form);
             return "signin/email";

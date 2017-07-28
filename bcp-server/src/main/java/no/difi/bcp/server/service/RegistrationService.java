@@ -86,7 +86,7 @@ public class RegistrationService {
     }
 
     @Transactional(readOnly = true)
-    public List<Process> findProcesses(Participant participant) {
+    public List<Registration> findProcesses(Participant participant) {
         return registrationRepository.findProcesses(participant);
     }
 

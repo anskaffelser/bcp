@@ -27,10 +27,12 @@ import no.difi.bcp.jaxb.v1.model.*;
 import no.difi.bcp.server.domain.Certificate;
 import no.difi.bcp.server.domain.Participant;
 import no.difi.bcp.server.domain.Process;
+import no.difi.bcp.server.domain.Registration;
 import no.difi.bcp.server.lang.*;
 import no.difi.bcp.server.service.ParticipantService;
 import no.difi.bcp.server.service.ProcessService;
 import no.difi.bcp.server.service.RegistrationService;
+import no.difi.certvalidator.ValidatorGroup;
 import no.difi.vefa.peppol.common.api.QualifiedIdentifier;
 import no.difi.vefa.peppol.common.lang.PeppolParsingException;
 import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
@@ -43,6 +45,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -80,6 +83,18 @@ public class ApiController {
     @Autowired
     private RegistrationService registrationService;
 
+    @Autowired
+    private ValidatorGroup validatorGroup;
+
+    private ValidatorType validatorType;
+
+    @PostConstruct
+    public void postConstruct() {
+        validatorType = new ValidatorType();
+        validatorType.setName(validatorGroup.getName());
+        validatorType.setVersion(validatorGroup.getVersion());
+    }
+
     @RequestMapping(
             value = "/{participantParam}",
             method = RequestMethod.GET)
@@ -92,7 +107,6 @@ public class ApiController {
             participantType.setParticipantIdentifier(createIdentifier(participant.toVefa()));
 
             registrationService.findProcesses(participant).stream()
-                    .map(Process::toVefa)
                     .map(ApiController::createIdentifier)
                     .forEach(participantType.getProcessReference()::add);
 
@@ -126,6 +140,7 @@ public class ApiController {
             ProcessType processType = new ProcessType();
             processType.setParticipantIdentifier(createIdentifier(participant.toVefa()));
             processType.setProcessIdentifier(createIdentifier(process.toVefa()));
+            //processType.setValidator(validatorType);
 
             registrationService.findCertificates(participant, process, role).stream()
                     .map(ApiController::createCertificate)
@@ -145,6 +160,14 @@ public class ApiController {
         identifierType.setScheme(identifier.getScheme().getValue());
         identifierType.setValue(identifier.getIdentifier());
         return identifierType;
+    }
+
+    private static ProcessReferenceType createIdentifier(Registration registration) {
+        ProcessReferenceType processReferenceType = new ProcessReferenceType();
+        processReferenceType.setScheme(registration.getProcess().getScheme());
+        processReferenceType.setValue(registration.getProcess().getIdentifier());
+        processReferenceType.setRole(RoleType.fromValue(registration.getRole().toString()));
+        return processReferenceType;
     }
 
     private static CertificateType createCertificate(Certificate certificate) {

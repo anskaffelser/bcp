@@ -25,6 +25,7 @@ package no.difi.bcp.server.config;
 import no.difi.certvalidator.Validator;
 import no.difi.bcp.lang.BcpException;
 import no.difi.bcp.security.BusinessCertificateValidator;
+import no.difi.certvalidator.ValidatorGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,17 +39,17 @@ import javax.annotation.PostConstruct;
  * @author erlend
  */
 @Configuration
-@PropertySource(value = "virksert.properties", ignoreResourceNotFound = true)
+@PropertySource(value = "bcp.properties", ignoreResourceNotFound = true)
 public class BusinessCertificateConfig {
 
-    private static Logger logger = LoggerFactory.getLogger(BusinessCertificateConfig.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BusinessCertificateConfig.class);
 
     @Value("${bcp.mode:production}")
     private String mode;
 
     @PostConstruct
     public void postConstruct() {
-        logger.info("Mode: {}", mode);
+        LOGGER.info("Mode: {}", mode);
     }
 
     @Bean
@@ -59,5 +60,10 @@ public class BusinessCertificateConfig {
     @Bean
     public Validator getValidator(BusinessCertificateValidator businessCertificateValidator) throws BcpException {
         return businessCertificateValidator.getValidator();
+    }
+
+    @Bean
+    public ValidatorGroup getValidatorGroup(Validator validator) {
+        return (ValidatorGroup) validator;
     }
 }

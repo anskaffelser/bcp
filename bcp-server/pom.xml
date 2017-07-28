@@ -52,6 +52,10 @@
             <groupId>no.difi.vefa</groupId>
             <artifactId>peppol-common</artifactId>
         </dependency>
+        <dependency>
+            <groupId>no.difi.vefa</groupId>
+            <artifactId>peppol-security</artifactId>
+        </dependency>
 
         <!-- Difi commons -->
         <dependency>

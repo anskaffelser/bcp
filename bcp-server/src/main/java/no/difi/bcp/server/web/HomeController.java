@@ -43,8 +43,13 @@ public class HomeController {
 
     @RequestMapping(method = RequestMethod.GET)
     public String home(@AuthenticationPrincipal User user, ModelMap modelMap) {
-        if (user.getParticipant() == null) {
+        if (user == null) {
+            // Anonymous
+
+            return "home_anonymous";
+        } else if (user.getParticipant() == null) {
             // Admin
+
             return "home_admin";
         } else {
             // User

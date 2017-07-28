@@ -33,7 +33,7 @@
     <xs:complexType name="ParticipantType">
         <xs:sequence>
             <xs:element name="ParticipantIdentifier" type="IdentifierType"/>
-            <xs:element name="ProcessReference" type="IdentifierType" maxOccurs="unbounded"/>
+            <xs:element name="ProcessReference" type="ProcessReferenceType" maxOccurs="unbounded"/>
             <xs:element ref="xmldsig:Signature" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
@@ -45,8 +45,17 @@
             <xs:element name="ProcessIdentifier" type="IdentifierType"/>
             <xs:element name="Role" type="RoleType" minOccurs="0"/>
             <xs:element name="Certificate" type="CertificateType" maxOccurs="unbounded"/>
+            <xs:element name="Validator" type="ValidatorType" minOccurs="0"/>
             <xs:element ref="xmldsig:Signature" minOccurs="0"/>
         </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ProcessReferenceType">
+        <xs:simpleContent>
+            <xs:extension base="IdentifierType">
+                <xs:attribute name="role" type="RoleType"/>
+            </xs:extension>
+        </xs:simpleContent>
     </xs:complexType>
 
     <xs:complexType name="IdentifierType">
@@ -62,6 +71,15 @@
             <xs:extension base="xs:base64Binary">
                 <xs:attribute name="serialNumber" type="xs:string" use="required"/>
                 <xs:attribute name="expire" type="xs:long" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="ValidatorType">
+        <xs:simpleContent>
+            <xs:extension base="xs:anyURI">
+                <xs:attribute name="name" type="xs:string" use="required"/>
+                <xs:attribute name="version" type="xs:string" use="required"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
