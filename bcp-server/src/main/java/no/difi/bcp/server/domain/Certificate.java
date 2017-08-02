@@ -69,7 +69,7 @@ public class Certificate implements Serializable {
 
     private Long revoked;
 
-    private long updated;
+    private long validated;
 
     public long getId() {
         return id;
@@ -163,12 +163,12 @@ public class Certificate implements Serializable {
         this.revoked = revoked;
     }
 
-    public long getUpdated() {
-        return updated;
+    public long getValidated() {
+        return validated;
     }
 
-    public void setUpdated(long updated) {
-        this.updated = updated;
+    public void setValidated(long validated) {
+        this.validated = validated;
     }
 
 }

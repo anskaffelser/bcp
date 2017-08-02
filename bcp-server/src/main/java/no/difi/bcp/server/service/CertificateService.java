@@ -115,7 +115,7 @@ public class CertificateService {
 
     @Transactional
     public void save(Certificate certificate) {
-        certificate.setUpdated(System.currentTimeMillis());
+        certificate.setValidated(System.currentTimeMillis());
 
         if (certificate.getIdentifier() == null)
             certificate.setIdentifier(UUID.randomUUID().toString());

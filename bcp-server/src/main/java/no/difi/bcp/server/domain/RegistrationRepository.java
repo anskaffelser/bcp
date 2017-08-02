@@ -41,7 +41,9 @@ public interface RegistrationRepository extends CrudRepository<Registration, Lon
     @Query("select r from Registration r inner join r.application.customers c where c in (?1)")
     List<Registration> findProcesses(Participant participant);
 
-    @Query("select cert from Registration r inner join r.application.customers c inner join r.application.certificates cert where c in (?1) and r.process = ?2 and r.role = ?3")
+    @Query("select distinct cert " +
+            "from Registration r inner join r.application.customers c inner join r.application.certificates cert " +
+            "where c in (?1) and r.process = ?2 and r.role = ?3 and cert.revoked = null")
     List<Certificate> findCertificates(Participant participant, Process process, Role role);
 
 }

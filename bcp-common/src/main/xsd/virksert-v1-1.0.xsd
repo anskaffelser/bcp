@@ -71,6 +71,7 @@
             <xs:extension base="xs:base64Binary">
                 <xs:attribute name="serialNumber" type="xs:string" use="required"/>
                 <xs:attribute name="expire" type="xs:long" use="required"/>
+                <xs:attribute name="lastValidation" type="xs:long"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
