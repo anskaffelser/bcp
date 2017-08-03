@@ -22,17 +22,18 @@
 
 package no.difi.bcp.security;
 
-import no.difi.certvalidator.Validator;
-import no.difi.certvalidator.ValidatorLoader;
-import no.difi.certvalidator.api.CertificateValidationException;
-import no.difi.certvalidator.lang.ValidatorParsingException;
 import no.difi.bcp.api.Mode;
 import no.difi.bcp.api.RecipePath;
 import no.difi.bcp.lang.BcpException;
+import no.difi.certvalidator.ValidatorGroup;
+import no.difi.certvalidator.ValidatorLoader;
+import no.difi.certvalidator.api.CertificateValidationException;
+import no.difi.certvalidator.lang.ValidatorParsingException;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.cert.X509Certificate;
+import java.util.Map;
 
 /**
  * Validator for business certificates.
@@ -44,7 +45,7 @@ public class BusinessCertificateValidator {
     /**
      * Holds the actual certificate validator.
      */
-    private Validator validator;
+    private ValidatorGroup validator;
 
     /**
      * Use of {@link Mode} to load the certificate validator using resources part of this package.
@@ -53,8 +54,8 @@ public class BusinessCertificateValidator {
      * @return Validator for validation of business certificates.
      * @throws BcpException when loading of validator is unsuccessful.
      */
-    public static BusinessCertificateValidator of(Mode mode) throws BcpException {
-        return of((Enum<Mode>) mode);
+    public static BusinessCertificateValidator of(Mode mode, Map<String, Object> values) throws BcpException {
+        return of((Enum<Mode>) mode, values);
     }
 
     /**
@@ -67,8 +68,8 @@ public class BusinessCertificateValidator {
      * @return Validator for validation of business certificates.
      * @throws BcpException when loading of validator is unsuccessful.
      */
-    public static BusinessCertificateValidator of(Enum<?> mode) throws BcpException {
-        return of(pathFromEnum(mode));
+    public static BusinessCertificateValidator of(Enum<?> mode, Map<String, Object> values) throws BcpException {
+        return of(pathFromEnum(mode), values);
     }
 
     /**
@@ -79,12 +80,12 @@ public class BusinessCertificateValidator {
      * @return Validator for validation of business certificates.
      * @throws BcpException when loading of validator is unsuccessful.
      */
-    public static BusinessCertificateValidator of(String modeString) throws BcpException {
+    public static BusinessCertificateValidator of(String modeString, Map<String, Object> values) throws BcpException {
         String path = Mode.of(modeString)
                 .map(BusinessCertificateValidator::pathFromEnum)
                 .orElse(modeString);
 
-        return new BusinessCertificateValidator(path);
+        return new BusinessCertificateValidator(path, values);
     }
 
     /**
@@ -107,9 +108,11 @@ public class BusinessCertificateValidator {
      * @param path Path to recipe file in class path.
      * @throws BcpException when loading of validator is unsuccessful.
      */
-    private BusinessCertificateValidator(String path) throws BcpException {
+    private BusinessCertificateValidator(String path, Map<String, Object> values) throws BcpException {
         try (InputStream inputStream = getClass().getResourceAsStream(path)) {
-            this.validator = ValidatorLoader.newInstance().build(inputStream);
+            this.validator = ValidatorLoader.newInstance()
+                    .putAll(values)
+                    .build(inputStream);
         } catch (IOException | ValidatorParsingException e) {
             throw new BcpException(String.format(
                     "Unable to load certificate validator, received '%s'.", e.getMessage()), e);
@@ -122,7 +125,7 @@ public class BusinessCertificateValidator {
      * @return Validator instance.
      */
     @Deprecated
-    public Validator getValidator() {
+    public ValidatorGroup getValidator() {
         return validator;
     }
 

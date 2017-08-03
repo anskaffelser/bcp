@@ -25,6 +25,9 @@ package no.difi.bcp.server.config;
 import no.difi.bcp.lang.BcpException;
 import no.difi.bcp.security.BusinessCertificateValidator;
 import no.difi.certvalidator.ValidatorGroup;
+import no.difi.certvalidator.api.CrlFetcher;
+import no.difi.certvalidator.util.SimpleCachingCrlFetcher;
+import no.difi.certvalidator.util.SimpleCrlCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,6 +36,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
 import javax.annotation.PostConstruct;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author erlend
@@ -52,13 +57,20 @@ public class BusinessCertificateConfig {
     }
 
     @Bean
-    public BusinessCertificateValidator getBusinessCertificate() throws BcpException {
-        return BusinessCertificateValidator.of(mode);
+    public BusinessCertificateValidator getBusinessCertificate(CrlFetcher crlFetcher) throws BcpException {
+        Map<String, Object> values = new HashMap<>();
+        values.put("crlFetcher", crlFetcher);
+
+        return BusinessCertificateValidator.of(mode, values);
     }
 
     @Bean
     public ValidatorGroup getValidator(BusinessCertificateValidator businessCertificateValidator) throws BcpException {
-        return (ValidatorGroup) businessCertificateValidator.getValidator();
+        return businessCertificateValidator.getValidator();
     }
 
+    @Bean
+    public CrlFetcher createCrlFetcher() {
+        return new SimpleCachingCrlFetcher(new SimpleCrlCache());
+    }
 }

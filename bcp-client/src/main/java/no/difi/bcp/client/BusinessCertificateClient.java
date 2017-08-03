@@ -23,17 +23,17 @@
 package no.difi.bcp.client;
 
 import com.google.common.io.ByteStreams;
-import no.difi.bcp.client.lang.BcpClientException;
-import no.difi.certvalidator.api.CertificateValidationException;
-import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
-import no.difi.vefa.peppol.common.model.ProcessIdentifier;
 import no.difi.bcp.api.Mode;
 import no.difi.bcp.api.Role;
+import no.difi.bcp.client.lang.BcpClientException;
 import no.difi.bcp.jaxb.v1.model.CertificateType;
 import no.difi.bcp.jaxb.v1.model.ParticipantType;
 import no.difi.bcp.jaxb.v1.model.ProcessType;
 import no.difi.bcp.lang.BcpException;
 import no.difi.bcp.security.BusinessCertificateValidator;
+import no.difi.certvalidator.api.CertificateValidationException;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
+import no.difi.vefa.peppol.common.model.ProcessIdentifier;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -44,6 +44,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.security.cert.X509Certificate;
+import java.util.Map;
 
 /**
  * @author erlend
@@ -65,15 +66,27 @@ public class BusinessCertificateClient {
     private BusinessCertificateValidator validator;
 
     public static BusinessCertificateClient of(URI uri, Mode mode) throws BcpException {
-        return of(uri, (Enum<?>) mode);
+        return of(uri, mode, null);
+    }
+
+    public static BusinessCertificateClient of(URI uri, Mode mode, Map<String, Object> values) throws BcpException {
+        return of(uri, (Enum<?>) mode, values);
     }
 
     public static BusinessCertificateClient of(URI uri, Enum<?> mode) throws BcpException {
-        return new BusinessCertificateClient(uri, BusinessCertificateValidator.of(mode));
+        return of(uri, mode, null);
+    }
+
+    public static BusinessCertificateClient of(URI uri, Enum<?> mode, Map<String, Object> values) throws BcpException {
+        return new BusinessCertificateClient(uri, BusinessCertificateValidator.of(mode, values));
     }
 
     public static BusinessCertificateClient of(URI uri, String mode) throws BcpException {
-        return new BusinessCertificateClient(uri, BusinessCertificateValidator.of(mode));
+        return of(uri, mode, null);
+    }
+
+    public static BusinessCertificateClient of(URI uri, String mode, Map<String, Object> values) throws BcpException {
+        return new BusinessCertificateClient(uri, BusinessCertificateValidator.of(mode, values));
     }
 
     private BusinessCertificateClient(URI uri, BusinessCertificateValidator validator) {

@@ -22,10 +22,10 @@
 
 package no.difi.bcp.security;
 
-import no.difi.certvalidator.Validator;
-import no.difi.certvalidator.api.CertificateValidationException;
 import no.difi.bcp.api.Mode;
 import no.difi.bcp.lang.BcpException;
+import no.difi.certvalidator.Validator;
+import no.difi.certvalidator.api.CertificateValidationException;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -41,7 +41,7 @@ public class BusinessCertificateValidatorTest {
 
     @BeforeClass
     public void beforeClass() throws CertificateValidationException, BcpException {
-        businessCertificateValidator = BusinessCertificateValidator.of(Mode.TEST);
+        businessCertificateValidator = BusinessCertificateValidator.of(Mode.TEST, null);
     }
 
     @Test
@@ -57,6 +57,6 @@ public class BusinessCertificateValidatorTest {
 
     @Test(expectedExceptions = BcpException.class)
     public void receiptNotFound() throws Exception {
-        BusinessCertificateValidator.of("/invalid-path.xml");
+        BusinessCertificateValidator.of("/invalid-path.xml", null);
     }
 }

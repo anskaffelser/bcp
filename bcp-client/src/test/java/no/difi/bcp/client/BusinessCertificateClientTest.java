@@ -40,7 +40,7 @@ public class BusinessCertificateClientTest {
     @Test(enabled = false)
     public void simple() throws Exception {
         BusinessCertificateClient client = BusinessCertificateClient
-                .of(URI.create("http://localhost:8080/"), Mode.TEST);
+                .of(URI.create("http://localhost:8080/"), Mode.TEST, null);
 
         X509Certificate certificate = client.fetchCertificate(
                 ParticipantIdentifier.of("9908:991825827"),
