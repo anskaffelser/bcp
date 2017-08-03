@@ -31,7 +31,7 @@ import org.springframework.stereotype.Service;
 @Service("bcp")
 public class ConfigService {
 
-    @Value("${bcp.title:Virksert}")
+    @Value("${bcp.title:Business Certificate Publisher}")
     private String title;
 
     public String getTitle() {

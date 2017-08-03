@@ -49,13 +49,14 @@ public class EmailService {
         if (mailSender == null) {
             LOGGER.info("{} => {}\n{}", to, subject, text);
         } else {
-            MailMessage mailMessage = new SimpleMailMessage();
+            SimpleMailMessage mailMessage = new SimpleMailMessage();
             if (!from.isEmpty()) {
                 mailMessage.setFrom(from);
             }
             mailMessage.setTo(to);
             mailMessage.setSubject(subject);
             mailMessage.setText(text);
+            mailSender.send(mailMessage);
             LOGGER.info("Message '{}' sent to '{}'.", subject, to);
         }
     }
