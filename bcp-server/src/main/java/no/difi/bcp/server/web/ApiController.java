@@ -40,6 +40,7 @@ import no.difi.vefa.peppol.common.model.ProcessIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -65,6 +66,9 @@ public class ApiController {
     private static final ObjectFactory OBJECT_FACTORY = new ObjectFactory();
 
     private static JAXBContext jaxbContext;
+
+    @Value("${bcp.api.v1:0}")
+    private int revision;
 
     static {
         try {
@@ -107,7 +111,7 @@ public class ApiController {
             participantType.setParticipantIdentifier(createIdentifier(participant.toVefa()));
 
             registrationService.findProcesses(participant).stream()
-                    .map(ApiController::createIdentifier)
+                    .map(this::createIdentifier)
                     .forEach(participantType.getProcessReference()::add);
 
             response.setContentType(MediaType.APPLICATION_XML_VALUE);
@@ -140,10 +144,14 @@ public class ApiController {
             ProcessType processType = new ProcessType();
             processType.setParticipantIdentifier(createIdentifier(participant.toVefa()));
             processType.setProcessIdentifier(createIdentifier(process.toVefa()));
-            //processType.setValidator(validatorType);
+
+            if (revision >= 1) {
+                processType.setRole(RoleType.valueOf(role.name()));
+                processType.setValidator(validatorType);
+            }
 
             registrationService.findCertificates(participant, process, role).stream()
-                    .map(ApiController::createCertificate)
+                    .map(this::createCertificate)
                     .forEach(processType.getCertificate()::add);
 
             response.setContentType(MediaType.APPLICATION_XML_VALUE);
@@ -162,7 +170,7 @@ public class ApiController {
         return identifierType;
     }
 
-    private static ProcessReferenceType createIdentifier(Registration registration) {
+    private ProcessReferenceType createIdentifier(Registration registration) {
         ProcessReferenceType processReferenceType = new ProcessReferenceType();
         processReferenceType.setScheme(registration.getProcess().getScheme());
         processReferenceType.setValue(registration.getProcess().getIdentifier());
@@ -170,10 +178,12 @@ public class ApiController {
         return processReferenceType;
     }
 
-    private static CertificateType createCertificate(Certificate certificate) {
+    private CertificateType createCertificate(Certificate certificate) {
         CertificateType certificateType = new CertificateType();
         certificateType.setExpire(certificate.getExpiration());
         certificateType.setSerialNumber(certificate.getSerialNumber());
+        if (revision >= 1)
+            certificateType.setLastValidation(certificate.getValidated());
         certificateType.setValue(certificate.getCertificate());
         return certificateType;
     }

@@ -92,15 +92,38 @@
             </dependency>
 
             <!-- Difi commons -->
-            <dependency>
+            <!-- <dependency>
                 <groupId>no.difi.commons</groupId>
                 <artifactId>commons-certvalidator</artifactId>
                 <version>2.1.1</version>
+            </dependency> -->
+            <dependency>
+                <groupId>com.github.difi</groupId>
+                <artifactId>certvalidator</artifactId>
+                <version>1afb6579b6</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>net.klakegg.pkix</groupId>
+                        <artifactId>pkix-ocsp</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>no.difi.commons</groupId>
                 <artifactId>commons-datahotel</artifactId>
                 <version>0.9.0</version>
+            </dependency>
+
+            <!-- OCSP Client -->
+            <!-- <dependency>
+                <groupId>net.klakegg.pkix</groupId>
+                <artifactId>pkix-ocsp</artifactId>
+                <version>0.9.0</version>
+            </dependency> -->
+            <dependency>
+                <groupId>com.github.klakegg</groupId>
+                <artifactId>pkix-ocsp</artifactId>
+                <version>e540d1777d</version>
             </dependency>
 
             <!-- VEFA PEPPOL -->
@@ -183,5 +206,12 @@
             </plugin>
         </plugins>
     </build>
+
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
 
 </project>

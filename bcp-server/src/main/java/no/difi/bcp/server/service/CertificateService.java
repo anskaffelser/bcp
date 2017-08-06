@@ -22,6 +22,7 @@
 
 package no.difi.bcp.server.service;
 
+import net.klakegg.pkix.ocsp.CertificateResult;
 import no.difi.bcp.security.BusinessCertificateValidator;
 import no.difi.bcp.server.domain.Certificate;
 import no.difi.bcp.server.domain.CertificateRepository;
@@ -29,7 +30,10 @@ import no.difi.bcp.server.domain.Participant;
 import no.difi.bcp.server.form.UploadForm;
 import no.difi.certvalidator.Validator;
 import no.difi.certvalidator.api.CertificateValidationException;
+import no.difi.certvalidator.api.Report;
 import no.difi.certvalidator.extra.NorwegianOrganizationNumberRule;
+import no.difi.certvalidator.rule.OCSPRule;
+import no.difi.certvalidator.util.SimpleReport;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.style.BCStyle;
 import org.bouncycastle.asn1.x500.style.IETFUtils;
@@ -45,6 +49,7 @@ import java.io.InputStream;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -55,6 +60,9 @@ public class CertificateService {
 
     @Autowired
     private CertificateRepository certificateRepository;
+
+    @Autowired
+    private IssuerService issuerService;
 
     @Autowired
     private BusinessCertificateValidator validator;
@@ -89,10 +97,13 @@ public class CertificateService {
     @Transactional
     public Certificate insert(Participant participant, X509Certificate cert)
             throws CertificateEncodingException, CertificateValidationException {
-        validator.validate(cert);
+        Report report = validator.validate(cert, SimpleReport.newInstance());
 
-        new NorwegianOrganizationNumberRule(s -> String.format("9908:%s", s).equals(participant.getIdentifier()))
-                .validate(cert);
+        Optional.ofNullable(report.get(NorwegianOrganizationNumberRule.ORGANIZATION))
+                .filter(no -> String.format("9908:%s", no.getNumber()).equals(participant.getIdentifier()))
+                .orElseThrow(() -> new CertificateValidationException("Unable to verify ownership of certificate."));
+
+        CertificateResult certificateResult = report.get(OCSPRule.RESULT);
 
         X500Name x500name = new JcaX509CertificateHolder(cert).getSubject();
         String name = IETFUtils.valueToString(x500name.getRDNs(BCStyle.O)[0].getFirst().getValue());
@@ -103,11 +114,13 @@ public class CertificateService {
         Certificate certificate = new Certificate();
         certificate.setCertificate(cert.getEncoded());
         certificate.setSerialNumber(cert.getSerialNumber().toString());
+        if (certificateResult != null)
+            certificate.setOcspUri(certificateResult.getUri());
         certificate.setExpiration(cert.getNotAfter().getTime());
         certificate.setParticipant(participant);
         certificate.setName(name);
         certificate.setSubject(cert.getSubjectX500Principal().getName());
-        certificate.setIssuer(cert.getIssuerX500Principal().getName());
+        certificate.setIssuer(issuerService.createOrFetch(report));
         save(certificate);
 
         return certificate;

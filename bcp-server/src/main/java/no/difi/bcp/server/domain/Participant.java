@@ -32,7 +32,8 @@ import java.util.List;
 @Entity
 @Table(
         indexes = {
-                @Index(columnList = "scheme,identifier")
+                @Index(columnList = "scheme,identifier"),
+                @Index(columnList = "parent_id")
         },
         uniqueConstraints = @UniqueConstraint(columnNames = {"scheme", "identifier"})
 )
@@ -49,6 +50,9 @@ public class Participant implements Serializable {
     private String scheme;
 
     private String name;
+
+    @ManyToOne
+    private Participant parent;
 
     @OneToMany
     private List<Certificate> certificates;
@@ -86,6 +90,14 @@ public class Participant implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Participant getParent() {
+        return parent;
+    }
+
+    public void setParent(Participant parent) {
+        this.parent = parent;
     }
 
     public List<Certificate> getCertificates() {

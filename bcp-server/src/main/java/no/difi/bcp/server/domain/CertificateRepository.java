@@ -24,10 +24,14 @@ package no.difi.bcp.server.domain;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * @author erlend
@@ -40,5 +44,16 @@ public interface CertificateRepository extends CrudRepository<Certificate, Long>
     Page<Certificate> findByParticipant(Participant participant, Pageable pageable);
 
     Certificate findByIdentifier(String identifier);
+
+    @Query("select c from Certificate c where c.ocspUri != null")
+    Stream<Certificate> findOcspEnabled();
+
+    @Modifying
+    @Query("update Certificate c set c.validated = ?1, c.revoked = null where c in (?2)")
+    void updateVerifiedValid(long date, List<Certificate> certificates);
+
+    @Modifying
+    @Query("update Certificate c set c.validated = ?1, c.revoked = ?1 where c in (?2)")
+    void updateVerifiedInvalid(long date, List<Certificate> certificates);
 
 }

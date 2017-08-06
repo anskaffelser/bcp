@@ -27,7 +27,6 @@ import no.difi.bcp.server.domain.User;
 import no.difi.bcp.server.form.CertificateForm;
 import no.difi.bcp.server.form.UploadForm;
 import no.difi.bcp.server.lang.BcpServerException;
-import no.difi.bcp.server.lang.CertificateException;
 import no.difi.bcp.server.service.CertificateService;
 import no.difi.certvalidator.api.CertificateValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,7 +84,9 @@ public class CertificateController {
 
             return "redirect:/certificate";
         } catch (CertificateValidationException | CertificateEncodingException e) {
-            throw new CertificateException(e.getMessage(), e);
+            redirectAttributes.addFlashAttribute("alert-danger", e.getMessage());
+
+            return "redirect:/certificate/upload";
         }
     }
 
@@ -101,7 +102,7 @@ public class CertificateController {
     @PreAuthorize("true")
     @ResponseBody
     @RequestMapping(value = "/{certificate}/download", method = RequestMethod.GET)
-    public void view(@PathVariable Certificate certificate, HttpServletResponse response) throws IOException, BcpServerException {
+    public void download(@PathVariable Certificate certificate, HttpServletResponse response) throws IOException, BcpServerException {
         response.setContentType("application/pkix-cert");
         response.setHeader("Content-Disposition", String.format(
                 "attachment; filename=%s-%s.crt", certificate.getParticipant().getIdentifier(), certificate.getIdentifier()));

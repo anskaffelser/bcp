@@ -22,13 +22,20 @@
 
 package no.difi.bcp.server.service;
 
-import no.difi.certvalidator.Validator;
+import net.klakegg.pkix.ocsp.*;
+import no.difi.bcp.server.domain.Certificate;
 import no.difi.bcp.server.domain.CertificateRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author erlend
@@ -38,8 +45,8 @@ public class ValidationService {
 
     private static Logger logger = LoggerFactory.getLogger(ValidationService.class);
 
-    @Autowired
-    private Validator validator;
+    private OcspMultiClient client = OcspMultiClient.builder()
+            .build();
 
     @Autowired
     private CertificateRepository certificateRepository;
@@ -47,15 +54,42 @@ public class ValidationService {
     @Scheduled(cron = "0 0 3 * * *")
     // @Scheduled(fixedDelay = 1000)
     public void run() {
+        performValidation();
+    }
+
+    @Transactional
+    public void performValidation() {
         logger.info("Validating registered certificates.");
 
-        /*
-        for (Certificate certificate : certificateRepository.listValid()) {
-            if (!validator.isValid(certificate.getCertificate())) {
-                certificate.setRevoked(System.currentTimeMillis());
-                certificateRepository.insert(certificate);
-            }
-        }
-        */
+        certificateRepository.findOcspEnabled()
+                .collect(Collectors.toMap(Certificate::getIssuer, Arrays::asList))
+                .forEach((issuer, certificates) -> {
+                    try {
+                        long timestamp = System.currentTimeMillis();
+
+                        OcspResult result = client.verify(
+                                certificates.get(0).getOcspUri(),
+                                new CertificateIssuer(issuer.getNameHash(), issuer.getKeyHash()),
+                                certificates.stream()
+                                        .map(Certificate::getSerialNumber)
+                                        .map(BigInteger::new)
+                                        .collect(Collectors.toList())
+                                        .toArray(new BigInteger[certificates.size()]));
+
+                        List<Certificate> validCertificates = certificates.stream()
+                                .filter(c -> result.get(new BigInteger(c.getSerialNumber())).getStatus() == CertificateStatus.GOOD)
+                                .collect(Collectors.toList());
+                        if (validCertificates.size() > 0)
+                            certificateRepository.updateVerifiedValid(timestamp, validCertificates);
+
+                        List<Certificate> invalidCertificates = certificates.stream()
+                                .filter(c -> result.get(new BigInteger(c.getSerialNumber())).getStatus() != CertificateStatus.GOOD)
+                                .collect(Collectors.toList());
+                        if (invalidCertificates.size() > 0)
+                            certificateRepository.updateVerifiedInvalid(timestamp, invalidCertificates);
+                    } catch (OcspException e) {
+                        logger.warn("Error while validating certificates.", e);
+                    }
+                });
     }
 }

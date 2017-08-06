@@ -28,6 +28,7 @@ import no.difi.bcp.lang.BcpException;
 import no.difi.certvalidator.ValidatorGroup;
 import no.difi.certvalidator.ValidatorLoader;
 import no.difi.certvalidator.api.CertificateValidationException;
+import no.difi.certvalidator.api.Report;
 import no.difi.certvalidator.lang.ValidatorParsingException;
 
 import java.io.IOException;
@@ -157,5 +158,35 @@ public class BusinessCertificateValidator {
      */
     public void validate(InputStream inputStream) throws CertificateValidationException {
         validator.validate(inputStream);
+    }
+
+    /**
+     * Validate certificate.
+     *
+     * @param certificate Certificate as a {@link X509Certificate} object.
+     * @throws CertificateValidationException validation failed.
+     */
+    public Report validate(X509Certificate certificate, Report report) throws CertificateValidationException {
+        return validator.validate(certificate, report);
+    }
+
+    /**
+     * Validate certificate.
+     *
+     * @param certificate Certificate as a byte array.
+     * @throws CertificateValidationException validation failed.
+     */
+    public Report validate(byte[] certificate, Report report) throws CertificateValidationException {
+        return validator.validate(certificate, report);
+    }
+
+    /**
+     * Validate certificate.
+     *
+     * @param inputStream Certificate from an {@link InputStream}.
+     * @throws CertificateValidationException validation failed.
+     */
+    public Report validate(InputStream inputStream, Report report) throws CertificateValidationException {
+        return validator.validate(inputStream, report);
     }
 }

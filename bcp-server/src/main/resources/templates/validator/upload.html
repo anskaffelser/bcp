@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html layout:decorator="layout" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div layout:fragment="breadcrumb">
+    <ol class="breadcrumb">
+        <li><a th:href="@{/}">Home</a></li>
+        <li class="active">Validator</li>
+    </ol>
+</div>
+
+<div layout:fragment="content">
+
+    <div class="page-header">
+        <h1>Validator</h1>
+    </div>
+
+    <form method="post" enctype="multipart/form-data" th:action="${#httpServletRequest.requestURI}" th:object="${form}" class="form-horizontal">
+
+        <th:block th:include="forms :: file('Certificate file', 'file')"/>
+        <th:block th:include="forms :: submit('Validate')"/>
+
+    </form>
+
+</div>
+
+</body>
+</html>

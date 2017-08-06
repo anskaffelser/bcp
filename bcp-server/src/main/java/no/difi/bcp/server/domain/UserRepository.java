@@ -33,7 +33,7 @@ import java.util.List;
 @Repository
 public interface UserRepository extends CrudRepository<User, Long> {
 
-    User findByParticipantAndEmail(Participant participant, String email);
+    User findByParticipantAndEmailIgnoreCase(Participant participant, String email);
 
     User findByParticipantAndIdentifier(Participant participant, String identifier);
 

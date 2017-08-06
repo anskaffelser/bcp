@@ -54,7 +54,7 @@ public class UserService {
 
     @Transactional
     public User findUser(Participant participant, String email) {
-        User user = userRepository.findByParticipantAndEmail(participant, email);
+        User user = userRepository.findByParticipantAndEmailIgnoreCase(participant, email);
 
         if (user == null && participant == null && userRepository.countByParticipant(null) == 0) {
             user = new User();

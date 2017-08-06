@@ -36,9 +36,24 @@
     <name>BCP :: Common</name>
 
     <dependencies>
-        <dependency>
+        <!-- Difi commons -->
+        <!-- <dependency>
             <groupId>no.difi.commons</groupId>
             <artifactId>commons-certvalidator</artifactId>
+        </dependency> -->
+        <dependency>
+            <groupId>com.github.difi</groupId>
+            <artifactId>certvalidator</artifactId>
+        </dependency>
+
+        <!-- OCSP Client -->
+        <!-- <dependency>
+            <groupId>net.klakegg.pkix</groupId>
+            <artifactId>pkix-ocsp</artifactId>
+        </dependency> -->
+        <dependency>
+            <groupId>com.github.klakegg</groupId>
+            <artifactId>pkix-ocsp</artifactId>
         </dependency>
     </dependencies>
 

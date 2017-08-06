@@ -15,8 +15,10 @@
 <div layout:fragment="content">
 
     <div class="page-header">
+        <a th:href="@{/issuer/{i}/download(i=${certificate.issuer.identifier})}"
+           class="btn pull-right">Download issuer</a>
         <a th:href="@{/certificate/{i}/download(i=${certificate.identifier})}"
-           class="btn btn-primary pull-right">Download certificate</a>
+        class="btn btn-primary pull-right">Download certificate</a>
 
         <h1 th:text="${certificate.name}">Certificate</h1>
     </div>
@@ -25,14 +27,24 @@
         <dt>Certificate subject</dt>
         <dd th:text="${certificate.subject}"></dd>
 
-        <dt>Certificate issuer</dt>
-        <dd th:text="${certificate.issuer}"></dd>
-
         <dt>Serial number</dt>
         <dd th:text="${certificate.serialNumber}"></dd>
 
         <dt>Expiration</dt>
         <dd th:text="${#dates.format(certificate.expirationDate, 'yyyy-MM-dd')}"></dd>
+
+        <dt>OCSP-path</dt>
+        <dd th:text="${certificate.ocspUri == null ? 'Not set' : certificate.ocspUri}"></dd>
+    </dl>
+
+    <h2>Issuer</h2>
+
+    <dl>
+        <dt>Certificate subject</dt>
+        <dd th:text="${certificate.issuer.subject}"></dd>
+
+        <dt>Serial number</dt>
+        <dd th:text="${certificate.issuer.serialNumber}"></dd>
     </dl>
 
 </div>

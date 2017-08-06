@@ -24,6 +24,7 @@ package no.difi.bcp.server.domain;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.net.URI;
 import java.util.Date;
 import java.util.List;
 
@@ -52,7 +53,8 @@ public class Certificate implements Serializable {
 
     private String subject;
 
-    private String issuer;
+    @ManyToOne
+    private Issuer issuer;
 
     @ManyToOne
     private Participant participant;
@@ -64,6 +66,8 @@ public class Certificate implements Serializable {
     private byte[] certificate;
 
     private String serialNumber;
+
+    private URI ocspUri;
 
     private long expiration;
 
@@ -103,11 +107,11 @@ public class Certificate implements Serializable {
         this.subject = subject;
     }
 
-    public String getIssuer() {
+    public Issuer getIssuer() {
         return issuer;
     }
 
-    public void setIssuer(String issuer) {
+    public void setIssuer(Issuer issuer) {
         this.issuer = issuer;
     }
 
@@ -141,6 +145,14 @@ public class Certificate implements Serializable {
 
     public void setSerialNumber(String serialNumber) {
         this.serialNumber = serialNumber;
+    }
+
+    public URI getOcspUri() {
+        return ocspUri;
+    }
+
+    public void setOcspUri(URI ocspUri) {
+        this.ocspUri = ocspUri;
     }
 
     public long getExpiration() {

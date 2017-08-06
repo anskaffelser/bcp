@@ -73,7 +73,6 @@
         <div class="col-md-2 col-sm-3" style="padding-left: 0;">
 
             <ul class="nav nav-pills nav-stacked" sec:authorize="hasAuthority('USER')">
-                <!-- <li th:classappend="${#httpServletRequest.getRequestURI().startsWith('/participant') ? 'active':''}"><a th:href="@{/participant}">Participants</a></li> -->
                 <li th:classappend="${#httpServletRequest.getRequestURI().startsWith('/application') ? 'active':''}"><a th:href="@{/application}">Applications</a></li>
                 <li th:classappend="${#httpServletRequest.getRequestURI().startsWith('/certificate') ? 'active':''}"><a th:href="@{/certificate}">Certificates</a></li>
                 <li th:classappend="${#httpServletRequest.getRequestURI().startsWith('/process') ? 'active':''}"><a th:href="@{/process}">Processes</a></li>
@@ -84,6 +83,7 @@
                 <li th:classappend="${#httpServletRequest.getRequestURI().startsWith('/participant') ? 'active':''}"><a th:href="@{/participant}">Participants</a></li>
                 <li th:classappend="${#httpServletRequest.getRequestURI().startsWith('/domain') ? 'active':''}"><a th:href="@{/domain}">Domains</a></li>
                 <li th:classappend="${#httpServletRequest.getRequestURI().startsWith('/process') ? 'active':''}"><a th:href="@{/process}">Processes</a></li>
+                <li th:classappend="${#httpServletRequest.getRequestURI().startsWith('/issuer') ? 'active':''}"><a th:href="@{/issuer}">Issuers</a></li>
                 <li th:classappend="${#httpServletRequest.getRequestURI().startsWith('/user') ? 'active':''}"><a th:href="@{/user}">Users</a></li>
             </ul>
 

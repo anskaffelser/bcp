@@ -40,6 +40,9 @@ import java.util.UUID;
 public class LoginService {
 
     @Autowired
+    private ConfigService configService;
+
+    @Autowired
     private EmailService emailService;
 
     @Autowired
@@ -62,7 +65,7 @@ public class LoginService {
             loginRepository.deleteByUser(user);
             loginRepository.save(login);
 
-            emailService.send(email, "OTP for Business Certificate Publisher",
+            emailService.send(user.getEmail(), String.format("OTP for %s", configService.getTitle()),
                     String.format("Your code (OTP) is: %s", login.getCode()));
         }
     }
