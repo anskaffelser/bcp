@@ -22,12 +22,12 @@
 
 package no.difi.bcp.server.service;
 
+import no.difi.bcp.server.api.ParticipantVerifier;
 import no.difi.bcp.server.domain.Participant;
 import no.difi.bcp.server.domain.ParticipantRepository;
 import no.difi.bcp.server.form.SepForm;
 import no.difi.bcp.server.lang.BcpServerException;
 import no.difi.bcp.server.lang.ParticipantNotFoundException;
-import no.difi.bcp.server.util.DatahotelOrganization;
 import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -38,6 +38,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * @author erlend
@@ -49,7 +50,7 @@ public class ParticipantService {
     private ParticipantRepository participantRepository;
 
     @Autowired
-    private DatahotelService datahotelService;
+    private Set<ParticipantVerifier> participantVerifiers;
 
     @Transactional(readOnly = true)
     public Participant get(ParticipantIdentifier participantIdentifier) throws ParticipantNotFoundException {
@@ -71,12 +72,17 @@ public class ParticipantService {
     @Transactional
     public Participant save(Participant participant) throws BcpServerException {
         if (participant.getId() == 0) {
-            if (participant.getIdentifier().startsWith("9908:")) {
-                Optional<DatahotelOrganization> org =
-                        datahotelService.findByIdentifier(participant.getIdentifier().substring(5));
-                org.map(DatahotelOrganization::getNavn)
-                        .ifPresent(participant::setName);
-            }
+            String icd = participant.getIdentifier().substring(0, 4);
+
+            ParticipantVerifier participantVerifier = participantVerifiers.stream()
+                    .filter(i -> i.supported(icd))
+                    .findFirst()
+                    .orElseThrow(() -> new BcpServerException(String.format("ICD '%s' is not supported.", icd)));
+
+            if (!participantVerifier.isValid(participant.getIdentifier()))
+                throw new BcpServerException(String.format("Participant identifier '%s' is invalid.", participant.getIdentifier()));
+
+            participantVerifier.update(participant);
         }
 
         return participantRepository.save(participant);

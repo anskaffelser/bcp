@@ -65,7 +65,8 @@ public class UserController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String addSubmit(@AuthenticationPrincipal User principal, @Valid @ModelAttribute("form") UserForm form, BindingResult bindingResult, ModelMap modelMap) {
+    public String addSubmit(@AuthenticationPrincipal User principal, @Valid @ModelAttribute("form") UserForm form,
+                            BindingResult bindingResult, ModelMap modelMap) {
         if (bindingResult.hasErrors()) {
             modelMap.put("form", form);
             return "user/form";
@@ -79,7 +80,8 @@ public class UserController {
     }
 
     @RequestMapping(value = "/{identifier}", method = RequestMethod.GET)
-    public String view(@AuthenticationPrincipal User principal, @PathVariable String identifier, ModelMap modelMap) throws BcpServerException {
+    public String view(@AuthenticationPrincipal User principal, @PathVariable String identifier, ModelMap modelMap)
+            throws BcpServerException {
         modelMap.put("user", userService.findUserByIdentifier(principal.getParticipant(), identifier));
 
         return "user/view";

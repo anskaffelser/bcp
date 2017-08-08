@@ -70,17 +70,20 @@ public class ParticipantController {
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public String addSubmit(@Valid @ModelAttribute("form") ParticipantForm form, BindingResult bindingResult,
-                            ModelMap modelMap, RedirectAttributes redirectAttributes)
-            throws BcpServerException {
+                            ModelMap modelMap, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             modelMap.put("form", form);
             return "participant/form";
         }
 
-        Participant participant = participantService.save(form.update(new Participant()));
+        try {
+            Participant participant = participantService.save(form.update(new Participant()));
 
-        redirectAttributes.addFlashAttribute("alert-success",
-                String.format("Participant '%s' successfully registered.", participant.getName()));
+            redirectAttributes.addFlashAttribute("alert-success",
+                    String.format("Participant '%s' successfully registered.", participant.getName()));
+        } catch (BcpServerException e) {
+            redirectAttributes.addFlashAttribute("alert-danger", e.getMessage());
+        }
 
         return "redirect:/participant";
     }

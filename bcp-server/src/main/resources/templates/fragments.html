@@ -4,7 +4,7 @@
         <div th:if="${#vars['alert-success']}" class="alert alert-success" role="alert" th:text="${#vars['alert-success']}"></div>
         <div th:if="${#vars['alert-info']}" class="alert alert-info" role="alert" th:text="${#vars['alert-info']}"></div>
         <div th:if="${#vars['alert-warning']}" class="alert alert-warning" role="alert" th:text="${#vars['alert-warning']}"></div>
-        <div th:if="${#vars['alert-danger']}" class="alert alert-success" role="alert" th:text="${#vars['alert-danger']}"></div>
+        <div th:if="${#vars['alert-danger']}" class="alert alert-danger" role="alert" th:text="${#vars['alert-danger']}"></div>
     </th:block>
 
     <th:block th:fragment="pagination(page)">

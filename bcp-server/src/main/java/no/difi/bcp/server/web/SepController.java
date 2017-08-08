@@ -89,10 +89,10 @@ public class SepController {
             return "sep/form";
         }
 
-        participantService.createSep(user.getParticipant(), form);
+        Participant participant = participantService.createSep(user.getParticipant(), form);
 
         redirectAttributes.addFlashAttribute("alert-success",
-                String.format("Sub Exchange Participant '%s' successfully registered.", form.getName()));
+                String.format("Sub Exchange Participant '%s' successfully registered.", participant.getName()));
 
         return "redirect:/sep";
     }
