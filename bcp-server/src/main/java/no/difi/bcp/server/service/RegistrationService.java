@@ -50,7 +50,8 @@ public class RegistrationService {
 
     @Transactional(readOnly = true)
     public List<Registration> findByApplication(Application application) {
-        return registrationRepository.findByApplication(application, new Sort(Sort.Direction.ASC, "process.domain.title", "process.title"));
+        return registrationRepository
+                .findByApplication(application, new Sort(Sort.Direction.ASC, "process.domain.title", "process.title"));
     }
 
     @Transactional

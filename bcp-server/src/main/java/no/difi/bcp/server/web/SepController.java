@@ -64,7 +64,7 @@ public class SepController {
         return "sep/list";
     }
 
-    @PreAuthorize("#participant == principal.participant or #participant.parent == principal.participant")
+    @PreAuthorize("hasAnyAuthority('USER') and (#participant == principal.participant or #participant.parent == principal.participant)")
     @RequestMapping("/{participant}")
     public String view(@PathVariable Participant participant, ModelMap modelMap) {
         modelMap.put("participant", participant);
@@ -97,7 +97,7 @@ public class SepController {
         return "redirect:/sep";
     }
 
-    @PreAuthorize("#participant == principal.participant or #participant.parent == principal.participant")
+    @PreAuthorize("hasAnyAuthority('USER') and (#participant == principal.participant or #participant.parent == principal.participant)")
     @RequestMapping(value = "/{participant}/apps", method = RequestMethod.GET)
     public String appsForm(@PathVariable Participant participant, ModelMap modelMap) {
         modelMap.put("participant", participant);
@@ -108,7 +108,7 @@ public class SepController {
     }
 
 
-    @PreAuthorize("#participant == principal.participant or #participant.parent == principal.participant")
+    @PreAuthorize("hasAnyAuthority('USER') and (#participant == principal.participant or #participant.parent == principal.participant)")
     @RequestMapping(value = "/{participant}/apps", method = RequestMethod.POST)
     public String appsSubmit(@PathVariable Participant participant, @Valid @ModelAttribute("form") SepApplicationForm form,
                              BindingResult bindingResult, ModelMap modelMap, RedirectAttributes redirectAttributes)

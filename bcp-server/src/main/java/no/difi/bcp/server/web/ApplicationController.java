@@ -74,7 +74,7 @@ public class ApplicationController {
         return "application/list";
     }
 
-    @PreAuthorize("#app.participant.id == principal.participant.id")
+    @PreAuthorize("hasAnyAuthority('USER') and #app.participant.id == principal.participant.id")
     @RequestMapping(value = "/{app}", method = RequestMethod.GET)
     public String view(@AuthenticationPrincipal User user, @PathVariable Application app, ModelMap modelMap) {
         modelMap.put("item", app);
@@ -107,7 +107,7 @@ public class ApplicationController {
         return String.format("redirect:/application/%s", application.getIdentifier());
     }
 
-    @PreAuthorize("#app.participant.id == principal.participant.id")
+    @PreAuthorize("hasAnyAuthority('USER') and #app.participant.id == principal.participant.id")
     @RequestMapping(value = "/{app}/edit", method = RequestMethod.GET)
     public String editForm(@PathVariable Application app, ModelMap modelMap) {
         modelMap.put("form", new ApplicationForm(app));
@@ -115,7 +115,7 @@ public class ApplicationController {
         return "application/form";
     }
 
-    @PreAuthorize("#app.participant.id == principal.participant.id")
+    @PreAuthorize("hasAnyAuthority('USER') and #app.participant.id == principal.participant.id")
     @RequestMapping(value = "/{app}/edit", method = RequestMethod.POST)
     public String editSubmit(@PathVariable Application app, @Valid @ModelAttribute("form") ApplicationForm form,
                              BindingResult bindingResult, ModelMap modelMap) {
@@ -129,7 +129,7 @@ public class ApplicationController {
         return "redirect:/application";
     }
 
-    @PreAuthorize("#app.participant.id == principal.participant.id")
+    @PreAuthorize("hasAnyAuthority('USER') and #app.participant.id == principal.participant.id")
     @RequestMapping(value = "/{app}/certificates", method = RequestMethod.GET)
     public String certificatesForm(@PathVariable Application app, ModelMap modelMap) {
         modelMap.put("form", new ApplicationCertificateForm(app.getCertificates()));
@@ -139,7 +139,7 @@ public class ApplicationController {
         return "application/certificates";
     }
 
-    @PreAuthorize("#app.participant.id == principal.participant.id")
+    @PreAuthorize("hasAnyAuthority('USER') and #app.participant.id == principal.participant.id")
     @RequestMapping(value = "/{app}/certificates", method = RequestMethod.POST)
     public String certificatesSubmit(@PathVariable Application app, @Valid @ModelAttribute("form") ApplicationCertificateForm form,
                                      BindingResult bindingResult, ModelMap modelMap) {
@@ -155,7 +155,7 @@ public class ApplicationController {
         return String.format("redirect:/application/%s", app.getIdentifier());
     }
 
-    @PreAuthorize("#app.participant.id == principal.participant.id")
+    @PreAuthorize("hasAnyAuthority('USER') and #app.participant.id == principal.participant.id")
     @RequestMapping(value = "/{app}/processes", method = RequestMethod.GET)
     public String processesForm(@PathVariable Application app, ModelMap modelMap) {
         modelMap.put("form", new ApplicationProcessForm(registrationService.findByApplication(app).stream()
@@ -167,7 +167,7 @@ public class ApplicationController {
         return "application/processes";
     }
 
-    @PreAuthorize("#app.participant.id == principal.participant.id")
+    @PreAuthorize("hasAnyAuthority('USER') and #app.participant.id == principal.participant.id")
     @RequestMapping(value = "/{app}/processes", method = RequestMethod.POST)
     public String processesSubmit(@PathVariable Application app, @Valid @ModelAttribute("form") ApplicationProcessForm form,
                                   BindingResult bindingResult, ModelMap modelMap) {
