@@ -51,8 +51,9 @@ public class ValidationService {
     @Autowired
     private CertificateRepository certificateRepository;
 
-    @Scheduled(cron = "0 0 3 * * *")
-    // @Scheduled(fixedDelay = 1000)
+    @Transactional
+    @Scheduled(cron = "0 3 * * * *") // XX:03:00
+    // @Scheduled(fixedDelay = 20000)
     public void run() {
         performValidation();
     }

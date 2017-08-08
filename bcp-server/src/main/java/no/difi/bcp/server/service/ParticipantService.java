@@ -24,6 +24,7 @@ package no.difi.bcp.server.service;
 
 import no.difi.bcp.server.domain.Participant;
 import no.difi.bcp.server.domain.ParticipantRepository;
+import no.difi.bcp.server.form.SepForm;
 import no.difi.bcp.server.lang.BcpServerException;
 import no.difi.bcp.server.lang.ParticipantNotFoundException;
 import no.difi.bcp.server.util.DatahotelOrganization;
@@ -35,6 +36,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -61,6 +63,11 @@ public class ParticipantService {
         return participantRepository.findAll(new PageRequest(page, 20, Sort.Direction.ASC, "name"));
     }
 
+    @Transactional(readOnly = true)
+    public List<Participant> findByOwnership(Participant participant) {
+        return participantRepository.findByOwnership(participant);
+    }
+
     @Transactional
     public Participant save(Participant participant) throws BcpServerException {
         if (participant.getId() == 0) {
@@ -73,5 +80,16 @@ public class ParticipantService {
         }
 
         return participantRepository.save(participant);
+    }
+
+    @Transactional
+    public Participant createSep(Participant parent, SepForm form) {
+        Participant participant = form.update(new Participant());
+        participant.setParent(parent);
+        participant.setScheme(parent.getScheme());
+        participant.setIdentifier(String.format("%s:%s", parent.getIdentifier(), form.getIdentifier()));
+        participantRepository.save(participant);
+
+        return participant;
     }
 }

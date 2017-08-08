@@ -30,6 +30,7 @@ import no.difi.bcp.server.service.LoginService;
 import no.difi.bcp.server.service.ParticipantService;
 import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -55,6 +56,9 @@ public class SigninController {
 
     @Autowired
     private ParticipantService participantService;
+
+    @Value("${bcp.login.show_code:false}")
+    private boolean showCode;
 
     @RequestMapping(method = RequestMethod.GET)
     public String viewIndex() {
@@ -94,7 +98,10 @@ public class SigninController {
             return "redirect:/signin/email";
         }
 
-        loginService.prepare(participant, form.getEmail());
+        String code = loginService.prepare(participant, form.getEmail());
+
+        if (code != null && showCode)
+            redirectAttributes.addFlashAttribute("code", code);
 
         return String.format("redirect:/signin/code?participant=%s", form.getParticipant());
     }

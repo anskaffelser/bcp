@@ -79,14 +79,14 @@ public class ApplicationService {
     @Transactional
     public void enableCustomer(Application application, Participant participant) {
         LOGGER.info("Enable customer '{}' for '{}'.", participant.getName(), application.getTitle());
-        application.getCustomers().add(participant);
-        applicationRepository.save(application);
+        // application.getCustomers().add(participant);
+        // applicationRepository.save(application);
     }
 
     @Transactional
     public void disableCustomer(Application application, Participant participant) {
         LOGGER.info("Disable customer '{}' for '{}'.", participant.getName(), application.getTitle());
-        application.getCustomers().remove(participant);
-        applicationRepository.save(application);
+        // application.getCustomers().remove(participant);
+        // applicationRepository.save(application);
     }
 }

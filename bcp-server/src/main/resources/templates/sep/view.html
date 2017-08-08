@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html layout:decorator="layout" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div layout:fragment="breadcrumb">
+    <ol class="breadcrumb">
+        <li><a th:href="@{/}">Home</a></li>
+        <li><a th:href="@{/sep}">Exchange Participants</a></li>
+        <li class="active" th:text="${participant.name}">Participant</li>
+    </ol>
+</div>
+
+<div layout:fragment="content">
+
+    <div class="page-header">
+        <h1 th:text="${participant.name}">Participant</h1>
+    </div>
+
+    <h2>Active applications</h2>
+
+    <div th:if="${applications.size() == 0}" class="jumbotron">
+        <h1>Get started!</h1>
+        <p>...</p>
+        <p><a th:href="@{/sep/{scheme}::{identifier}/apps(scheme=${participant.scheme}, identifier=${participant.identifier})}" class="btn btn-primary btn-lg" role="button">Select applications</a></p>
+    </div>
+
+    <th:block th:if="${applications.size() != 0}">
+        <p class="pull-right"><a th:href="@{/sep/{scheme}::{identifier}/apps(scheme=${participant.scheme}, identifier=${participant.identifier})}">Select applications</a></p>
+
+        <table class="table table-striped">
+            <thead>
+            <th>Title</th>
+            </thead>
+            <tbody>
+            <th:block th:each="item : ${applications}">
+                <tr>
+                    <td><a th:text="${item.title}" th:href="@{/application/{identifier}(identifier=${item.identifier})}">Application title</a></td>
+                </tr>
+            </th:block>
+            </tbody>
+        </table>
+    </th:block>
+
+</div>
+
+</body>
+</html>

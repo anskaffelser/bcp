@@ -24,8 +24,11 @@ package no.difi.bcp.server.domain;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * @author erlend
@@ -35,6 +38,10 @@ public interface ParticipantRepository extends CrudRepository<Participant, Long>
 
     Participant findByIdentifierAndScheme(String identifier, String Scheme);
 
+    @Query("select p from Participant p where p.parent = null")
     Page<Participant> findAll(Pageable pageable);
+
+    @Query("select p from Participant p where p = ?1 or p.parent = ?1 order by p.parent, p.name")
+    List<Participant> findByOwnership(Participant participant);
 
 }

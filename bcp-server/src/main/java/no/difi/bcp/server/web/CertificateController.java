@@ -90,7 +90,7 @@ public class CertificateController {
         }
     }
 
-    @PreAuthorize("#certificate.participant.id == principal.participant.id")
+    @PreAuthorize("#certificate.participant == principal.participant")
     @RequestMapping(value = "/{certificate}", method = RequestMethod.GET)
     public String view(@PathVariable Certificate certificate, ModelMap modelMap)
             throws BcpServerException {
@@ -114,7 +114,7 @@ public class CertificateController {
         writer.flush();
     }
 
-    @PreAuthorize("#certificate.participant.id == principal.participant.id")
+    @PreAuthorize("#certificate.participant == principal.participant")
     @RequestMapping(value = "/{certificate}/edit", method = RequestMethod.GET)
     public String editForm(@PathVariable Certificate certificate, ModelMap modelMap) {
         modelMap.put("form", new CertificateForm(certificate));
@@ -122,7 +122,7 @@ public class CertificateController {
         return "certificate/form";
     }
 
-    @PreAuthorize("#certificate.participant.id == principal.participant.id")
+    @PreAuthorize("#certificate.participant == principal.participant")
     @RequestMapping(value = "/{certificate}/edit", method = RequestMethod.POST)
     public String editSubmit(@PathVariable Certificate certificate, @Valid @ModelAttribute("form") CertificateForm form,
                              BindingResult bindingResult, ModelMap modelMap)

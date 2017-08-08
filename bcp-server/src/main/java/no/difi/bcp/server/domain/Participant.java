@@ -57,8 +57,11 @@ public class Participant implements Serializable {
     @OneToMany
     private List<Certificate> certificates;
 
-    @OneToMany
-    private List<Registration> registrations;
+    @ManyToMany
+    @JoinTable(name = "application_participant",
+            joinColumns = @JoinColumn(name = "participant_id"),
+            inverseJoinColumns = @JoinColumn(name = "application_id"))
+    private List<Application> applications;
 
     public long getId() {
         return id;
@@ -108,12 +111,12 @@ public class Participant implements Serializable {
         this.certificates = certificates;
     }
 
-    public List<Registration> getRegistrations() {
-        return registrations;
+    public List<Application> getApplications() {
+        return applications;
     }
 
-    public void setRegistrations(List<Registration> registrations) {
-        this.registrations = registrations;
+    public void setApplications(List<Application> applications) {
+        this.applications = applications;
     }
 
     public ParticipantIdentifier toVefa() {

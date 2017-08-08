@@ -52,10 +52,11 @@ public class Application implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "certificate_id"))
     private List<Certificate> certificates;
 
-    @ManyToMany
-    @JoinTable(name = "application_participant",
+    @ManyToMany(mappedBy = "applications")
+    /*@JoinTable(name = "application_participant",
             joinColumns = @JoinColumn(name = "application_id"),
             inverseJoinColumns = @JoinColumn(name = "participant_id"))
+    @Column(name = "CATEGORY_ID", unique = true, nullable = false)*/
     private List<Participant> customers;
 
     public static Application newInstance() {

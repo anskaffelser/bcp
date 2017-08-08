@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html layout:decorator="layout" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div layout:fragment="breadcrumb">
+
+</div>
+
+<div layout:fragment="content">
+
+    <div class="page-header">
+        <h1>New Sub Exchange Participant</h1>
+    </div>
+
+    <form method="post" th:action="${#httpServletRequest.requestURI}" th:object="${form}" class="form-horizontal">
+
+        <th:block th:include="forms :: text('Identifier', 'identifier')"/>
+
+        <div class="form-group">
+            <label for="name" class="col-sm-2 control-label">Name</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" id="name" th:field="*{name}"/>
+            </div>
+        </div>
+
+        <th:block th:include="forms :: submit('Save')"/>
+
+    </form>
+
+</div>
+
+</body>
+</html>

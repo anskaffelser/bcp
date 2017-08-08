@@ -52,7 +52,7 @@ public class LoginService {
     private UserService userService;
 
     @Transactional
-    public void prepare(Participant participant, String email) {
+    public String prepare(Participant participant, String email) {
         User user = userService.findUser(participant, email);
 
         if (user != null) {
@@ -67,7 +67,11 @@ public class LoginService {
 
             emailService.send(user.getEmail(), String.format("OTP for %s", configService.getTitle()),
                     String.format("Your code (OTP) is: %s", login.getCode()));
+
+            return login.getCode();
         }
+
+        return null;
     }
 
     @Transactional

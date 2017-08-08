@@ -23,7 +23,6 @@
 package no.difi.bcp.server.domain;
 
 import no.difi.bcp.api.Role;
-import no.difi.bcp.server.form.ApplicationProcessForm;
 
 import javax.persistence.*;
 import java.io.Serializable;

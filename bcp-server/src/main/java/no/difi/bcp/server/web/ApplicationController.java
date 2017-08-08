@@ -183,25 +183,4 @@ public class ApplicationController {
 
         return String.format("redirect:/application/%s", app.getIdentifier());
     }
-
-    @PreAuthorize("#app.participant.id == principal.participant.id")
-    @RequestMapping(value = "/{app}/toggle", method = RequestMethod.GET)
-    public String toggleForm(@AuthenticationPrincipal User user, @PathVariable Application app, ModelMap modelMap) {
-        modelMap.put("item", app);
-        modelMap.put("enabled", applicationService.isEnabled(app, user.getParticipant()));
-
-        return "application/toggle";
-    }
-
-    @PreAuthorize("#app.participant.id == principal.participant.id")
-    @RequestMapping(value = "/{app}/toggle", method = RequestMethod.POST)
-    public String toggleSubmit(@AuthenticationPrincipal User user, @PathVariable Application app) {
-        if (applicationService.isEnabled(app, user.getParticipant())) {
-            applicationService.disableCustomer(app, user.getParticipant());
-        } else {
-            applicationService.enableCustomer(app, user.getParticipant());
-        }
-
-        return String.format("redirect:/application/%s", app.getIdentifier());
-    }
 }

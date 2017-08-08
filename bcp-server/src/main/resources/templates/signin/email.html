@@ -12,7 +12,7 @@
         <div class="form-group form-group-lg">
             <label for="participant" class="col-sm-4 control-label">Participant identifier</label>
             <div class="col-sm-6">
-                <input remoteType="text" class="form-control" id="participant" th:field="*{participant}" placeholder="e.g. 9908:991825827"/>
+                <input type="text" class="form-control" id="participant" th:field="*{participant}" placeholder="e.g. 9908:991825827"/>
 
                 <div class="alert alert-danger" th:if="${#fields.hasErrors('participant')}">
                     <p th:each="err : ${#fields.errors('participant')}" th:text="${err}"></p>
@@ -22,7 +22,7 @@
         <div class="form-group form-group-lg">
             <label for="email" class="col-sm-4 control-label">Email</label>
             <div class="col-sm-6">
-                <input remoteType="email" class="form-control" id="email" th:field="*{email}" placeholder="Email"/>
+                <input type="email" class="form-control" id="email" th:field="*{email}" placeholder="Email"/>
 
                 <div class="alert alert-danger" th:if="${#fields.hasErrors('email')}">
                     <p th:each="err : ${#fields.errors('email')}" th:text="${err}"></p>

@@ -12,18 +12,20 @@
         <div class="form-group form-group-lg">
             <label for="participant" class="col-sm-4 control-label">Participant identifier</label>
             <div class="col-sm-6">
-                <input remoteType="email" class="form-control" id="participant" th:field="*{participant}" placeholder="e.g. 9908:991825827"/>
+                <input type="text" class="form-control" id="participant" th:field="*{participant}" placeholder="e.g. 9908:991825827"/>
             </div>
         </div>
+
         <div class="form-group form-group-lg">
             <label for="code" class="col-sm-4 control-label">Code</label>
             <div class="col-sm-6">
-                <input remoteType="password" class="form-control" id="code" name="code" placeholder="Code"/>
+                <input type="text" class="form-control" id="code" name="code" th:value="${#vars['code'] != null ? #vars['code'] : ''}" placeholder="Code"/>
             </div>
         </div>
+
         <div class="form-group form-group-lg">
             <div class="col-sm-offset-4 col-sm-6">
-                <button remoteType="submit" class="btn btn-primary btn-lg">Sign in</button>
+                <button type="submit" class="btn btn-primary btn-lg">Sign in</button>
             </div>
         </div>
     </form>

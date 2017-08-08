@@ -39,8 +39,16 @@
             <tr>
                 <td><a th:href="@{/certificate/{i}(i=${item.identifier})}" th:text="${item.name}"></a></td>
                 <td th:text="${item.serialNumber}"></td>
-                <td th:text="${#dates.format(item.expirationDate, 'yyyy-MM-dd')}"></td>
-                <td th:text="${#dates.format(item.validated, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                <td>
+                    <strong th:text="${#dates.format(item.expirationDate, 'yyyy-MM-dd')}"/>
+                    <br />
+                    <th:block th:text="${#dates.format(item.expirationDate, 'HH:mm:ss')}"/>
+                </td>
+                <td>
+                    <th:block th:text="${#dates.format(item.validated, 'yyyy-MM-dd')}"/>
+                    <br />
+                    <th:block th:text="${#dates.format(item.validated, 'HH:mm:ss')}"/>
+                </td>
                 <td style="text-align: right;">
                     <a th:href="@{/certificate/{identifier}/edit(identifier=${item.identifier})}">Edit</a>
                     |

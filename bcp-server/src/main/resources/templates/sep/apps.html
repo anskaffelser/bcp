@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html layout:decorator="layout" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div layout:fragment="breadcrumb">
+    <ol class="breadcrumb">
+        <li><a th:href="@{/}">Home</a></li>
+        <li><a th:href="@{/sep}">Exchange Participants</a></li>
+        <li><a th:href="@{/sep/{s}::{i}(s=${participant.scheme},i=${participant.identifier})}"
+               th:text="${participant.name}">Participant</a></li>
+        <li class="active">Select applications</li>
+    </ol>
+</div>
+
+<div layout:fragment="content">
+
+    <div class="page-header">
+        <h1>Select applications</h1>
+    </div>
+
+    <form method="post" th:action="${#httpServletRequest.requestURI}" th:object="${form}">
+
+        <table class="table table-striped">
+            <thead>
+            <th style="width: 4%;">&nbsp;</th>
+            <th>Application</th>
+            </thead>
+            <tbody>
+            <th:block th:each="item : ${list}">
+                <tr>
+                    <td class="text-center">
+                        <label>
+                            <input type="checkbox" th:field="*{applications}" th:value="${item.identifier}"/>
+                        </label>
+                    </td>
+                    <td th:text="${item.title}"></td>
+                </tr>
+            </th:block>
+            </tbody>
+        </table>
+
+        <div class="pull-right">
+            <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+
+    </form>
+
+</div>
+
+</body>
+</html>

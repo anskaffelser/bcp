@@ -73,6 +73,7 @@
         <div class="col-md-2 col-sm-3" style="padding-left: 0;">
 
             <ul class="nav nav-pills nav-stacked" sec:authorize="hasAuthority('USER')">
+                <li th:classappend="${#httpServletRequest.getRequestURI().startsWith('/sep') ? 'active':''}"><a th:href="@{/sep}">Exchange Participants</a></li>
                 <li th:classappend="${#httpServletRequest.getRequestURI().startsWith('/application') ? 'active':''}"><a th:href="@{/application}">Applications</a></li>
                 <li th:classappend="${#httpServletRequest.getRequestURI().startsWith('/certificate') ? 'active':''}"><a th:href="@{/certificate}">Certificates</a></li>
                 <li th:classappend="${#httpServletRequest.getRequestURI().startsWith('/process') ? 'active':''}"><a th:href="@{/process}">Processes</a></li>
