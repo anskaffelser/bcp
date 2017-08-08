@@ -72,4 +72,12 @@
         </div>
     </th:block>
 
+    <th:block th:fragment="submit-lg(title)">
+        <div class="form-group form-group-lg" style="margin-top: 20pt;">
+            <div class="col-sm-offset-4 col-sm-6">
+                <button type="submit" class="btn btn-primary btn-lg" th:text="${title}"></button>
+            </div>
+        </div>
+    </th:block>
+
 </html>

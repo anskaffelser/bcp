@@ -25,12 +25,14 @@ package no.difi.bcp.server.form;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.Pattern;
+
 /**
  * @author erlend
  */
 public class SigninEmailForm {
 
-    @NotBlank
+    @Pattern(regexp = "([0-9]{4}:[0-9]+|admin)", message = "Invalid participant identifier.")
     private String participant;
 
     @NotBlank

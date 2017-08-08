@@ -22,13 +22,13 @@
 
 package no.difi.bcp.server.web;
 
-import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.difi.bcp.server.domain.Participant;
 import no.difi.bcp.server.form.SigninCodeForm;
 import no.difi.bcp.server.form.SigninEmailForm;
 import no.difi.bcp.server.lang.ParticipantNotFoundException;
 import no.difi.bcp.server.service.LoginService;
 import no.difi.bcp.server.service.ParticipantService;
+import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -38,6 +38,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
@@ -75,16 +76,23 @@ public class SigninController {
     }
 
     @RequestMapping(value = "/email", method = RequestMethod.POST)
-    public String emailSubmit(@Valid @ModelAttribute("form") SigninEmailForm form, BindingResult bindingResult, ModelMap modelMap)
-            throws ParticipantNotFoundException {
+    public String emailSubmit(@Valid @ModelAttribute("form") SigninEmailForm form, BindingResult bindingResult,
+                              ModelMap modelMap, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             modelMap.put("form", form);
             return "signin/email";
         }
 
         Participant participant = null;
-        if (!"admin".equals(form.getParticipant()))
-            participant = participantService.get(ParticipantIdentifier.of(form.getParticipant()));
+        try {
+            if (!"admin".equals(form.getParticipant()))
+                participant = participantService.get(ParticipantIdentifier.of(form.getParticipant()));
+        } catch (ParticipantNotFoundException e) {
+            redirectAttributes.addFlashAttribute("alert-warning",
+                    String.format("Participant identifier '%s' not found.", form.getParticipant()));
+
+            return "redirect:/signin/email";
+        }
 
         loginService.prepare(participant, form.getEmail());
 
