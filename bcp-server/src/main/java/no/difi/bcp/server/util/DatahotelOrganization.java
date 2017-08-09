@@ -27,7 +27,9 @@ package no.difi.bcp.server.util;
  */
 public class DatahotelOrganization {
 
-    private String orgnr, navn;
+    private String orgnr;
+
+    private String navn;
 
     public String getOrgnr() {
         return orgnr;

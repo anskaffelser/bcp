@@ -23,6 +23,7 @@
 jQuery(function($) {
     /* Set focus on first input element in #main. */
     var inputs = $("#main input, #main select");
-    if (inputs.size() > 0)
+    if (inputs.size() > 0) {
         inputs.get(0).focus();
+    }
 });

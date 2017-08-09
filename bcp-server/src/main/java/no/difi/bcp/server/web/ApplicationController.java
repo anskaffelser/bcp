@@ -141,7 +141,8 @@ public class ApplicationController {
 
     @PreAuthorize("hasAnyAuthority('USER') and #app.participant.id == principal.participant.id")
     @RequestMapping(value = "/{app}/certificates", method = RequestMethod.POST)
-    public String certificatesSubmit(@PathVariable Application app, @Valid @ModelAttribute("form") ApplicationCertificateForm form,
+    public String certificatesSubmit(@PathVariable Application app,
+                                     @Valid @ModelAttribute("form") ApplicationCertificateForm form,
                                      BindingResult bindingResult, ModelMap modelMap) {
         if (bindingResult.hasErrors()) {
             modelMap.put("form", form);
@@ -169,7 +170,8 @@ public class ApplicationController {
 
     @PreAuthorize("hasAnyAuthority('USER') and #app.participant.id == principal.participant.id")
     @RequestMapping(value = "/{app}/processes", method = RequestMethod.POST)
-    public String processesSubmit(@PathVariable Application app, @Valid @ModelAttribute("form") ApplicationProcessForm form,
+    public String processesSubmit(@PathVariable Application app,
+                                  @Valid @ModelAttribute("form") ApplicationProcessForm form,
                                   BindingResult bindingResult, ModelMap modelMap) {
         if (bindingResult.hasErrors()) {
             modelMap.put("form", form);

@@ -138,7 +138,8 @@ public class UserController {
     }
 
     @RequestMapping(value = "/{identifier}/delete", method = RequestMethod.GET)
-    public String deleteForm(@AuthenticationPrincipal User principal, @PathVariable String identifier, ModelMap modelMap)
+    public String deleteForm(@AuthenticationPrincipal User principal, @PathVariable String identifier,
+                             ModelMap modelMap)
             throws BcpServerException {
         User user = userService.findUserByIdentifier(principal.getParticipant(), identifier);
 
@@ -158,7 +159,8 @@ public class UserController {
 
     @ResponseBody
     @RequestMapping(value = "/xml", method = RequestMethod.GET)
-    public void xmlDump(@AuthenticationPrincipal User principal, HttpServletResponse response) throws JAXBException, IOException {
+    public void xmlDump(@AuthenticationPrincipal User principal, HttpServletResponse response)
+            throws JAXBException, IOException {
 
         RegistrationType registration = OBJECT_FACTORY.createRegistrationType();
 
