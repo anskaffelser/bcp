@@ -63,16 +63,16 @@ public class ApiController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ApiController.class);
 
-    private static final ObjectFactory OBJECT_FACTORY = new ObjectFactory();
+    private static final JAXBContext JAXB_CONTEXT;
 
-    private static JAXBContext jaxbContext;
+    private static final ObjectFactory OBJECT_FACTORY = new ObjectFactory();
 
     @Value("${bcp.api.v1:0}")
     private int revision;
 
     static {
         try {
-            jaxbContext = JAXBContext.newInstance(ParticipantType.class, ProcessType.class);
+            JAXB_CONTEXT = JAXBContext.newInstance(ParticipantType.class, ProcessType.class);
         } catch (JAXBException e) {
             throw new IllegalStateException(e.getMessage(), e);
         }
@@ -116,7 +116,7 @@ public class ApiController {
 
             response.setContentType(MediaType.APPLICATION_XML_VALUE);
 
-            Marshaller marshaller = jaxbContext.createMarshaller();
+            Marshaller marshaller = JAXB_CONTEXT.createMarshaller();
             marshaller.marshal(OBJECT_FACTORY.createParticipant(participantType), response.getWriter());
         } catch (PeppolParsingException e) {
             throw new InvalidInputException(e.getMessage(), e);
@@ -156,7 +156,7 @@ public class ApiController {
 
             response.setContentType(MediaType.APPLICATION_XML_VALUE);
 
-            Marshaller marshaller = jaxbContext.createMarshaller();
+            Marshaller marshaller = JAXB_CONTEXT.createMarshaller();
             marshaller.marshal(OBJECT_FACTORY.createProcess(processType), response.getWriter());
         } catch (PeppolParsingException e) {
             throw new InvalidInputException(e.getMessage(), e);

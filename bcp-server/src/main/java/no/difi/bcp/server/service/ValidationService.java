@@ -28,12 +28,14 @@ import no.difi.bcp.server.domain.CertificateRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -62,35 +64,44 @@ public class ValidationService {
     public void performValidation() {
         logger.info("Validating registered certificates.");
 
-        certificateRepository.findOcspEnabled()
-                .collect(Collectors.toMap(Certificate::getIssuer, Arrays::asList))
-                .forEach((issuer, certificates) -> {
-                    try {
-                        long timestamp = System.currentTimeMillis();
+        long timestamp = System.currentTimeMillis();
+        int page = 0;
+        Page<Certificate> certificatePage;
 
-                        OcspResult result = client.verify(
-                                certificates.get(0).getOcspUri(),
-                                new CertificateIssuer(issuer.getNameHash(), issuer.getKeyHash()),
-                                certificates.stream()
-                                        .map(Certificate::getSerialNumber)
-                                        .map(BigInteger::new)
-                                        .collect(Collectors.toList())
-                                        .toArray(new BigInteger[certificates.size()]));
+        do {
+            certificatePage = certificateRepository
+                    .findOcspEnabled(new PageRequest(page++, 25, new Sort(Sort.Direction.ASC, "issuer")));
 
-                        List<Certificate> validCertificates = certificates.stream()
-                                .filter(c -> result.get(new BigInteger(c.getSerialNumber())).getStatus() == CertificateStatus.GOOD)
-                                .collect(Collectors.toList());
-                        if (validCertificates.size() > 0)
-                            certificateRepository.updateVerifiedValid(timestamp, validCertificates);
+            certificatePage.getContent().stream()
+                    .collect(Collectors.groupingBy(Certificate::getIssuer))
+                    .forEach((issuer, certificates) -> {
+                        try {
+                            OcspResult result = client.verify(
+                                    certificates.get(0).getOcspUri(),
+                                    new CertificateIssuer(
+                                            issuer.getNameHash(),
+                                            issuer.getKeyHash()),
+                                    certificates.stream()
+                                            .map(Certificate::getSerialNumber)
+                                            .map(BigInteger::new)
+                                            .collect(Collectors.toList())
+                                            .toArray(new BigInteger[certificates.size()]));
 
-                        List<Certificate> invalidCertificates = certificates.stream()
-                                .filter(c -> result.get(new BigInteger(c.getSerialNumber())).getStatus() != CertificateStatus.GOOD)
-                                .collect(Collectors.toList());
-                        if (invalidCertificates.size() > 0)
-                            certificateRepository.updateVerifiedInvalid(timestamp, invalidCertificates);
-                    } catch (OcspException e) {
-                        logger.warn("Error while validating certificates.", e);
-                    }
-                });
+                            List<Certificate> validCertificates = certificates.stream()
+                                    .filter(c -> result.get(new BigInteger(c.getSerialNumber())).getStatus() == CertificateStatus.GOOD)
+                                    .collect(Collectors.toList());
+                            if (validCertificates.size() > 0)
+                                certificateRepository.updateVerifiedValid(timestamp, validCertificates);
+
+                            List<Certificate> invalidCertificates = certificates.stream()
+                                    .filter(c -> result.get(new BigInteger(c.getSerialNumber())).getStatus() != CertificateStatus.GOOD)
+                                    .collect(Collectors.toList());
+                            if (invalidCertificates.size() > 0)
+                                certificateRepository.updateVerifiedInvalid(timestamp, invalidCertificates);
+                        } catch (OcspException e) {
+                            logger.warn("Error while validating certificates.", e);
+                        }
+                    });
+        } while (certificatePage.getTotalPages() > page);
     }
 }

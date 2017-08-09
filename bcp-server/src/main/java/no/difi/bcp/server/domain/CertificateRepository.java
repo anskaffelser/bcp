@@ -30,7 +30,6 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * @author erlend
@@ -45,7 +44,7 @@ public interface CertificateRepository extends CrudRepository<Certificate, Long>
     Certificate findByIdentifier(String identifier);
 
     @Query("select c from Certificate c where c.ocspUri != null")
-    Stream<Certificate> findOcspEnabled();
+    Page<Certificate> findOcspEnabled(Pageable pageable);
 
     @Modifying
     @Query("update Certificate c set c.validated = ?1, c.revoked = null where c in (?2)")

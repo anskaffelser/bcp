@@ -74,6 +74,9 @@ public class ParticipantService {
         if (participant.getId() == 0) {
             String icd = participant.getIdentifier().substring(0, 4);
 
+            if (participantRepository.findByIdentifierAndScheme(participant.getIdentifier(), participant.getScheme()) != null)
+                throw new BcpServerException(String.format("Participant identifier '%s' is already registered.", participant.getIdentifier()));
+
             ParticipantVerifier participantVerifier = participantVerifiers.stream()
                     .filter(i -> i.supported(icd))
                     .findFirst()
