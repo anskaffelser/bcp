@@ -31,7 +31,6 @@
             <directory>src/main/assembly/full</directory>
             <outputDirectory></outputDirectory>
             <excludes>
-                <exclude>*/**/.gitkeep</exclude>
                 <exclude>*/**/.gitignore</exclude>
             </excludes>
         </fileSet>
