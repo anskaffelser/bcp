@@ -100,7 +100,7 @@
             <dependency>
                 <groupId>com.github.difi</groupId>
                 <artifactId>certvalidator</artifactId>
-                <version>1afb6579b6</version>
+                <version>8580c057a4</version>
                 <exclusions>
                     <exclusion>
                         <groupId>net.klakegg.pkix</groupId>

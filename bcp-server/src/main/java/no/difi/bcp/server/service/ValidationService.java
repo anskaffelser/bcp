@@ -54,7 +54,7 @@ public class ValidationService {
     private CertificateRepository certificateRepository;
 
     @Transactional
-    @Scheduled(cron = "0 3 * * * *") // XX:03:00
+    @Scheduled(cron = "${bcp.scheduled.validation:0 3 * * * *}") // Default: XX:03:00
     // @Scheduled(fixedDelay = 20000)
     public void run() {
         performValidation();

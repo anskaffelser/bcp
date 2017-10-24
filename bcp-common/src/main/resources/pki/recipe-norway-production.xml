@@ -20,7 +20,7 @@
   ~ permissions and limitations under the Licence.
   -->
 
-<ValidatorRecipe xmlns="http://difi.no/xsd/certvalidator/1.0" name="bcp-norway-production" version="2017-03-07">
+<ValidatorRecipe xmlns="http://difi.no/xsd/certvalidator/1.0" name="bcp-norway-production" version="2017-10-24">
     <Validator>
         <Expiration millis="0"/>
         <Signing type="PUBLIC_SIGNED"/>
@@ -42,10 +42,14 @@
             <Policy>2.16.578.1.1.1.1.100</Policy>
         </Chain>
         <Class>no.difi.certvalidator.extra.NorwegianOrganizationNumberRule</Class>
-        <CRL/>
-        <OCSP>
-            <IntermediateBucketReference>intermediate</IntermediateBucketReference>
-        </OCSP>
+        <HandleError>
+            <CRL/>
+        </HandleError>
+        <HandleError>
+            <OCSP>
+                <IntermediateBucketReference>intermediate</IntermediateBucketReference>
+            </OCSP>
+        </HandleError>
     </Validator>
 
     <CertificateBucket name="root">

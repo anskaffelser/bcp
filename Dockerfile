@@ -8,10 +8,6 @@ RUN cd $MAVEN_HOME/project \
  && mv $MAVEN_HOME/project/target/bcp-server /bcp \
  && find /bcp -name .gitkeep -exec rm -rf '{}' \;
 
-WORKDIR /bcp
-
-ENTRYPOINT ["sh", "/bcp/bin/run.sh"]
-
 
 
 FROM java:8-jre-alpine

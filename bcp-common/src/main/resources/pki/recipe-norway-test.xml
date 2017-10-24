@@ -19,7 +19,7 @@
   ~ See the Licence for the specific language governing
   ~ permissions and limitations under the Licence.
   -->
-<ValidatorRecipe xmlns="http://difi.no/xsd/certvalidator/1.0" name="bcp-norway-test" version="2017-07-17">
+<ValidatorRecipe xmlns="http://difi.no/xsd/certvalidator/1.0" name="bcp-norway-test" version="2017-10-24">
 
     <!-- Rules for Commfides are degraded to make issued certificates pass. -->
 
@@ -55,15 +55,19 @@
             </Chain>
         </Junction>
         <Class>no.difi.certvalidator.extra.NorwegianOrganizationNumberRule</Class>
-        <CRL/>
-        <Junction type="OR">
-            <PrincipleName field="O" principal="ISSUER">
-                <Value>Commfides Norge AS - 988 312 495</Value>
-            </PrincipleName>
-            <OCSP>
-                <IntermediateBucketReference>intermediate</IntermediateBucketReference>
-            </OCSP>
-        </Junction>
+        <HandleError>
+            <CRL/>
+        </HandleError>
+        <HandleError>
+            <Junction type="OR">
+                <PrincipleName field="O" principal="ISSUER">
+                    <Value>Commfides Norge AS - 988 312 495</Value>
+                </PrincipleName>
+                <OCSP>
+                    <IntermediateBucketReference>intermediate</IntermediateBucketReference>
+                </OCSP>
+            </Junction>
+        </HandleError>
     </Validator>
 
     <CertificateBucket name="root">

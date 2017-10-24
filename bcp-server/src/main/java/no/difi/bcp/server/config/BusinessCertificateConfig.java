@@ -25,7 +25,10 @@ package no.difi.bcp.server.config;
 import no.difi.bcp.lang.BcpException;
 import no.difi.bcp.security.BusinessCertificateValidator;
 import no.difi.certvalidator.ValidatorGroup;
+import no.difi.certvalidator.api.CertificateValidationException;
 import no.difi.certvalidator.api.CrlFetcher;
+import no.difi.certvalidator.api.ErrorHandler;
+import no.difi.certvalidator.api.FailedValidationException;
 import no.difi.certvalidator.util.SimpleCachingCrlFetcher;
 import no.difi.certvalidator.util.SimpleCrlCache;
 import org.slf4j.Logger;
@@ -60,6 +63,12 @@ public class BusinessCertificateConfig {
     public BusinessCertificateValidator getBusinessCertificate(CrlFetcher crlFetcher) throws BcpException {
         Map<String, Object> values = new HashMap<>();
         values.put("crlFetcher", crlFetcher);
+        values.put("#errorhandler", new ErrorHandler() {
+            @Override
+            public void handle(CertificateValidationException e) throws FailedValidationException {
+                LOGGER.info(e.getMessage(), e);
+            }
+        });
 
         return BusinessCertificateValidator.of(mode, values);
     }
