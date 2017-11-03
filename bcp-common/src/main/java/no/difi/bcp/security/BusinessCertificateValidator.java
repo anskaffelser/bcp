@@ -22,6 +22,7 @@
 
 package no.difi.bcp.security;
 
+import com.google.common.io.ByteStreams;
 import no.difi.bcp.api.Mode;
 import no.difi.bcp.api.RecipePath;
 import no.difi.bcp.lang.BcpException;
@@ -31,6 +32,7 @@ import no.difi.certvalidator.api.CertificateValidationException;
 import no.difi.certvalidator.api.Report;
 import no.difi.certvalidator.lang.ValidatorParsingException;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.cert.X509Certificate;
@@ -46,7 +48,9 @@ public class BusinessCertificateValidator {
     /**
      * Holds the actual certificate validator.
      */
-    private ValidatorGroup validator;
+    private final ValidatorGroup validator;
+
+    private final byte[] validatorSource;
 
     /**
      * Use of {@link Mode} to load the certificate validator using resources part of this package.
@@ -111,9 +115,14 @@ public class BusinessCertificateValidator {
      */
     private BusinessCertificateValidator(String path, Map<String, Object> values) throws BcpException {
         try (InputStream inputStream = getClass().getResourceAsStream(path)) {
+            if (inputStream == null)
+                throw new IOException("InputStream is null.");
+
+            this.validatorSource = ByteStreams.toByteArray(inputStream);
+
             this.validator = ValidatorLoader.newInstance()
                     .putAll(values)
-                    .build(inputStream);
+                    .build(new ByteArrayInputStream(validatorSource));
         } catch (IOException | ValidatorParsingException e) {
             throw new BcpException(String.format(
                     "Unable to load certificate validator, received '%s'.", e.getMessage()), e);
@@ -128,6 +137,10 @@ public class BusinessCertificateValidator {
     @Deprecated
     public ValidatorGroup getValidator() {
         return validator;
+    }
+
+    public InputStream getValidatorSource() {
+        return new ByteArrayInputStream(validatorSource);
     }
 
     /**

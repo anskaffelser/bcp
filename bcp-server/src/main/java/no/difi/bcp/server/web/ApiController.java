@@ -22,8 +22,10 @@
 
 package no.difi.bcp.server.web;
 
+import com.google.common.io.ByteStreams;
 import no.difi.bcp.api.Role;
 import no.difi.bcp.jaxb.v1.model.*;
+import no.difi.bcp.security.BusinessCertificateValidator;
 import no.difi.bcp.server.domain.Certificate;
 import no.difi.bcp.server.domain.Participant;
 import no.difi.bcp.server.domain.Process;
@@ -89,6 +91,9 @@ public class ApiController {
 
     @Autowired
     private ValidatorGroup validatorGroup;
+
+    @Autowired
+    private BusinessCertificateValidator businessCertificateValidator;
 
     private ValidatorType validatorType;
 
@@ -161,6 +166,12 @@ public class ApiController {
         } catch (PeppolParsingException e) {
             throw new InvalidInputException(e.getMessage(), e);
         }
+    }
+
+    @RequestMapping(value = "/validator", method = RequestMethod.GET)
+    public void getValidator(HttpServletResponse response) throws IOException {
+        response.setContentType(MediaType.APPLICATION_XML_VALUE);
+        ByteStreams.copy(businessCertificateValidator.getValidatorSource(), response.getOutputStream());
     }
 
     private static IdentifierType createIdentifier(QualifiedIdentifier identifier) {
