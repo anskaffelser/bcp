@@ -39,7 +39,7 @@
 
     <dependencies>
 
-        <!-- Virksert -->
+        <!-- BCP -->
         <dependency>
             <groupId>no.difi.bcp</groupId>
             <artifactId>bcp-server</artifactId>

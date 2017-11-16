@@ -22,48 +22,32 @@
 
 package no.difi.bcp.client;
 
-import com.google.common.io.ByteStreams;
 import no.difi.bcp.api.Mode;
 import no.difi.bcp.api.Role;
+import no.difi.bcp.client.api.BcpClient;
 import no.difi.bcp.client.lang.BcpClientException;
-import no.difi.bcp.jaxb.v1.model.CertificateType;
-import no.difi.bcp.jaxb.v1.model.ParticipantType;
-import no.difi.bcp.jaxb.v1.model.ProcessType;
 import no.difi.bcp.lang.BcpException;
-import no.difi.bcp.security.BusinessCertificateValidator;
-import no.difi.certvalidator.api.CertificateValidationException;
 import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.difi.vefa.peppol.common.model.ProcessIdentifier;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.transform.stream.StreamSource;
-import java.io.BufferedInputStream;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.URI;
 import java.security.cert.X509Certificate;
 import java.util.Map;
 
 /**
  * @author erlend
+ *
+ * This class is deprecated. Please use BcpClientBuilder. Example:
+ *
+ * BcpClient bcpClient = BcpClientBuilder.newInstance()
+ *                          .location("http://bcp.com/")
+ *                          .validator(Mode.PRODUCTION)
+ *                          .build();
  */
-public class BusinessCertificateClient {
+@Deprecated
+public class BusinessCertificateClient implements BcpClient {
 
-    private static JAXBContext jaxbContext;
-
-    static {
-        try {
-            jaxbContext = JAXBContext.newInstance(ParticipantType.class, ProcessType.class);
-        } catch (JAXBException e) {
-            throw new IllegalStateException(e.getMessage());
-        }
-    }
-
-    private URI uri;
-
-    private BusinessCertificateValidator validator;
+    private BcpClient client;
 
     public static BusinessCertificateClient of(URI uri, Mode mode) throws BcpException {
         return of(uri, mode, null);
@@ -78,7 +62,12 @@ public class BusinessCertificateClient {
     }
 
     public static BusinessCertificateClient of(URI uri, Enum<?> mode, Map<String, Object> values) throws BcpException {
-        return new BusinessCertificateClient(uri, BusinessCertificateValidator.of(mode, values));
+        return new BusinessCertificateClient(
+                BcpClientBuilder.newInstance()
+                        .location(uri)
+                        .validator(mode, values)
+                        .build()
+        );
     }
 
     public static BusinessCertificateClient of(URI uri, String mode) throws BcpException {
@@ -86,58 +75,22 @@ public class BusinessCertificateClient {
     }
 
     public static BusinessCertificateClient of(URI uri, String mode, Map<String, Object> values) throws BcpException {
-        return new BusinessCertificateClient(uri, BusinessCertificateValidator.of(mode, values));
+        return new BusinessCertificateClient(
+                BcpClientBuilder.newInstance()
+                        .location(uri)
+                        .validator(mode, values)
+                        .build()
+        );
     }
 
-    private BusinessCertificateClient(URI uri, BusinessCertificateValidator validator) {
-        this.uri = uri;
-        this.validator = validator;
+    private BusinessCertificateClient(BcpClient client) {
+        this.client = client;
     }
 
-    public X509Certificate fetchCertificate(ParticipantIdentifier participantIdentifier,
-                                            ProcessIdentifier processIdentifier)
-            throws BcpClientException {
-        return fetchCertificate(participantIdentifier, processIdentifier, Role.REQUEST);
-    }
-
+    @Override
     public X509Certificate fetchCertificate(ParticipantIdentifier participantIdentifier,
                                             ProcessIdentifier processIdentifier,
-                                            Role role)
-            throws BcpClientException {
-        URI currentUri = uri.resolve(String.format("api/v1/%s/%s/%s",
-                participantIdentifier.urlencoded(), processIdentifier.urlencoded(), role.name()));
-
-        try {
-            HttpURLConnection connection = (HttpURLConnection) currentUri.toURL().openConnection();
-
-            switch (connection.getResponseCode()) {
-                case 400:
-                case 404:
-                case 500:
-                    throw new BcpClientException(new String(ByteStreams.toByteArray(connection.getInputStream())));
-                case 200:
-                    try (InputStream inputStream = connection.getInputStream();
-                         BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream)) {
-                        Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-                        ProcessType processType = unmarshaller.unmarshal(
-                                new StreamSource(bufferedInputStream), ProcessType.class).getValue();
-
-                        for (CertificateType certificateType : processType.getCertificate()) {
-                            try {
-                                return validator.getValidator().validate(certificateType.getValue());
-                            } catch (CertificateValidationException e) {
-                                // No action...
-                            }
-                        }
-
-                        throw new BcpClientException("No valid certificate found.");
-                    }
-                default:
-                    throw new BcpClientException(String.format(
-                            "Unknown error: %s", connection.getResponseMessage()));
-            }
-        } catch (Exception e) {
-            throw new BcpClientException(e.getMessage(), e);
-        }
+                                            Role role) throws BcpClientException {
+        return client.fetchCertificate(participantIdentifier, processIdentifier, role);
     }
 }

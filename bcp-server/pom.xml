@@ -36,7 +36,7 @@
     <name>BCP :: Server</name>
 
     <dependencies>
-        <!-- Virksert -->
+        <!-- BCP -->
         <dependency>
             <groupId>no.difi.bcp</groupId>
             <artifactId>bcp-common</artifactId>

@@ -67,7 +67,7 @@
     <dependencyManagement>
         <dependencies>
             
-            <!-- Virksert -->
+            <!-- BCP -->
             <dependency>
                 <groupId>no.difi.bcp</groupId>
                 <artifactId>bcp-common</artifactId>
@@ -88,7 +88,7 @@
             <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
-                <version>22.0</version>
+                <version>23.0</version>
             </dependency>
 
             <!-- Difi commons -->

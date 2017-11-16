@@ -22,27 +22,28 @@
 
 package no.difi.bcp.client;
 
+import no.difi.bcp.api.Mode;
 import no.difi.bcp.api.Role;
+import no.difi.bcp.client.api.BcpClient;
 import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.difi.vefa.peppol.common.model.ProcessIdentifier;
 import no.difi.vefa.peppol.common.model.Scheme;
-import no.difi.bcp.api.Mode;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.net.URI;
 import java.security.cert.X509Certificate;
 
 /**
  * @author erlend
  */
-@Deprecated
-public class BusinessCertificateClientTest {
+public class DefaultClientTest {
 
-    @Test(enabled = false)
+    @Test // (enabled = false)
     public void simple() throws Exception {
-        BusinessCertificateClient client = BusinessCertificateClient
-                .of(URI.create("https://test-bcp.difi.blufo.net/"), Mode.TEST);
+        BcpClient client = BcpClientBuilder.newInstance()
+                .location("https://test-bcp.difi.blufo.net/")
+                .validator(Mode.TEST)
+                .build();
 
         X509Certificate certificate = client.fetchCertificate(
                 ParticipantIdentifier.of("9908:984851006"),
