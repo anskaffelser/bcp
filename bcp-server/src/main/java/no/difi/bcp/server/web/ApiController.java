@@ -34,11 +34,13 @@ import no.difi.bcp.server.lang.*;
 import no.difi.bcp.server.service.ParticipantService;
 import no.difi.bcp.server.service.ProcessService;
 import no.difi.bcp.server.service.RegistrationService;
+import no.difi.bcp.server.service.SignerService;
 import no.difi.certvalidator.ValidatorGroup;
 import no.difi.vefa.peppol.common.api.QualifiedIdentifier;
 import no.difi.vefa.peppol.common.lang.PeppolParsingException;
 import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.difi.vefa.peppol.common.model.ProcessIdentifier;
+import no.difi.vefa.peppol.security.xmldsig.DomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +49,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletResponse;
@@ -90,6 +94,9 @@ public class ApiController {
     private RegistrationService registrationService;
 
     @Autowired
+    private SignerService signerService;
+
+    @Autowired
     private ValidatorGroup validatorGroup;
 
     @Autowired
@@ -122,7 +129,14 @@ public class ApiController {
             response.setContentType(MediaType.APPLICATION_XML_VALUE);
 
             Marshaller marshaller = JAXB_CONTEXT.createMarshaller();
-            marshaller.marshal(OBJECT_FACTORY.createParticipant(participantType), response.getWriter());
+
+            if (signerService.active()) {
+                Document document = DomUtils.newDocumentBuilder().newDocument();
+                marshaller.marshal(OBJECT_FACTORY.createParticipant(participantType), document);
+                signerService.sign(document, response.getOutputStream());
+            } else {
+                marshaller.marshal(OBJECT_FACTORY.createParticipant(participantType), response.getWriter());
+            }
         } catch (PeppolParsingException e) {
             throw new InvalidInputException(e.getMessage(), e);
         }
@@ -162,16 +176,29 @@ public class ApiController {
             response.setContentType(MediaType.APPLICATION_XML_VALUE);
 
             Marshaller marshaller = JAXB_CONTEXT.createMarshaller();
-            marshaller.marshal(OBJECT_FACTORY.createProcess(processType), response.getWriter());
+
+            if (signerService.active()) {
+                Document document = DomUtils.newDocumentBuilder().newDocument();
+                marshaller.marshal(OBJECT_FACTORY.createProcess(processType), document);
+                signerService.sign(document, response.getOutputStream());
+            } else {
+                marshaller.marshal(OBJECT_FACTORY.createProcess(processType), response.getWriter());
+            }
         } catch (PeppolParsingException e) {
             throw new InvalidInputException(e.getMessage(), e);
         }
     }
 
     @RequestMapping(value = "/validator", method = RequestMethod.GET)
-    public void getValidator(HttpServletResponse response) throws IOException {
+    public void getValidator(HttpServletResponse response) throws IOException, BcpServerException, SAXException {
         response.setContentType(MediaType.APPLICATION_XML_VALUE);
-        ByteStreams.copy(businessCertificateValidator.getValidatorSource(), response.getOutputStream());
+
+        if (signerService.active()) {
+            Document document = DomUtils.newDocumentBuilder().parse(businessCertificateValidator.getValidatorSource());
+            signerService.sign(document, response.getOutputStream());
+        } else {
+            ByteStreams.copy(businessCertificateValidator.getValidatorSource(), response.getOutputStream());
+        }
     }
 
     private static IdentifierType createIdentifier(QualifiedIdentifier identifier) {
