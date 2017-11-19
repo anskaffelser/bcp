@@ -6,8 +6,9 @@ import no.difi.bcp.client.model.ParticipantLookup;
 import no.difi.bcp.client.model.ProcessLookup;
 import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.difi.vefa.peppol.common.model.ProcessIdentifier;
+import org.w3c.dom.Document;
 
-import java.io.InputStream;
+import java.io.IOException;
 
 /**
  * @author erlend
@@ -20,8 +21,10 @@ public interface BcpVersion {
                         ProcessIdentifier processIdentifier,
                         Role role);
 
-    ParticipantLookup parseParticipantLookup(InputStream inputStream) throws BcpClientException;
+    ParticipantLookup parseParticipantLookup(Document document) throws BcpClientException;
 
-    ProcessLookup parseProcessLookup(InputStream inputStream) throws BcpClientException;
+    ProcessLookup parseProcessLookup(Document document) throws BcpClientException;
+
+    StatusCode parseStatusCode(BcpFetcher.BcpResponse response) throws IOException;
 
 }

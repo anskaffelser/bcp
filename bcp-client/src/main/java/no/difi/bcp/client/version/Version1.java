@@ -1,24 +1,25 @@
 package no.difi.bcp.client.version;
 
 import no.difi.bcp.api.Role;
+import no.difi.bcp.client.api.BcpFetcher;
 import no.difi.bcp.client.api.BcpVersion;
+import no.difi.bcp.client.api.StatusCode;
 import no.difi.bcp.client.lang.BcpClientException;
 import no.difi.bcp.client.model.Certificate;
 import no.difi.bcp.client.model.ParticipantLookup;
 import no.difi.bcp.client.model.ProcessLookup;
-import no.difi.bcp.jaxb.v1.model.CertificateType;
-import no.difi.bcp.jaxb.v1.model.IdentifierType;
-import no.difi.bcp.jaxb.v1.model.ParticipantType;
-import no.difi.bcp.jaxb.v1.model.ProcessType;
+import no.difi.bcp.client.model.ProcessReference;
+import no.difi.bcp.jaxb.v1.model.*;
 import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.difi.vefa.peppol.common.model.ProcessIdentifier;
 import no.difi.vefa.peppol.common.model.Scheme;
+import org.w3c.dom.Document;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.transform.stream.StreamSource;
-import java.io.InputStream;
+import javax.xml.transform.dom.DOMSource;
+import java.io.IOException;
 import java.util.stream.Collectors;
 
 /**
@@ -59,17 +60,17 @@ public class Version1 implements BcpVersion {
     }
 
     @Override
-    public ParticipantLookup parseParticipantLookup(InputStream inputStream) throws BcpClientException {
+    public ParticipantLookup parseParticipantLookup(Document document) throws BcpClientException {
         try {
             Unmarshaller unmarshaller = JAXB_CONTEXT.createUnmarshaller();
 
             ParticipantType participantType = unmarshaller.unmarshal(
-                    new StreamSource(inputStream), ParticipantType.class).getValue();
+                    new DOMSource(document), ParticipantType.class).getValue();
 
             return ParticipantLookup.builder()
                     .participantIdentifier(parseParticipantIdentifier(participantType.getParticipantIdentifier()))
                     .processIdentifiers(participantType.getProcessReference().stream()
-                            .map(this::parseProcessIdentifier)
+                            .map(this::parseProcessReference)
                             .collect(Collectors.toList()))
                     .build();
         } catch (JAXBException e) {
@@ -78,12 +79,12 @@ public class Version1 implements BcpVersion {
     }
 
     @Override
-    public ProcessLookup parseProcessLookup(InputStream inputStream) throws BcpClientException {
+    public ProcessLookup parseProcessLookup(Document document) throws BcpClientException {
         try {
             Unmarshaller unmarshaller = JAXB_CONTEXT.createUnmarshaller();
 
             ProcessType processType = unmarshaller.unmarshal(
-                    new StreamSource(inputStream), ProcessType.class).getValue();
+                    new DOMSource(document), ProcessType.class).getValue();
 
             return ProcessLookup.builder()
                     .participantIdentifier(parseParticipantIdentifier(processType.getParticipantIdentifier()))
@@ -105,11 +106,30 @@ public class Version1 implements BcpVersion {
         return ProcessIdentifier.of(identifier.getValue(), Scheme.of(identifier.getScheme()));
     }
 
+    private ProcessReference parseProcessReference(ProcessReferenceType identifier) {
+        return ProcessReference.of(identifier.getValue(), Scheme.of(identifier.getScheme()),
+                Role.valueOf(identifier.getRole().value()));
+    }
+
     private Certificate parseCertificate(CertificateType certificateType) {
         return Certificate.builder()
                 .serialNumber(certificateType.getSerialNumber())
                 .expire(certificateType.getExpire())
                 .content(certificateType.getValue())
                 .build();
+    }
+
+    @Override
+    public StatusCode parseStatusCode(BcpFetcher.BcpResponse response) throws IOException {
+        switch (response.getCode()) {
+            case 200:
+                return StatusCode.OK;
+            case 404:
+                return StatusCode.NOT_FOUND;
+            case 500:
+                return StatusCode.ERROR;
+            default:
+                return StatusCode.UNKNOWN;
+        }
     }
 }

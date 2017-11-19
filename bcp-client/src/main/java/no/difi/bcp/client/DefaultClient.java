@@ -24,27 +24,32 @@ package no.difi.bcp.client;
 
 import com.google.common.io.ByteStreams;
 import no.difi.bcp.api.Role;
-import no.difi.bcp.client.api.BcpClient;
-import no.difi.bcp.client.api.BcpLocation;
-import no.difi.bcp.client.api.BcpVersion;
+import no.difi.bcp.client.api.*;
+import no.difi.bcp.client.fetcher.DefaultFetcher;
 import no.difi.bcp.client.lang.BcpClientException;
 import no.difi.bcp.client.model.Certificate;
 import no.difi.bcp.client.model.ProcessLookup;
+import no.difi.bcp.client.util.DomUtils;
 import no.difi.bcp.security.BusinessCertificateValidator;
+import no.difi.certvalidator.Validator;
 import no.difi.certvalidator.api.CertificateValidationException;
 import no.difi.vefa.peppol.common.model.ParticipantIdentifier;
 import no.difi.vefa.peppol.common.model.ProcessIdentifier;
+import org.w3c.dom.Document;
 
 import java.io.BufferedInputStream;
+import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.URI;
 import java.security.cert.X509Certificate;
+import java.util.Objects;
 
 /**
  * @author erlend
  */
 class DefaultClient implements BcpClient {
+
+    private BcpFetcher fetcher = new DefaultFetcher();
 
     private BcpVersion version;
 
@@ -52,7 +57,9 @@ class DefaultClient implements BcpClient {
 
     private BusinessCertificateValidator validator;
 
-    public DefaultClient(BcpVersion version, BcpLocation location, BusinessCertificateValidator validator) {
+    public DefaultClient(BcpFetcher fetcher, BcpVersion version, BcpLocation location,
+                         BusinessCertificateValidator validator) {
+        this.fetcher = fetcher;
         this.version = version;
         this.location = location;
         this.validator = validator;
@@ -62,42 +69,47 @@ class DefaultClient implements BcpClient {
     public X509Certificate fetchCertificate(ParticipantIdentifier participantIdentifier,
                                             ProcessIdentifier processIdentifier,
                                             Role role) throws BcpClientException {
-        // Fetch URI for BCP
-        URI rootUri = location.forParticipantIdentifier(participantIdentifier);
+        // Fetch URI for lookup
+        URI serviceUri = location.forParticipantIdentifier(participantIdentifier);
 
-        // Generate URI for lookup
-        URI currentUri = rootUri.resolve(version.generatePath(participantIdentifier, processIdentifier, role));
+        URI lookupUri = serviceUri.resolve(version.generatePath(participantIdentifier, processIdentifier, role));
 
-        try {
-            HttpURLConnection connection = (HttpURLConnection) currentUri.toURL().openConnection();
+        try (BcpFetcher.BcpResponse response = fetcher.fetch(lookupUri);
+             InputStream inputStream = response.getContent();
+             BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream)) {
 
-            switch (connection.getResponseCode()) {
-                case 400:
-                case 404:
-                case 500:
-                    throw new BcpClientException(new String(ByteStreams.toByteArray(connection.getInputStream())));
-                case 200:
-                    try (InputStream inputStream = connection.getInputStream();
-                         BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream)) {
+            // Parse status code
+            StatusCode statusCode = version.parseStatusCode(response);
 
-                        ProcessLookup processLookup = version.parseProcessLookup(bufferedInputStream);
+            if (statusCode.error)
+                throw new BcpClientException(String.format("%s\r\nResponse: %s",
+                        String.format(statusCode.message, response.getCode()),
+                        new String(ByteStreams.toByteArray(bufferedInputStream))
+                ));
 
-                        for (Certificate certificate : processLookup.getCertificates()) {
-                            try {
-                                return validator.getValidator().validate(certificate.getContent());
-                            } catch (CertificateValidationException e) {
-                                // Certificates not deemed valid are to be silently discarded.
-                            }
-                        }
+            // Read document as DOM document
+            Document document = DomUtils.parse(bufferedInputStream);
 
-                        throw new BcpClientException("No valid certificate found.");
-                    }
-                default:
-                    throw new BcpClientException(String.format(
-                            "Unknown error: %s", connection.getResponseMessage()));
-            }
-        } catch (Exception e) {
+            ProcessLookup processLookup = version.parseProcessLookup(document);
+
+            // Return first valid certificate
+            return processLookup.getCertificates().stream()
+                    .map(this::extractCert)
+                    .filter(Objects::nonNull)
+                    .filter(validator.getValidator()::isValid)
+                    .findFirst()
+                    .orElseThrow(() -> new BcpClientException("No valid certificate found."));
+        } catch (IOException e) {
             throw new BcpClientException(e.getMessage(), e);
+        }
+    }
+
+    private X509Certificate extractCert(Certificate certificate) {
+        try {
+            return Validator.getCertificate(certificate.getContent());
+        } catch (CertificateValidationException e) {
+            // Simply return null on invalid certificate data.
+            return null;
         }
     }
 }

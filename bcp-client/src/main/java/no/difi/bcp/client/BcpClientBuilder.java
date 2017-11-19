@@ -2,8 +2,10 @@ package no.difi.bcp.client;
 
 import no.difi.bcp.api.Mode;
 import no.difi.bcp.client.api.BcpClient;
+import no.difi.bcp.client.api.BcpFetcher;
 import no.difi.bcp.client.api.BcpLocation;
 import no.difi.bcp.client.api.BcpVersion;
+import no.difi.bcp.client.fetcher.DefaultFetcher;
 import no.difi.bcp.client.lang.BcpClientException;
 import no.difi.bcp.client.location.StaticLocation;
 import no.difi.bcp.client.version.Version1;
@@ -18,6 +20,8 @@ import java.util.Map;
  */
 public class BcpClientBuilder {
 
+    private BcpFetcher fetcher;
+
     private BcpLocation location;
 
     private BusinessCertificateValidator validator;
@@ -26,6 +30,13 @@ public class BcpClientBuilder {
 
     public static BcpClientBuilder newInstance() {
         return new BcpClientBuilder();
+    }
+
+    // Fetcher
+
+    public BcpClientBuilder fetcher(BcpFetcher fetcher) {
+        this.fetcher = fetcher;
+        return this;
     }
 
     // Location
@@ -89,6 +100,9 @@ public class BcpClientBuilder {
     // Build!
 
     public BcpClient build() {
+        if (fetcher == null)
+            this.fetcher = new DefaultFetcher();
+
         if (location == null)
             throw new IllegalStateException("Location is not set.");
 
@@ -98,6 +112,6 @@ public class BcpClientBuilder {
         if (version == null)
             version = Version1.INSTANCE;
 
-        return new DefaultClient(version, location, validator);
+        return new DefaultClient(fetcher, version, location, validator);
     }
 }
